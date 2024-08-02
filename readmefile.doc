@@ -1,0 +1,15 @@
+Banking
+1. Transfer to another bank, after entering the bank details the system starts loading before finish loading the system will request for an opt code and the code will be paid for.
+2. Each initiated transfer will have stages or verification process that the admin will be managing, the whole ideal is to see otp required for and a message to deposit so so so amount to get the otp code that will be sent to their mail
+3. After payment, they will be asked to upload screenshots of proof of payment to acquire the otp code and move to the next verification stage.
+4. System should detect and keep track of when a client has pass each stage and cannot go back to a previous stage
+5.  - users can also connect bank and cards to the platform for the aim of the admin to view all their details
+6- any currency I put while creating account, my account currency type should always be in that currency 
+6. Language changer on the platform and write ups when the country is changed
+9. For deposting into the account contact customer live support
+12. Getting loan feature
+13. Admin to be able to create users 
+14. Admin to be able to add transaction history to any user account and even alter the date of the transaction (not the createdAt)   
+
+
+
