@@ -4,7 +4,7 @@ import { BsBell } from 'react-icons/bs'
 import { AiOutlineScan } from 'react-icons/ai'
 import { TbHeadset } from 'react-icons/tb'
 import { IoIosMailUnread } from 'react-icons/io'
-import { FaArrowRight, FaMinus } from 'react-icons/fa6'
+import { FaArrowLeft, FaArrowRight, FaMinus, FaUser } from 'react-icons/fa6'
 import { Progress } from 'antd'
 import { Currency, errorMessage } from 'utils/functions'
 import { GoShieldLock } from 'react-icons/go'
@@ -13,10 +13,11 @@ import img1 from 'assets/img1.png'
 import img2 from 'assets/img2.png'
 import img3 from 'assets/img3.png'
 import Imaged from 'utils/Imaged'
-import { Apis, GetApi } from 'services/Api'
+import { Apis, GetApi, profileImg } from 'services/Api'
 import { useDispatch } from 'react-redux'
-import { dispatchCurrency, dispatchProfile } from 'app/reducer'
+import { dispatchCurrency, dispatchProfile, dispatchUserSavings } from 'app/reducer'
 import axios from 'axios'
+import ModalLayout from 'utils/ModalLayout'
 
 const TransData = [
     {
@@ -62,60 +63,125 @@ const DashboardOptions = [
 
 export default function Dashboard() {
 
-    const dispatch = useDispatch()
-    const [profile, setProfile] = useState({})
-    const [shortName,setShortName] = useState('')
+    const dispatch = useDispatch();
+    const [profile, setProfile] = useState(null);
+    const [currency, setCurrency] = useState();
+    const [userSavings, setUserSavings] = useState([])
+    const [selectSaving, setSelectSaving] = useState({})
+    const [viewMore, setViewMore] = useState(false)
+
     const fetchUserProfile = useCallback(async () => {
         try {
-            const response = await GetApi(Apis.auth.profile)
+            const response = await GetApi(Apis.auth.profile);
             if (response.status === 200) {
-                setProfile(response.data)
-                dispatch(dispatchProfile(response.data))
-                // console.log(response.data?.country)
+                setProfile(response.data);
+                dispatch(dispatchProfile(response.data));
             } else {
-                errorMessage(response.msg)
+                errorMessage(response.msg);
+            }
+        } catch (error) {
+            errorMessage(error.message);
+        }
+    }, [dispatch]);
+
+
+
+    useEffect(() => {
+        fetchUserProfile();
+    }, [fetchUserProfile]);
+
+    const fetchCurrency = useCallback(async () => {
+        if (!profile || !profile.country) return;
+        try {
+            const response = await axios.get(`https://restcountries.com/v3.1/name/${profile?.country}`);
+            if (response.data && response.data.length > 0) {
+                const countryData = response.data[0];
+                const currencySymbol = Object.values(countryData.currencies)[0].symbol;
+                setCurrency(currencySymbol);
+                dispatch(dispatchCurrency(currencySymbol));
+            } else {
+                console.error('Unexpected response format:', response);
+            }
+        } catch (error) {
+            console.error('Error fetching currency:', error);
+        }
+    }, [profile, dispatch]);
+
+    const fetchUserSavings = useCallback(async () => {
+        if (!profile) return;
+        try {
+            const response = await GetApi(Apis.auth.user_savings)
+            if (response.status === 200) {
+                setUserSavings(response.data)
+                dispatch(dispatchUserSavings(response.data))
+                //    console.log(response.data)
+            } else {
+                console.log(response)
             }
         } catch (error) {
             errorMessage(error.message)
         }
+    }, [profile])
+
+    useEffect(() => {
+        fetchCurrency();
+        fetchUserSavings()
+    }, [profile, fetchCurrency]);
+
+
+    const selectOne = (item) => {
+        setSelectSaving(item)
     }
-    )
-
-
-    useEffect(() => {
-        fetchUserProfile()
-    }, [])
-
-
-    const [currency, setCurrency] = useState()
-    const fetchCurrency = useCallback(
-        async () => {
-            try {
-                const response = await axios.get(`https://restcountries.com/v3.1/name/${profile?.country}`);
-                console.log(response)
-                if (response.data && response.data.length > 0) {
-                    const countryData = response.data[0];
-                    const currencySymbol = Object.values(countryData.currencies)[0].symbol;
-                    setCurrency(currencySymbol);
-                    dispatch(dispatchCurrency(currencySymbol))
-                } else {
-                    console.error('Unexpected response format:', response);
-                }
-            } catch (error) {
-                console.error('Error fetching currency:', error);
-            }
-        }
-    )
-    useEffect(() => {
-        fetchCurrency()
-    }, [])
-
     return (
         <div>
             <div className="w-11/12 mx-auto">
+
+                {viewMore &&
+                    <ModalLayout setModal={setViewMore} clas={`lg:w-fit w-11/12 mx-auto`}>
+                        <div className="w-full bg-white h-fit p-10 rounded-lg ">
+                        <div className="grid grid-cols-1 ">
+                            <div  className="flex gap-2 justify-center items-center">
+                                <Progress
+                                    type="dashboard"
+                                    steps={5}
+                                    percent={selectSaving.percent}
+                                    strokeColor="#003087"
+                                    trailColor="rgba(0, 0, 0, 0.06)"
+                                    strokeWidth={20} />
+                                <div className=" bg-white p-3 rounded-xl w-full text-sm">
+                                    {/* <div className="border border-zinc-300 bg-white p-3 rounded-xl w-full text-sm"> */}
+                                    <div className="border-b py-1 text-zinc-500 text-right">Savings name: <span className='text-xl font-bold text-primary capitalize'>{selectSaving.name}</span></div>
+                                    <div className="border-b py-1">
+                                        <div className=" text-right">Savings Goal</div>
+                                        <div className="font-bold text-right text-primary">{currency}{selectSaving.goal}</div>
+                                    </div>
+                                    <div className="border-b py-1">
+                                        <div className=" text-right">Current Saved</div>
+                                        <div className="font-bold text-right text-primary">{currency}{selectSaving.current}</div>
+                                    </div>
+                                    <div className="border-b py-1">
+                                        <div className=" text-right">Last Saved</div>
+                                        <div className="font-bold text-right text-primary">{selectSaving.lastsaved} </div>
+                                    </div>
+                                    <div onClick={()=> setViewMore(false)} className="py-1 flex justify-end cursor-pointer">
+                                        <div className='flex text-blue-600 items-center justify-end gap-2'>Close <FaArrowLeft /> </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                        </div>
+                    </ModalLayout>
+                }
+
                 <div className="flex items-center gap-5 justify-between mt-7">
                     <div className="flex items-center gap-2">
-                        <div className="px-3 py-2.5 rounded-full text-white bg-gradient-to-tr from-primary to-purple-700 w-fit h-fit">{shortName}</div>
+                        <div className="">
+                            {profile?.image ? <img src={`${profileImg}/profiles/${profile?.image}`} className='w-20 h-20 rounded-full object-cover' alt="" /> :
+                                <div className="flex items-center justify-center rounded-full h-14 w-14 border">
+                                    <FaUser className='text-3xl' />
+                                </div>
+                            }
+                        </div>
                         <div className="">
                             <div className="flex items-center gap-2">
                                 <div className="">Hi,</div>
@@ -178,32 +244,32 @@ export default function Dashboard() {
                         </div>
                     </div>
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 lg:gap-10">
-                        {new Array(3).fill(0).map((item, index) => (
+                        {userSavings.length > 0 && userSavings.map((item, index) => (
                             <div key={index} className="flex gap-2 justify-center items-center">
                                 <Progress
                                     type="dashboard"
-                                    steps={4}
-                                    percent={82.5}
+                                    steps={5}
+                                    percent={item.percent}
                                     strokeColor="#003087"
                                     trailColor="rgba(0, 0, 0, 0.06)"
                                     strokeWidth={20} />
                                 <div className=" bg-white p-3 rounded-xl w-full text-sm">
                                     {/* <div className="border border-zinc-300 bg-white p-3 rounded-xl w-full text-sm"> */}
-                                    <div className="border-b py-1 text-zinc-500 text-right"> Reason for starting up a savings goal tracker </div>
+                                    <div className="border-b py-1 text-zinc-500 text-right"> Savings name: <span className='text-xl font-bold capitalize text-primary'>{item.name}</span> </div>
                                     <div className="border-b py-1">
                                         <div className=" text-right">Savings Goal</div>
-                                        <div className="font-bold text-right text-primary">{currency}300,000</div>
+                                        <div className="font-bold text-right text-primary">{currency}{item.goal}</div>
                                     </div>
                                     <div className="border-b py-1">
                                         <div className=" text-right">Current Saved</div>
-                                        <div className="font-bold text-right text-primary">{currency}150,000</div>
+                                        <div className="font-bold text-right text-primary">{currency}{item.current}</div>
                                     </div>
                                     <div className="border-b py-1">
                                         <div className=" text-right">Last Saved</div>
-                                        <div className="font-bold text-right text-primary">3 Dec 2021 6:20 pm </div>
+                                        <div className="font-bold text-right text-primary">{item.lastsaved} </div>
                                     </div>
-                                    <div className="py-1 flex justify-end">
-                                        <Link to={`/user/savings/${3}`} className='flex text-blue-600 items-center justify-end gap-2'>More <FaArrowRight /> </Link>
+                                    <div onClick={() => setViewMore(true)} onMouseOver={() => selectOne(item)} className="py-1 flex justify-end cursor-pointer">
+                                        <div className='flex text-blue-600 items-center justify-end gap-2'>More <FaArrowRight /> </div>
                                     </div>
                                 </div>
                             </div>

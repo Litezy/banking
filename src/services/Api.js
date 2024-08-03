@@ -9,25 +9,32 @@ export const profileImg = 'http://localhost:5002'
 
 
 const user = 'user'
-const admin ='admin'
+const admin = 'admin'
 
 export const non_auth_urls = {
     create_acc: user + `/signup`,
     login: user + '/login',
-    verify_email:user +'/verify-email',
-    resend_otp: user +'/resend-otp'
-
+    verify_email: user + '/verify-email',
+    resend_otp: user + '/resend-otp',
+    change_img: user + '/upload-img'
 }
 export const auth_urls = {
     profile: user + '/profile',
-    logout: user +'/logout',
-    change_img: user + '/upload-img'
+    logout: user + '/logout',
+    edit_profile: user +'/edit-profile',
+    user_savings: user +'/user-savings',
+    topup: user + '/top-up',
+    create_savings: user + '/create-savings',
+    trans_history: user + '/trans-history',
+    delete_savings : user + '/delete-savings',
+    all_cards:user + '/user-cards',
+    create_card: user + '/create-card'
 }
 export const Apis = {
     non_auth: non_auth_urls,
-    auth:auth_urls
+    auth: auth_urls
 
-    
+
 }
 
 export const ClientGetApi = async (endpoint) => {

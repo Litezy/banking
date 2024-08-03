@@ -14,8 +14,8 @@ const ModalLayout = ({children,setModal,clas}) => {
         }
     },[])
     return (
-        <div className="w-full z-50 h-screen absolute flex top-0 left-0 items-center justify-center bg-black/40 backdrop-blur-sm ">
-            <div ref={refdiv} className={`${clas}`}>{children}</div>
+        <div className="w-full z-50 h-screen absolute  flex top-0 left-0 items-center justify-center bg-black/40 backdrop-blur-sm ">
+            <div ref={refdiv} className={`${clas} overflow-y-auto`}>{children}</div>
         </div>
     )
 }

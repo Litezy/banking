@@ -12,6 +12,8 @@ import Transactions from "user/Transactions";
 import Notifications from "user/Notifications";
 import Settings from "user/Settings";
 import Profile from "user/Profile";
+import Loans from "user/Loans";
+import TopUpsavings from "user/TopUpsavings";
 
 
 
@@ -38,4 +40,6 @@ export const UserRoutes = [
     { path: 'notifications', component: Notifications },
     { path: 'settings', component: Settings },
     { path: 'profile', component: Profile },
+    { path: 'loans', component: Loans },
+   
 ]

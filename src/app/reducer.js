@@ -3,7 +3,9 @@ import { createSlice } from '@reduxjs/toolkit'
 const initialState = {
     profile: {},
     notifications: [], 
-    forms:{}
+    forms:{},
+    currency:null,
+    usersavings:[]
   };
   
   export const globalStates = createSlice({
@@ -17,7 +19,7 @@ const initialState = {
         state.forms = action.payload;
       },
       dispatchCurrency: (state, action) => {
-        state.forms = action.payload;
+        state.currency = action.payload;
       },
       updateForms: (state, action) => {
         const { name, value } = action.payload;
@@ -26,10 +28,13 @@ const initialState = {
       dispatchNotifications: (state, action) => {
         state.notifications = action.payload;
       },
+      dispatchUserSavings: (state, action) => {
+        state.usersavings = action.payload;
+      },
     },
   });
 
 
-export const { dispatchForms,dispatchNotifications,dispatchProfile,dispatchCurrency } = globalStates.actions
+export const { dispatchForms,dispatchNotifications,dispatchProfile,dispatchCurrency,dispatchUserSavings } = globalStates.actions
 
 export default globalStates.reducer

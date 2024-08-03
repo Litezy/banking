@@ -1,7 +1,7 @@
 import { Progress } from 'antd'
 import UserLayout from 'layouts/UserLayout'
-import React, { useEffect, useRef, useState } from 'react'
-import { FaArrowRight, FaMinus } from 'react-icons/fa6'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { FaArrowLeft, FaArrowRight, FaMinus } from 'react-icons/fa6'
 import { Link } from 'react-router-dom'
 import { Currency, errorMessage, successMessage } from 'utils/functions'
 import { BiSupport } from "react-icons/bi";
@@ -11,13 +11,50 @@ import { FaEdit, FaPlus } from "react-icons/fa";
 import Formbutton from 'utils/Formbutton'
 import { IoIosMailUnread } from 'react-icons/io'
 import CardComponent from 'components/user/CardComponent'
+import { Apis, GetApi, PostApi } from 'services/Api'
+import { useSelector } from 'react-redux'
+import ModalLayout from 'utils/ModalLayout'
+import FormComponent from 'utils/FormComponent'
+import ButtonComponent from 'utils/ButtonComponent'
+import Loader from 'utils/Loader'
 
 const Savings = () => {
 
     const [support, setSupport] = useState(false)
     const proofDiv = useRef(null)
     const [load, setLoad] = useState(false)
+    const [load2, setLoad2] = useState(false)
+    const [load3, setLoad3] = useState(false)
+    const [savings, setSavings] = useState([])
+    const [selectedItem, setSelectedItem] = useState({})
+    const [closeview, setCloseView] = useState(false)
     const [add, setAdd] = useState(false)
+    const [topup, setTopup] = useState(false)
+    const [createsave, setCreateSave] = useState(false)
+
+    const profile = useSelector((state) => state.profile.profile)
+    const currency = useSelector((state) => state.profile.currency)
+
+
+
+    const fetchUserSavings = useCallback(async () => {
+        if (!profile) return;
+        try {
+            const response = await GetApi(Apis.auth.user_savings)
+            if (response.status === 200) {
+                setSavings(response.data)
+            } else {
+                // console.log(response)
+            }
+        } catch (error) {
+            errorMessage(error.message)
+        }
+    }, [profile])
+
+    useEffect(() => {
+        fetchUserSavings()
+    }, [profile])
+
     const steps = [
         {
             step: 'Contact customer support',
@@ -33,6 +70,51 @@ const Savings = () => {
         },
     ]
 
+
+    const [saveForms, setSaveForms] = useState({
+        name: '',
+        goal: '',
+        current: ''
+    })
+
+
+    const handleChange = (e) => {
+        setSaveForms({
+            ...saveForms,
+            [e.target.name]: e.target.value
+        })
+    }
+
+    const createSavings = async (e) => {
+        e.preventDefault()
+        if (!saveForms.name) return errorMessage('Savings name is required')
+        if (!saveForms.goal) return errorMessage('Savings goal is required')
+        if (saveForms.current < 0 || saveForms.current === 0) return errorMessage(`Amount can not be negative or zero`)
+        if (saveForms.current > profile?.balance) return errorMessage(`Insufficient balance`)
+        const formdata = {
+            goal: saveForms.goal,
+            name: saveForms.name,
+            current: saveForms.current
+        }
+        setLoad3(true)
+        try {
+            const response = await PostApi(Apis.auth.create_savings, formdata)
+            if (response.status === 200) {
+                successMessage(response.msg)
+                setSaveForms({ ...saveForms, goal: '', name: '', current: '' })
+                setCreateSave(false)
+                fetchUserSavings()
+            } else {
+                errorMessage(response.msg)
+            }
+        } catch (error) {
+            errorMessage(error.message)
+        } finally {
+            setLoad3(false)
+        }
+    }
+
+
     const imgRef = useRef()
     const [proofimg, setProofimg] = useState({
         img: "",
@@ -46,6 +128,7 @@ const Savings = () => {
         })
     }
 
+    // console.log(savings)
     const handleImage = (e) => {
         const file = e.target.files[0]
         if (file.size >= 1000000) {
@@ -111,12 +194,106 @@ const Savings = () => {
         }
     ]
 
-    return (
-        <div className={`w-11/12 relative mx-auto ${add && 'overflow-hidden'}`}>
-            {support &&
-                <div className="w-full z-50 h-screen absolute flex items-center justify-center rounded-md bg-black/40 backdrop-blur-sm ">
+    const selectItem = (items) => {
+        setSelectedItem(items)
+    }
 
-                    <div ref={proofDiv} className={`lg:w-3/4 w-11/12 mx-auto rounded-lg bg-white  py-6 px-3 ${proofimg.img ? 'h-fit' : "h-80"}`}>
+    const [forms, setForms] = useState({
+        id: selectedItem.id,
+        amount: ''
+    })
+
+    const topUpSavings = async (e) => {
+        e.preventDefault()
+
+        if (forms.amount < 0) return errorMessage(`Amount can not be negative`)
+        const formdata = {
+            id: selectedItem.id,
+            amount: forms.amount
+        }
+        // return  console.log(formdata)
+        setLoad2(true)
+        try {
+            const response = await PostApi(Apis.auth.topup, formdata)
+            if (response.status === 200) {
+                successMessage(response.msg)
+                setCloseView(false)
+                setForms({ ...forms, id: '', amount: '' })
+                fetchUserSavings()
+            } else {
+                errorMessage(response.msg)
+            }
+        } catch (error) {
+            console.log(error)
+            errorMessage(error.message)
+        } finally {
+            setLoad2(false)
+
+        }
+    }
+
+
+    const deletsavings = async (e) => {
+        e.preventDefault()
+        const formdata = {
+            id: selectedItem.id
+        }
+        setLoad2(true)
+        try {
+           const response = await PostApi(Apis.auth.delete_savings,formdata)
+           if(response.status === 200){
+            successMessage(response.msg)
+            setCloseView(false)
+            setForms({ ...forms, id: '', amount: '' })
+            fetchUserSavings()
+           }else{
+            console.log(response)
+           }
+        } catch (error) {
+           errorMessage(error.message)
+        } finally {
+            setLoad2(false)
+        }
+    }
+    return (
+        <div className={`w-11/12  mx-auto ${add && 'overflow-hidden'}`}>
+
+            {createsave &&
+                <ModalLayout setModal={setCreateSave} clas={`lg:w-[60%] w-11/12 mx-auto`}>
+                    <form onSubmit={createSavings} className="h-fit w-full relative bg-white rounded-lg p-10">
+
+                        {load3 &&
+                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 ">
+                                <Loader />
+                            </div>
+                        }
+                        <div className="w-full flex items-start gap-5 flex-col ">
+                            <div className="flex w-full lg:items-center flex-col lg:flex-row justify-between">
+                                <div className="lg:w-[45%]">Savings Goal Name</div>
+                                <FormComponent name={'name'} value={saveForms.name} onchange={handleChange} />
+                            </div>
+                            <div className="flex w-full lg:items-center flex-col lg:flex-row justify-between">
+                                <div className="lg:w-[45%]">Goal</div>
+                                <FormComponent formtype='phone' name={'goal'} value={saveForms.goal} onchange={handleChange} />
+                            </div>
+                            <div className="flex w-full lg:items-center flex-col lg:flex-row justify-between">
+                                <div className="flex items-start lg:w-[45%]   flex-col">
+                                    <div className="w-full">Amount to add </div>
+                                    <div>Available bal. {currency}{profile?.balance}</div>
+                                </div>
+                                <FormComponent formtype='phone' name={'current'} value={saveForms.current} onchange={handleChange} />
+                            </div>
+                        </div>
+                        <div className="lg:w-1/2 mx-auto mt-8">
+                            <ButtonComponent title={`Create Savings`} bg={`text-white bg-primary h-14 `} />
+                        </div>
+                    </form>
+                </ModalLayout>
+            }
+
+            {support &&
+                <ModalLayout setModal={setSupport} clas={`lg:w-[60%] w-11/12 mx-auto`}>
+                    <div ref={proofDiv} className={`w-full p-10 rounded-lg bg-white h-fit `}>
                         <div className="w-full">
                             <form onSubmit={submitForm} className="lg:w-3/4 w-full mx-auto">
                                 <div className="text-lg font-semibold text-primary">Bank Details to make your transfer to:</div>
@@ -165,7 +342,65 @@ const Savings = () => {
                         </div>
 
                     </div>
-                </div>
+                </ModalLayout>
+            }
+
+            {closeview &&
+                <ModalLayout setModal={setCloseView} clas={`lg:w-[60%] w-11/12 mx-auto`}>
+                    <div className="w-full bg-white h-fit p-10 rounded-lg ">
+
+
+                        {load2 &&
+                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2">
+                                <Loader />
+                            </div>
+                        }
+                        <div className="grid grid-cols-1 ">
+                            <div className="flex gap-2 justify-center items-center">
+                                <Progress
+                                    type="dashboard"
+                                    steps={5}
+                                    percent={selectedItem.percent}
+                                    strokeColor="#003087"
+                                    trailColor="rgba(0, 0, 0, 0.06)"
+                                    strokeWidth={20} className='text-sm' />
+                                <div className=" bg-white p-3 rounded-xl w-full text-sm">
+                                    {/* <div className="border border-zinc-300 bg-white p-3 rounded-xl w-full text-sm"> */}
+                                    <div className="border-b py-1 text-zinc-500 text-right">Savings name: <span className='text-xl font-bold text-primary capitalize'>{selectedItem.name}</span></div>
+                                    <div className="border-b py-1">
+                                        <div className=" text-right">Savings Goal</div>
+                                        <div className="font-bold text-right text-primary">{currency}{selectedItem.goal}</div>
+                                    </div>
+                                    <div className="border-b py-1">
+                                        <div className=" text-right">Current Saved</div>
+                                        <div className="font-bold text-right text-primary">{currency}{selectedItem.current}</div>
+                                    </div>
+                                    <div className="border-b py-1">
+                                        <div className=" text-right">Last Saved</div>
+                                        <div className="font-bold text-right text-primary">{selectedItem.lastsaved} </div>
+                                    </div>
+                                    <div onClick={() => setCloseView(false)} className="py-1 flex justify-end cursor-pointer">
+                                        <div className='flex text-blue-600 items-center justify-end gap-2'>Close <FaArrowLeft /> </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <form onSubmit={topUpSavings} className="mt-5 w-full flex flex-col md:flex-row items-center gap-4 justify-between">
+                            <button type='button' onClick={() => setTopup(prev => !prev)} className='font-bold w-fit px-4 py-2 underline text-primary'>{topup ? 'Close' : 'TopUp Savings'}</button>
+                            {topup && <div className="flex items-center flex-col gap-1">
+                                <div className="flex flex-col items-start">
+                                    <div className="">Available Balance <span>{currency}{profile?.balance}</span></div>
+                                    <FormComponent name={`amount`} value={forms.amount} onchange={(e) => setForms({ ...forms, [e.target.name]: e.target.value })} formtype='phone' />
+                                </div>
+                                <ButtonComponent title={`Top Up`} bg={`bg-primary mt-2 text-white text-white h-10`} />
+                            </div>}
+                        </form>
+                        {!topup && <div className="mt-3 w-11/12 mx-auto">
+                            <ButtonComponent onclick={deletsavings} type='button' title={`Delete Savings`} bg={`bg-red-600   text-white h-10`} />
+                        </div>}
+                    </div>
+                </ModalLayout>
             }
 
             <div className="mt-4 flex flex-col lg:flex-row items-start h-fit py-5 mb-10 gap-10 ">
@@ -182,82 +417,48 @@ const Savings = () => {
                 <div onClick={() => setSupport(true)} className="w-fit cursor-pointer self-center text-white px-5 py-2 rounded-lg bg-primary">Contact Support</div>
             </div>
 
-            <div className="w-full grid md:grid-cols-2 grid-cols-1 ">
-                <div className="w-full flex items-start flex-col gap-2">
-                    <div className="text-xl font-semibold">This Month's Savings</div>
-                    {new Array(1).fill(0).map((item, index) => (
-                        <div key={index} className="flex gap-2 justify-center items-center">
-                            <Progress
-                                type="dashboard"
-                                steps={8}
-                                percent={82.5}
-                                strokeColor="#003087"
-                                trailColor="rgba(0, 0, 0, 0.06)"
-                                strokeWidth={20} />
-                            <div className=" bg-white p-3 rounded-xl w-full text-sm">
-                                {/* <div className="border border-zinc-300 bg-white p-3 rounded-xl w-full text-sm"> */}
-                                <div className="border-b py-1 text-zinc-500 text-right"> Reason for starting up a savings goal tracker </div>
-                                <div className="border-b py-1">
-                                    <div className=" text-right">Savings Goal</div>
-                                    <div className="font-bold text-right text-primary">{Currency}300,000</div>
-                                </div>
-                                <div className="border-b py-1">
-                                    <div className=" text-right">Current Saved</div>
-                                    <div className="font-bold text-right text-primary">{Currency}150,000</div>
-                                </div>
-                                <div className="border-b py-1">
-                                    <div className=" text-right">Last Saved</div>
-                                    <div className="font-bold text-right text-primary">3 Dec 2021 6:20 pm </div>
-                                </div>
-                                <div className="py-1 flex justify-end">
-                                    <Link to={`/user/savings/${3}`} className='flex text-blue-600 items-center justify-end gap-2'>More <FaArrowRight /> </Link>
-                                </div>
+            <div onClick={() => setCreateSave(true)} className=" mb-3 cursor-pointer w-fit ml-auto text-white bg-primary  px-5 py-2 rounded-md">Add New Goal</div>
+            <div className={`grid grid-cols-1 ${savings.length === 0 ? 'lg:grid-cols-1' : 'lg:grid-cols-2'} gap-5 lg:gap-10`}>
+
+                {savings.length > 0 ? savings.map((item, index) => (
+                    <div key={index} className="flex gap-2 justify-center items-center">
+                        <Progress
+                            type="dashboard"
+                            steps={5}
+                            percent={item.percent}
+                            strokeColor="#003087"
+                            trailColor="rgba(0, 0, 0, 0.06)"
+                            strokeWidth={20} />
+                        <div className=" bg-white p-3 rounded-xl w-full text-sm">
+                            {/* <div className="border border-zinc-300 bg-white p-3 rounded-xl w-full text-sm"> */}
+                            <div className="border-b py-1 text-zinc-500 text-right"> Savings name: <span className='text-xl font-bold capitalize text-primary'>{item.name}</span> </div>
+                            <div className="border-b py-1">
+                                <div className=" text-right">Savings Goal</div>
+                                <div className="font-bold text-right text-primary">{currency}{item.goal}</div>
                             </div>
-                        </div>
-                    ))}
-
-
-                </div>
-                <div className="w-full flex items-start flex-col gap-2">
-                    <div className="text-xl font-semibold">Last Month's Savings</div>
-                    {new Array(1).fill(0).map((item, index) => (
-                        <div key={index} className="flex gap-2 justify-center items-center">
-                            <Progress
-                                type="dashboard"
-                                steps={8}
-                                percent={82.5}
-                                strokeColor="#003087"
-                                trailColor="rgba(0, 0, 0, 0.06)"
-                                strokeWidth={20} />
-                            <div className=" bg-white p-3 rounded-xl w-full text-sm">
-                                {/* <div className="border border-zinc-300 bg-white p-3 rounded-xl w-full text-sm"> */}
-                                <div className="border-b py-1 text-zinc-500 text-right"> Reason for starting up a savings goal tracker </div>
-                                <div className="border-b py-1">
-                                    <div className=" text-right">Savings Goal</div>
-                                    <div className="font-bold text-right text-primary">{Currency}300,000</div>
-                                </div>
-                                <div className="border-b py-1">
-                                    <div className=" text-right">Current Saved</div>
-                                    <div className="font-bold text-right text-primary">{Currency}150,000</div>
-                                </div>
-                                <div className="border-b py-1">
-                                    <div className=" text-right">Last Saved</div>
-                                    <div className="font-bold text-right text-primary">3 Dec 2021 6:20 pm </div>
-                                </div>
-                                <div className="py-1 flex justify-end">
-                                    <Link to={`/user/savings/${3}`} className='flex text-blue-600 items-center justify-end gap-2'>More <FaArrowRight /> </Link>
-                                </div>
+                            <div className="border-b py-1">
+                                <div className=" text-right">Current Saved</div>
+                                <div className="font-bold text-right text-primary">{currency}{item.current}</div>
                             </div>
+                            <div className="border-b py-1">
+                                <div className=" text-right">Last Saved</div>
+                                <div className="font-bold text-right text-primary">{item.lastsaved} </div>
+                            </div>
+                            <Link onClick={() => setCloseView(true)} onMouseOver={() => selectItem(item)} className="py-1 flex justify-end cursor-pointer">
+                                <div className='flex text-blue-600 items-center justify-end gap-2'>More <FaArrowRight /> </div>
+                            </Link>
                         </div>
-                    ))}
+                    </div>
+                )) :
 
+                    <div className="mt-5 text-left text-2xl font-bold">No savings found...</div>
 
-                </div>
+                }
             </div>
 
-               <div className="my-10">
-                <CardComponent setAdd={setAdd} add={add}/>
-               </div>
+            <div className="my-10">
+                <CardComponent setAdd={setAdd} add={add} />
+            </div>
 
             {TransData.map((item, index) => (
                 <div className="rounded-xl mb-5  bg-white shadow-md border" key={index}>

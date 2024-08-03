@@ -158,3 +158,21 @@ input::-webkit-inner-spin-button {
 input[type=number] {
   appearance: textfield;
 }
+
+
+.refresh-icon {
+  display: inline-block;
+}
+
+.rotating {
+  animation: rotate 1s linear infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,201 +1,73 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { FaMinus } from 'react-icons/fa6'
 import { IoIosMailUnread } from 'react-icons/io'
-import { Currency } from 'utils/functions'
+import { useSelector } from 'react-redux'
+import { Apis, GetApi } from 'services/Api'
+import {  errorMessage, successMessage } from 'utils/functions'
+import { FaCopy } from "react-icons/fa";
 
 const Transactions = () => {
-  const TransData = [
-    {
-      title: 'Today',
-      data: [
-        {
-          title: 'Withdrawal',
-          amount: '1200',
-          content: `you have successfully transferred ${Currency}1,000 to keneth williams`,
-          status: 'Success',
-          date: '12:00 PM'
-        },
-        {
-          title: 'Deposit',
-          amount: '1,000',
-          status: 'Failed',
-          content: `you have successfully transferred ${Currency}1,000 to keneth williams`,
-          date: '11:00 PM'
-        },
-        {
-          title: 'Transfer',
-          amount: '500',
-          content: `you have successfully transferred ${Currency}1,000 to keneth williams`,
-          status: 'Success',
-          date: '10:00 PM'
-        },
-        {
-          title: 'Deposit',
-          amount: '1,000',
-          status: 'Failed',
-          content: `you have successfully transferred ${Currency}1,000 to keneth williams`,
-          date: '11:00 PM'
-        },
-        {
-          title: 'Transfer',
-          amount: '500',
-          content: `you have successfully transferred ${Currency}1,000 to keneth williams`,
-          status: 'Success',
-          date: '10:00 PM'
-        },
-        {
-          title: 'Withdrawal',
-          amount: '1200',
-          content: `you have successfully transferred ${Currency}1,000 to keneth williams`,
-          status: 'Success',
-          date: '12:00 PM'
-        },
-        {
-          title: 'Deposit',
-          amount: '1,000',
-          status: 'Failed',
-          content: `you have successfully transferred ${Currency}1,000 to keneth williams`,
-          date: '11:00 PM'
-        },
-        {
-          title: 'Transfer',
-          amount: '500',
-          content: `you have successfully transferred ${Currency}1,000 to keneth williams`,
-          status: 'Success',
-          date: '10:00 PM'
-        },
-        {
-          title: 'Deposit',
-          amount: '1,000',
-          status: 'Failed',
-          content: `you have successfully transferred ${Currency}1,000 to keneth williams`,
-          date: '11:00 PM'
-        },
-        {
-          title: 'Transfer',
-          amount: '500',
-          content: `you have successfully transferred ${Currency}1,000 to keneth williams`,
-          status: 'Success',
-          date: '10:00 PM'
-        },
-        {
-          title: 'Withdrawal',
-          amount: '1200',
-          content: `you have successfully transferred ${Currency}1,000 to keneth williams`,
-          status: 'Success',
-          date: '12:00 PM'
-        },
-        {
-          title: 'Deposit',
-          amount: '1,000',
-          status: 'Failed',
-          content: `you have successfully transferred ${Currency}1,000 to keneth williams`,
-          date: '11:00 PM'
-        },
-        {
-          title: 'Transfer',
-          amount: '500',
-          content: `you have successfully transferred ${Currency}1,000 to keneth williams`,
-          status: 'Success',
-          date: '10:00 PM'
-        },
-        {
-          title: 'Deposit',
-          amount: '1,000',
-          status: 'Failed',
-          content: `you have successfully transferred ${Currency}1,000 to keneth williams`,
-          date: '11:00 PM'
-        },
-        {
-          title: 'Transfer',
-          amount: '500',
-          content: `you have successfully transferred ${Currency}1,000 to keneth williams`,
-          status: 'Success',
-          date: '10:00 PM'
-        },
-        {
-          title: 'Deposit',
-          amount: '1,000',
-          status: 'Failed',
-          content: `you have successfully transferred ${Currency}1,000 to keneth williams`,
-          date: '11:00 PM'
-        },
-        {
-          title: 'Transfer',
-          amount: '500',
-          content: `you have successfully transferred ${Currency}1,000 to keneth williams`,
-          status: 'Success',
-          date: '10:00 PM'
-        },
-        {
-          title: 'Transfer',
-          amount: '700',
-          content: `you have successfully transferred ${Currency}1,000 to keneth williams`,
-          status: 'Failed',
-          date: '9:00 PM'
-        }
-      ]
-    },
-  ]
+  
+  const [transdata,setTransData]= useState([])
+  const [selectedItem,setSelectedItem]= useState({})
+  const fetchTransHistory = useCallback( async ()=>{
+     try {
+       const response = await GetApi(Apis.auth.trans_history)
+       console.log(response)
+       if(response.status === 200){
+         setTransData(response.data)
+       }else{
+        console.log(response.msg)
+       }
+     } catch (error) {
+      errorMessage(error.message)
+     }
+  },[])
 
-
+  const currency = useSelector((state)=>state.profile.currency)
+useEffect(()=>{
+  fetchTransHistory()
+},[])
   const [currentPage, setCurrentPage] = useState(1)
   const recordsPerPage = 6;
   let lastIndex = currentPage * recordsPerPage;
   let firstIndex = lastIndex - recordsPerPage;
-  const records = TransData
-  const npage = Math.ceil(TransData[0].data.length / recordsPerPage)
+  const records = transdata.slice(firstIndex,lastIndex)
+  const npage = Math.ceil(transdata.length / recordsPerPage)
   const numbers = Array.from({ length: npage }, (_, i) => i + 1);
 
-    if(records[0].data.length === 0){
-      firstIndex = 0
-    }
-     if(firstIndex === 0){
-      firstIndex = 1
-    }
-  
   const prevPage = () => {
     if (currentPage !== 1) {
-      setCurrentPage(currentPage - 1)
+      setCurrentPage(currentPage - 1);
     }
   }
+  
   const nextPage = () => {
     if (currentPage !== npage) {
-      setCurrentPage(currentPage + 1)
+      setCurrentPage(currentPage + 1);
     }
   }
-
+  
   const changeCurrentPage = (id, e) => {
-    e.preventDefault()
-    setCurrentPage(id)
+    e.preventDefault();
+    setCurrentPage(id);
   }
 
-  // console.log(records)
-  const [user,setUser] = useState({
-    country:'China'
-  })
-  const [data,setData] = useState('')
-  const [currency,setCurrency] = useState()
-  useEffect(() => {
-    const fetchCurrency = async () => {
-      try {
-        const response = await axios.get(`https://restcountries.com/v3.1/name/${user.country}`);
-        if (response.data && response.data.length > 0) {
-          const countryData = response.data[0]; 
-          const currencySymbol = Object.values(countryData.currencies)[0].symbol;
-          setCurrency(currencySymbol);
-          // console.log(`Country: ${user.country}, Currency: ${currencySymbol}`)
-        } else {
-          console.error('Unexpected response format:', response);
-        }
-      } catch (error) {
-        console.error('Error fetching currency:', error);
-      }
-    };
+ 
+  const selectOne = (item)=>{
+    setSelectedItem(item)
+  }
 
-    fetchCurrency();
-  }, [user.country]);
+  const copyToClip = async () => {
+    try {
+      await navigator.clipboard.writeText(selectedItem.transaction_id);
+      successMessage('transaction ID copied!');
+    } catch (err) {
+      errorMessage('Failed to copy!');
+    }
+  };
+
   return (
     <div className='w-full'>
       <div className="w-11/12 mx-auto mt-10">
@@ -206,10 +78,7 @@ const Transactions = () => {
             <div className="rounded-xl mb-5 bg-white shadow-md border" key={index}>
               <div className="p-3"> {item.title}</div>
               <div className="flex flex-col">
-                {item.data.slice(firstIndex,lastIndex).map((ele, i) => (
-                  <div
-                    // onClick={() => setViews({status: true, data: ele})}
-                    key={i} className="p-3 border-b last:border-none cursor-pointer">
+                  <div className="p-3 border-b last:border-none cursor-pointer">
                     <div className="grid grid-cols-2">
                       <div className="flex items-center gap-3">
                         <div className="rounded-full p-1 bg-blue-300 text-blue-50">
@@ -217,18 +86,24 @@ const Transactions = () => {
                             <IoIosMailUnread className='text-xl' />
                           </div>
                         </div>
-                        <div className="text-sm font-bold">{ele.title}</div>
+                        <div className="text-sm font-bold">{item.type}</div>
                         <FaMinus className='text-slate-500' />
-                        <div className={`text-xs font-semibold ${ele.status === 'Success' ? 'text-green-600' : 'text-red-600'}`}>{ele.status}</div>
+                        <div className={`text-xs font-semibold ${item.status === 'success' ? 'text-green-600' : 'text-red-600'}`}>{item.status}</div>
                       </div>
                       <div className="">
-                        <div className={`text-base font-bold text-right ${ele.status === 'Success' ? 'text-green-600' : 'text-red-600'}`}>{ele.status === "Success" ? '+' : '-'}{Currency}{parseInt(ele.amount).toLocaleString()}</div>
-                        <div className="text-xs text-right">{ele.date}</div>
+                        <div className={`text-base font-bold text-right ${item.status === 'success' ? 'text-green-600' : 'text-red-600'}`}>{item.status === "success" ? '+' : '-'}{currency}{parseInt(item.amount).toLocaleString()}</div>
+                        <div className="text-xs text-right">{item.date}</div>
                       </div>
                     </div>
-                    <div className="text-sm text-slate-500">{ele.content}</div>
+                    <div className="text-sm text-slate-500">{item.message}</div>
+                    <div className="flex items-center gap-3 text-sm mt-2 text-slate-500">
+                      <div className="">Transaction ID:</div>
+                      <div className="">{item.transaction_id}</div>
+                      <div onClick={copyToClip} onMouseOver={()=> selectOne(item)} className="">
+                      <FaCopy className='text-blue-400 text-lg'/>
+                      </div>
+                    </div>
                   </div>
-                ))}
               </div>
             </div>
           ))}
@@ -237,9 +112,9 @@ const Transactions = () => {
         <div className="w-fit ml-auto mr-5 mt-5">
           <div class="w-full flex flex-col items-center ">
             <span class="text-sm text-gray-700 ">
-              Showing <span class="font-semibold text-black">{firstIndex}</span> to
-              <span class="font-semibold text-black"> {lastIndex > TransData[0].data.length ? TransData[0].data.length : lastIndex}</span> of
-              <span class="font-semibold text-black"> {TransData[0].data.length} </span>
+              Showing <span class="font-semibold text-black">{firstIndex === 0? '1': firstIndex}</span> to
+              <span class="font-semibold text-black"> {lastIndex > transdata.length ? transdata.length : lastIndex}</span> of
+              <span class="font-semibold text-black"> {transdata.length} </span>
               Transactions
             </span>
 
