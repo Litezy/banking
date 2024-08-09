@@ -14,7 +14,7 @@ import img2 from 'assets/img2.png'
 import img3 from 'assets/img3.png'
 import Imaged from 'utils/Imaged'
 import { Apis, GetApi, profileImg } from 'services/Api'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { dispatchCurrency, dispatchProfile, dispatchUserSavings } from 'app/reducer'
 import axios from 'axios'
 import ModalLayout from 'utils/ModalLayout'
@@ -57,8 +57,8 @@ const TransData = [
 
 
 const DashboardOptions = [
-    { img: img1, url: '', title: 'Transfer' },
-    { img: img3, url: '', title: 'Savings' },
+    { img: img1, url: '/user/transfer', title: 'Transfer' },
+    { img: img3, url: '/user/savings', title: 'Savings' },
 ]
 
 export default function Dashboard() {
@@ -67,6 +67,8 @@ export default function Dashboard() {
     const [profile, setProfile] = useState(null);
     const [currency, setCurrency] = useState();
     const [userSavings, setUserSavings] = useState([])
+    const [records,setRecords]= useState([])
+    const [notice, setNotice] = useState([])
     const [selectSaving, setSelectSaving] = useState({})
     const [viewMore, setViewMore] = useState(false)
 
@@ -123,10 +125,43 @@ export default function Dashboard() {
         }
     }, [profile])
 
+
+
     useEffect(() => {
         fetchCurrency();
         fetchUserSavings()
     }, [profile, fetchCurrency]);
+
+
+    const fetchUserNotifications = useCallback(async () => {
+        try {
+            const response = await GetApi(Apis.auth.user_notifications)
+            if (response.status === 200) {
+                const filter = response.data.filter((item) => item.status === 'unread')
+                setNotice(filter)
+            } else {
+                console.log(response)
+            }
+        } catch (error) {
+            console.error('Error fetching currency:', error);
+        }
+    }, [])
+    const fetchTransHistory = useCallback( async ()=>{
+        try {
+          const response = await GetApi(Apis.auth.trans_history)
+          if(response.status === 200){
+            setRecords(response.data)
+          }else{
+           console.log(response.msg)
+          }
+        } catch (error) {
+         errorMessage(error.message)
+        }
+     },[])
+    useEffect(() => {
+        fetchUserNotifications()
+        fetchTransHistory()
+    }, [profile, dispatch])
 
 
     const selectOne = (item) => {
@@ -139,36 +174,36 @@ export default function Dashboard() {
                 {viewMore &&
                     <ModalLayout setModal={setViewMore} clas={`lg:w-fit w-11/12 mx-auto`}>
                         <div className="w-full bg-white h-fit p-10 rounded-lg ">
-                        <div className="grid grid-cols-1 ">
-                            <div  className="flex gap-2 justify-center items-center">
-                                <Progress
-                                    type="dashboard"
-                                    steps={5}
-                                    percent={selectSaving.percent}
-                                    strokeColor="#003087"
-                                    trailColor="rgba(0, 0, 0, 0.06)"
-                                    strokeWidth={20} />
-                                <div className=" bg-white p-3 rounded-xl w-full text-sm">
-                                    {/* <div className="border border-zinc-300 bg-white p-3 rounded-xl w-full text-sm"> */}
-                                    <div className="border-b py-1 text-zinc-500 text-right">Savings name: <span className='text-xl font-bold text-primary capitalize'>{selectSaving.name}</span></div>
-                                    <div className="border-b py-1">
-                                        <div className=" text-right">Savings Goal</div>
-                                        <div className="font-bold text-right text-primary">{currency}{selectSaving.goal}</div>
-                                    </div>
-                                    <div className="border-b py-1">
-                                        <div className=" text-right">Current Saved</div>
-                                        <div className="font-bold text-right text-primary">{currency}{selectSaving.current}</div>
-                                    </div>
-                                    <div className="border-b py-1">
-                                        <div className=" text-right">Last Saved</div>
-                                        <div className="font-bold text-right text-primary">{selectSaving.lastsaved} </div>
-                                    </div>
-                                    <div onClick={()=> setViewMore(false)} className="py-1 flex justify-end cursor-pointer">
-                                        <div className='flex text-blue-600 items-center justify-end gap-2'>Close <FaArrowLeft /> </div>
+                            <div className="grid grid-cols-1 ">
+                                <div className="flex gap-2 justify-center items-center">
+                                    <Progress
+                                        type="dashboard"
+                                        steps={5}
+                                        percent={selectSaving.percent}
+                                        strokeColor="#003087"
+                                        trailColor="rgba(0, 0, 0, 0.06)"
+                                        strokeWidth={20} />
+                                    <div className=" bg-white p-3 rounded-xl w-full text-sm">
+                                        {/* <div className="border border-zinc-300 bg-white p-3 rounded-xl w-full text-sm"> */}
+                                        <div className="border-b py-1 text-zinc-500 text-right">Savings name: <span className='text-xl font-bold text-primary capitalize'>{selectSaving.name}</span></div>
+                                        <div className="border-b py-1">
+                                            <div className=" text-right">Savings Goal</div>
+                                            <div className="font-bold text-right text-primary">{currency}{selectSaving.goal}</div>
+                                        </div>
+                                        <div className="border-b py-1">
+                                            <div className=" text-right">Current Saved</div>
+                                            <div className="font-bold text-right text-primary">{currency}{selectSaving.current}</div>
+                                        </div>
+                                        <div className="border-b py-1">
+                                            <div className=" text-right">Last Saved</div>
+                                            <div className="font-bold text-right text-primary">{selectSaving.lastsaved} </div>
+                                        </div>
+                                        <div onClick={() => setViewMore(false)} className="py-1 flex justify-end cursor-pointer">
+                                            <div className='flex text-blue-600 items-center justify-end gap-2'>Close <FaArrowLeft /> </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                    </div>
                         </div>
                     </ModalLayout>
                 }
@@ -199,7 +234,7 @@ export default function Dashboard() {
                                 <AiOutlineScan />
                             </Link>
                             <Link to="/user/notifications" className='relative'>
-                                <div className="w-3 h-3 bg-red-600 rounded-full border-2 border-white absolute top-0 right-0 shadow-lg"></div>
+                                {notice && <div className="w-3 h-3 bg-red-600 rounded-full border-2 border-white absolute top-0 right-0 shadow-lg"></div>}
                                 <BsBell />
                             </Link>
                         </div>
@@ -283,14 +318,12 @@ export default function Dashboard() {
                     </div>
                 </div>
 
-                {TransData.map((item, index) => (
-                    <div className="rounded-xl mb-5 bg-white shadow-md border" key={index}>
-                        <div className="p-3"> {item.title}</div>
-                        <div className="flex flex-col">
-                            {item.data.map((ele, i) => (
-                                <div
-                                    // onClick={() => setViews({status: true, data: ele})}
-                                    key={i} className="p-3 border-b last:border-none cursor-pointer">
+                <div className="mt-5 w-full rounded-xl mb-5 bg-white shadow-md ">
+                    {records.slice(0,4).map((item, index) => (
+                        <div className="border-b my-2" key={index}>
+                            <div className=""> {item.title}</div>
+                            <div className="flex flex-col">
+                                <div className="p-3 border-b last:border-none cursor-pointer">
                                     <div className="grid grid-cols-2">
                                         <div className="flex items-center gap-3">
                                             <div className="rounded-full p-1 bg-blue-300 text-blue-50">
@@ -298,21 +331,22 @@ export default function Dashboard() {
                                                     <IoIosMailUnread className='text-xl' />
                                                 </div>
                                             </div>
-                                            <div className="text-sm font-bold">{ele.title}</div>
+                                            <div className="text-sm font-bold">{item.type}</div>
                                             <FaMinus className='text-slate-500' />
-                                            <div className={`text-xs font-semibold ${ele.status === 'Success' ? 'text-green-600' : 'text-red-600'}`}>{ele.status}</div>
+                                            <div className={`text-xs font-semibold ${item.status === 'success' ? 'text-green-600' : 'text-red-600'}`}>{item.status}</div>
                                         </div>
                                         <div className="">
-                                            <div className={`text-base font-bold text-right ${ele.status === 'Success' ? 'text-green-600' : 'text-red-600'}`}>{ele.status === "Success" ? '+' : '-'}{Currency}{parseInt(ele.amount).toLocaleString()}</div>
-                                            <div className="text-xs text-right">{ele.date}</div>
+                                            <div className={`text-base font-bold text-right ${item.status === 'success' ? 'text-green-600' : 'text-red-600'}`}>{item.status === "success" ? '+' : '-'}{currency}{parseInt(item.amount).toLocaleString()}</div>
+                                            <div className="text-xs text-right">{item.date}</div>
                                         </div>
                                     </div>
-                                    <div className="text-sm text-slate-500">{ele.content}</div>
+                                    <div className="text-sm text-slate-500">{item.message}</div>
+                                    
                                 </div>
-                            ))}
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
         </div>
     )

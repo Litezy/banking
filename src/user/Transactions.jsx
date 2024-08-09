@@ -14,7 +14,6 @@ const Transactions = () => {
   const fetchTransHistory = useCallback( async ()=>{
      try {
        const response = await GetApi(Apis.auth.trans_history)
-       console.log(response)
        if(response.status === 200){
          setTransData(response.data)
        }else{

@@ -7,7 +7,7 @@ export default function Formbutton({ type = "submit", label, loading }) {
             disabled={loading ? true : false}
             className={`
             ${loading ? 'cursor-not-allowed' : ''}
-            w-full relative py-3.5 px-5 rounded-lg bg-gradient-to-tr from-primary to-purple-700 text-white
+            w-full relative py-3.5  px-5 rounded-lg bg-gradient-to-tr from-primary to-purple-700 text-white
             `} type={type}>
                 {label}
                {loading && <div className="btn-spinner center">

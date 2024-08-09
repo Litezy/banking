@@ -6,6 +6,7 @@ import { FaAsterisk } from "react-icons/fa6";
 import FormComponent from 'utils/FormComponent';
 import ModalLayout from 'utils/ModalLayout';
 import Loader from 'utils/Loader';
+import { useSelector } from 'react-redux';
 
 const Transfer = () => {
   const [bal, setBal] = useState(false)
@@ -14,6 +15,8 @@ const Transfer = () => {
   const [otp, setOtp] = useState(false)
 
   const Icon = bal ? IoEyeOutline : IoEyeOffSharp
+  const profile = useSelector((state)=> state.profile.profile)
+  const currency = useSelector((state)=> state.profile.currency)
 
   const RequestOtp = () => {
     setSubmit(false)
@@ -39,11 +42,11 @@ const Transfer = () => {
             <Icon onClick={() => setBal(prev => !prev)} className='text-2xl cursor-pointer' />
           </div>
           <div className="flex mt-5 self-center ">
-            <div className="text-slate-200 text-2xl self-end font-bold">{Currency}</div>
-            <div className="font-bold text-3xl text-white">{bal ? '30,000,000' :
+            <div className="text-slate-200 text-2xl self-end font-bold">{currency}</div>
+            <div className="font-bold text-3xl text-white">{bal ? profile?.balance :
               <>
                 <div className="flex">
-                  {new Array(5).fill(0).map((item, i) => (
+                  {new Array(3).fill(0).map((item, i) => (
                     <div className="flex items-center text-sm ml-2" key={i}><FaAsterisk /></div>
                   ))}
                 </div>
@@ -94,7 +97,7 @@ const Transfer = () => {
               <input type="text" className='outline-none w-full border-b' />
             </div>
             <div className="flex items-start flex-col lg:w-1/2 w-full">
-              <div className="-500 text-base">Routine No: (Optional)</div>
+              <div className="-500 text-base">Route No: (Optional)</div>
               <input type="text" className='outline-none w-full border-b' />
             </div>
             <div className="flex items-start flex-col lg:w-1/2 w-full">

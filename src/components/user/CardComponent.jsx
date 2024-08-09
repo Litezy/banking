@@ -168,7 +168,7 @@ const CardComponent = ({ setAdd, add }) => {
             }
 
             <div className="flex w-full items-center justify-between">
-                <div className="mb-2 text-2xl font-semibold">My Cards</div>
+                <div className="mb-2 text-xl font-semibold">My Cards</div>
                 {allcards.length < 2 &&
                     <button onClick={() => setAdd(true)} className='w-fit px-5 py-2 rounded-lg bg-primary text-white'>Add New Card</button>
                 }
@@ -176,7 +176,7 @@ const CardComponent = ({ setAdd, add }) => {
             {Array.isArray(allcards) && allcards.length > 0 ? <div className=" mx-auto grid grid-cols-1 md:grid-cols-2 gap-5">
                 {allcards.map((item, i) => {
                     return (
-                        <div key={i} className={`h-[17rem] w-full bg-gradient-to-tr from-[#5635a7] via-[#9b4de0] to-[#ea3d5a]  rounded-lg py-6 px-5`}>
+                        <div key={i} className={`h-[17rem] w-full bg-gradient-to-tr from-[#1d253f] via-[#152878] to-[#0b2cc9]  rounded-lg py-6 px-5`}>
                             <div className="flex flex-col text-white h-full justify-between">
                                 <div className="flex items-center  justify-between">
                                     <div className="font-semibold text-xl">Credit</div>
@@ -184,22 +184,22 @@ const CardComponent = ({ setAdd, add }) => {
                                 </div>
                                 <div className="mb-2 flex  items-center justify-between  text-white text-base">
                                     <div className="flex-col flex items-start">
-                                        <div className="text-sm">card No.</div>
+                                        <div className="text-sm">Card No.</div>
                                         <div className="text-xl font-semibold">{item.card_no}</div>
                                     </div>
                                     <div className="flex items-center mr-3 flex-col">
                                         <div className="">cvv</div>
-                                        <div className="text-2xl font-bold">{item.cvv}</div>
+                                        <div className="text-xl font-bold">{item.cvv}</div>
                                     </div>
                                 </div>
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-start flex-col">
-                                        <div className="text-sm">card holder</div>
+                                        <div className="text-sm">Card holder</div>
                                         <div className="font-bold text-2xl">{item.name}</div>
                                     </div>
                                     <div className="flex items-center flex-col">
                                         <div className="text-sm">exp</div>
-                                        <div className="font-bold text-2xl">{item.exp}</div>
+                                        <div className="font-bold text-xl">{item.exp}</div>
                                     </div>
                                 </div>
                             </div>

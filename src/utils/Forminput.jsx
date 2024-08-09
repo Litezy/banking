@@ -14,7 +14,7 @@ export default function Forminput({ onChange, formtype, isError, label, name, pl
   return (
     <div className='mb-3'>
       <FormControl fullWidth error={isError}>
-        {formtype === 'checkbox' && <FormControlLabel required control={<Checkbox />} label={placeholder} />}
+        {formtype === 'checkbox' && <FormControlLabel  control={<Checkbox />} label={placeholder} />}
         <InputLabel className='bg-white py-1 px-4' htmlFor="component-outlined">{label}</InputLabel>
         {formtype === 'select' &&
           <>

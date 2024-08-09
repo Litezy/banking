@@ -13,7 +13,13 @@ import Notifications from "user/Notifications";
 import Settings from "user/Settings";
 import Profile from "user/Profile";
 import Loans from "user/Loans";
-import TopUpsavings from "user/TopUpsavings";
+import AdminDashboard from "admin/AdminDashboard";
+import AllSavings from "admin/adminComponents/AllSavings";
+import AllTransfers from "admin/adminComponents/AllTransfers";
+import AllUsers from "admin/adminComponents/AllUsers";
+import CreateLoans from "admin/adminComponents/CreateLoans";
+import AllTransactions from "admin/adminComponents/AllTransactions";
+import AdminSettings from "admin/adminComponents/AdminSettings";
 
 
 
@@ -41,5 +47,15 @@ export const UserRoutes = [
     { path: 'settings', component: Settings },
     { path: 'profile', component: Profile },
     { path: 'loans', component: Loans },
+   
+]
+export const AdminRoutes = [
+    { path: 'overview', component: AdminDashboard },
+    { path: 'savings', component: AllSavings },
+    { path: 'transfers', component: AllTransfers },
+    { path: 'transactions', component: AllTransactions },
+    { path: 'users', component: AllUsers },
+    { path: 'loans', component: CreateLoans },
+    { path: 'settings', component: AdminSettings },
    
 ]

@@ -17,11 +17,13 @@ import ModalLayout from 'utils/ModalLayout'
 import FormComponent from 'utils/FormComponent'
 import ButtonComponent from 'utils/ButtonComponent'
 import Loader from 'utils/Loader'
+import UserBanks from 'utils/UserBanks'
 
 const Savings = () => {
 
     const [support, setSupport] = useState(false)
     const proofDiv = useRef(null)
+    const [records, setRecords] = useState([])
     const [load, setLoad] = useState(false)
     const [load2, setLoad2] = useState(false)
     const [load3, setLoad3] = useState(false)
@@ -155,44 +157,50 @@ const Savings = () => {
         }
     }, [])
 
-    const submitForm = (e) => {
+    const submitForm = async (e) => {
         e.preventDefault()
+        const formdata = new FormData()
+        formdata.append('firstname',profile?.firstname)
+        formdata.append('image', proofimg.image)
         setLoad(true)
-        setTimeout(() => {
-            setLoad(false)
-            setSupport(false)
-            successMessage('Transaction submitted')
-        }, 4000)
+        try {
+            const res = await PostApi(Apis.auth.deposit,formdata)
+            if(res.status === 200){
+                setTimeout(() => {
+                    setLoad(false)
+                    setSupport(false)
+                    successMessage('Transaction proof submitted')
+                    setProofimg({
+                        img: '',
+                        image: null
+                    })
+                }, 2000)
+            }else{
+                errorMessage(res.msg)
+            }
+        } catch (error) {
+            errorMessage(error.message)
+        }
+        
     }
 
-    const TransData = [
-        {
-            title: 'Today',
-            data: [
-                {
-                    title: 'Withdrawal',
-                    amount: '1200',
-                    content: `you have successfully transferred ${Currency}1,000 to keneth williams`,
-                    status: 'Success',
-                    date: '12:00 PM'
-                },
-                {
-                    title: 'Deposit',
-                    amount: '1,000',
-                    status: 'Failed',
-                    content: `you have successfully transferred ${Currency}1,000 to keneth williams`,
-                    date: '11:00 PM'
-                },
-                {
-                    title: 'Transfer',
-                    amount: '500',
-                    content: `you have successfully transferred ${Currency}1,000 to keneth williams`,
-                    status: 'Success',
-                    date: '10:00 PM'
-                },
-            ]
+    const fetchTransHistory = useCallback(async () => {
+        try {
+            const response = await GetApi(Apis.auth.trans_history)
+            if (response.status === 200) {
+                setRecords(response.data)
+            } else {
+                console.log(response.msg)
+            }
+        } catch (error) {
+            errorMessage(error.message)
         }
-    ]
+    }, [])
+
+
+    useEffect(() => {
+        fetchTransHistory()
+    }, [profile, createSavings])
 
     const selectItem = (items) => {
         setSelectedItem(items)
@@ -240,17 +248,17 @@ const Savings = () => {
         }
         setLoad2(true)
         try {
-           const response = await PostApi(Apis.auth.delete_savings,formdata)
-           if(response.status === 200){
-            successMessage(response.msg)
-            setCloseView(false)
-            setForms({ ...forms, id: '', amount: '' })
-            fetchUserSavings()
-           }else{
-            console.log(response)
-           }
+            const response = await PostApi(Apis.auth.delete_savings, formdata)
+            if (response.status === 200) {
+                successMessage(response.msg)
+                setCloseView(false)
+                setForms({ ...forms, id: '', amount: '' })
+                fetchUserSavings()
+            } else {
+                console.log(response)
+            }
         } catch (error) {
-           errorMessage(error.message)
+            errorMessage(error.message)
         } finally {
             setLoad2(false)
         }
@@ -459,15 +467,17 @@ const Savings = () => {
             <div className="my-10">
                 <CardComponent setAdd={setAdd} add={add} />
             </div>
+            <div className="my-10">
+                <UserBanks setAdd={setAdd} add={add} />
+            </div>
 
-            {TransData.map((item, index) => (
-                <div className="rounded-xl mb-5  bg-white shadow-md border" key={index}>
-                    <div className="p-3"> {item.title}</div>
-                    <div className="flex flex-col">
-                        {item.data.map((ele, i) => (
-                            <div
-                                // onClick={() => setViews({status: true, data: ele})}
-                                key={i} className="p-3 border-b last:border-none cursor-pointer">
+            <div className="mt-5 text-xl font-semibold">Latest Savings Transactions</div>
+            <div className=" w-full bg-white shadow-lg">
+                {records.slice(0, 5).map((item, index) => (
+                    <div className="rounded-xl border-b " key={index}>
+                        <div className=""> {item.title}</div>
+                        <div className="flex flex-col">
+                            <div className="p-3 border-b last:border-none cursor-pointer">
                                 <div className="grid grid-cols-2">
                                     <div className="flex items-center gap-3">
                                         <div className="rounded-full p-1 bg-blue-300 text-blue-50">
@@ -475,21 +485,25 @@ const Savings = () => {
                                                 <IoIosMailUnread className='text-xl' />
                                             </div>
                                         </div>
-                                        <div className="text-sm font-bold">{ele.title}</div>
+                                        <div className="text-sm font-bold">{item.type}</div>
                                         <FaMinus className='text-slate-500' />
-                                        <div className={`text-xs font-semibold ${ele.status === 'Success' ? 'text-green-600' : 'text-red-600'}`}>{ele.status}</div>
+                                        <div className={`text-xs font-semibold ${item.status === 'success' ? 'text-green-600' : 'text-red-600'}`}>{item.status}</div>
                                     </div>
                                     <div className="">
-                                        <div className={`text-base font-bold text-right ${ele.status === 'Success' ? 'text-green-600' : 'text-red-600'}`}>{ele.status === "Success" ? '+' : '-'}{Currency}{parseInt(ele.amount).toLocaleString()}</div>
-                                        <div className="text-xs text-right">{ele.date}</div>
+                                        <div className={`text-base font-bold text-right ${item.status === 'success' ? 'text-green-600' : 'text-red-600'}`}>{item.status === "success" ? '+' : '-'}{currency}{parseInt(item.amount).toLocaleString()}</div>
+                                        <div className="text-xs text-right">{item.date}</div>
                                     </div>
                                 </div>
-                                <div className="text-sm text-slate-500">{ele.content}</div>
+                                <div className="text-sm text-slate-500 lg:max-w-[75%]">{item.message}</div>
+                                <div className="flex items-center gap-3 text-sm mt-2 text-slate-500">
+                                    <div className="">Transaction ID:</div>
+                                    <div className="">{item.transaction_id}</div>
+                                </div>
                             </div>
-                        ))}
+                        </div>
                     </div>
-                </div>
-            ))}
+                ))}
+            </div>
         </div>
     )
 }

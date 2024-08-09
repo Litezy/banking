@@ -111,6 +111,7 @@ body {
     -webkit-transform: rotate(240deg);
     -ms-transform: rotate(240deg);
     transform: rotate(240deg);
+    
   }
   
   .btn-spinner .btn-spinner-blade:nth-child(10) {
@@ -174,5 +175,6 @@ input[type=number] {
   }
   to {
     transform: rotate(360deg);
+    
   }
 }

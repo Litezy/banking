@@ -4,7 +4,7 @@ import ButtonComponent from 'utils/ButtonComponent';
 import FormComponent from 'utils/FormComponent';
 import { FaEdit } from "react-icons/fa";
 import { useSelector } from 'react-redux';
-import { Apis, ClientPostApi, GetApi, PostApi } from 'services/Api';
+import { Apis, ClientPostApi, GetApi, PostApi, profileImg } from 'services/Api';
 import { errorMessage, successMessage } from 'utils/functions';
 import { FaUserLarge } from 'react-icons/fa6';
 import { useNavigate } from 'react-router-dom';
@@ -183,6 +183,10 @@ const Profile = () => {
                     <div className="md:w-1/2 w-full h-fit pb-5  px-3 bg-white rounded-md">
                         <div className="mt-5 w-full flex items-start flex-col gap-5">
                             <div className="text-xl font-light ">Account Information</div>
+                    <div className="w-full flex items-center justify-center">
+                        <img src={`${profileImg}/profiles/${profile?.image}`} className='w-32 h-32 object-cover rounded-full' alt={`profile image`} />
+                    </div>
+
                             <div className="flex items-start flex-col w-full justify-between gap-5">
                                 <div className="flex items-start flex-col w-full ">
                                     <div className="">First Name</div>

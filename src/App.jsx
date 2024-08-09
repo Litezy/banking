@@ -1,13 +1,15 @@
 import React from 'react'
 import {BrowserRouter, Route, Routes} from 'react-router-dom'
-import { FormRoutes, GeneralRoutes, UserRoutes } from './routes'
+import { AdminRoutes, FormRoutes, GeneralRoutes, UserRoutes } from './routes'
 import UserLayout from './layouts/UserLayout'
 import AuthRoutes from 'services/AuthRoutes'
 import TopUpsavings from 'user/TopUpsavings'
+import AdminLayout from 'layouts/AdminLayout'
 
 export default function App() {
   const user = '/user/'
   const general = '/'
+  const admin ='/admin/'
   return (
     <BrowserRouter>
     <Routes>
@@ -19,6 +21,9 @@ export default function App() {
       ))}
       {UserRoutes.map((item, index) => (
         <Route key={index} path={`${user}${item.path}`} element={<UserLayout> <AuthRoutes><item.component /></AuthRoutes> </UserLayout>} />
+      ))}
+      {AdminRoutes.map((item, index) => (
+        <Route key={index} path={`${admin}${item.path}`} element={<AdminLayout> <AuthRoutes><item.component /></AuthRoutes> </AdminLayout>} />
       ))}
      
     </Routes>

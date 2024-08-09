@@ -16,23 +16,46 @@ export const non_auth_urls = {
     login: user + '/login',
     verify_email: user + '/verify-email',
     resend_otp: user + '/resend-otp',
-    change_img: user + '/upload-img'
+    change_img: user + '/upload-img',
+    find_account: user + '/find-account'
 }
 export const auth_urls = {
     profile: user + '/profile',
     logout: user + '/logout',
-    edit_profile: user +'/edit-profile',
-    user_savings: user +'/user-savings',
+    edit_profile: user + '/edit-profile',
+    user_savings: user + '/user-savings',
     topup: user + '/top-up',
     create_savings: user + '/create-savings',
     trans_history: user + '/trans-history',
-    delete_savings : user + '/delete-savings',
-    all_cards:user + '/user-cards',
-    create_card: user + '/create-card'
+    delete_savings: user + '/delete-savings',
+    all_cards: user + '/user-cards',
+    create_card: user + '/create-card',
+    user_notifications: user + '/user-notifications',
+    markas_read: user + '/mark-read',
+    change_password: user + '/change-password',
+    change_email: user + '/change-email',
+    email_otp: user + '/email-otp',
+    mark_all: user + '/all-read',
+    get_banks: user + '/get-user-banks',
+    add_bank: user + '/add-bank',
+    deposit: user + '/deposit'
+}
+
+export const admin_urls = {
+    all_users: admin + '/all-users',
+    all_depo: admin + '/all-depo',
+    all_kyc: admin + '/all-kyc',
+    all_proofs: admin + '/all-proofs',
+    all_plans: admin + '/all-plans',
+    all_trans: admin + '/all-trans',
+    all_banks: admin + '/all-banks',
+    all_cards: admin + '/all-cards',
+    create_user: admin + '/create-user',
 }
 export const Apis = {
     non_auth: non_auth_urls,
-    auth: auth_urls
+    auth: auth_urls,
+    admin: admin_urls
 
 
 }

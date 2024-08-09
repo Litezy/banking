@@ -24,6 +24,6 @@ export const UserRole = [
     },
     {
         role: 'admin',
-        url: '/admin'
+        url: '/admin/overview'
     }
 ]
