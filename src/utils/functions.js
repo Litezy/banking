@@ -1,6 +1,8 @@
 import toast from "react-hot-toast"
 
 export const SiteName = 'Banking Application'
+export const SiteEmail = 'support@bankname.com'
+export const SiteContact = '+23404449430303'
 export const Currency = '£'
 export const errorMessage = (message) => {
     return toast.error(message, {

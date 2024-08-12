@@ -5,6 +5,7 @@ import UserLayout from './layouts/UserLayout'
 import AuthRoutes from 'services/AuthRoutes'
 import TopUpsavings from 'user/TopUpsavings'
 import AdminLayout from 'layouts/AdminLayout'
+import GeneralLayout from 'layouts/GeneralLayout'
 
 export default function App() {
   const user = '/user/'
@@ -17,7 +18,7 @@ export default function App() {
         <Route key={index} path={`${general}${item.path}`} element={<item.component />} />
       ))}
       {GeneralRoutes.map((item, index) => (
-        <Route key={index} path={`${general}${item.path}`} element={<item.component />} />
+        <Route key={index} path={`${general}${item.path}`} element={<GeneralLayout><item.component /></GeneralLayout>} />
       ))}
       {UserRoutes.map((item, index) => (
         <Route key={index} path={`${user}${item.path}`} element={<UserLayout> <AuthRoutes><item.component /></AuthRoutes> </UserLayout>} />
