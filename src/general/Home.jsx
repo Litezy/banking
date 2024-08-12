@@ -89,6 +89,7 @@ const SLIDES = Array.from(Array(SLIDE_COUNT).keys())
           <Testimonials slides={SLIDES} options={OPTIONS} />
         </div>
       </div>
+      
       <div className="w-11/12 mx-auto lg:w-10/12 mb-20">
           <div className="w-fit mx-auto mb-10 font-bold text-4xl lg:text-5xl">
             <div className="bg-zinc-500 h-1 w-3/5 mt-3 ml-auto"></div>
