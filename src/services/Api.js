@@ -17,7 +17,9 @@ export const non_auth_urls = {
     verify_email: user + '/verify-email',
     resend_otp: user + '/resend-otp',
     change_img: user + '/upload-img',
-    find_account: user + '/find-account'
+    find_account: user + '/find-account',
+    email_sub: user + '/email-subscribe',
+    contact_us: user + '/contact'
 }
 export const auth_urls = {
     profile: user + '/profile',
@@ -44,7 +46,8 @@ export const auth_urls = {
     get_adminBanks: user +'/admin-banks',
     transfer: user + '/transfer',
     upload_trans_prof: user +'/upload-proof',
-    user_transfers : user + '/user-transfers'
+    user_transfers : user + '/user-transfers',
+    all_savings : user + '/all-savings'
 }
 
 export const admin_urls = {
@@ -67,6 +70,9 @@ export const admin_urls = {
     admin_banks: admin +'/admin-banks',
     create_verify: admin + '/create-verify',
     update_verify: admin + '/update-verify',
+    decline_depo: admin + '/decline-depo',
+    settled_depos: admin + '/settled-depo',
+    remove_bank: admin + '/remove-bank'
 }
 export const Apis = {
     non_auth: non_auth_urls,

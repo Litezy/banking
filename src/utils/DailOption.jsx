@@ -73,7 +73,6 @@ export default function DailOptions({ title, setup, defaultValue }) {
             </div>
             <div onClick={() => setView(true)} className="border px-2 py-[0.7rem] border-zinc-300 hover:border-zinc-600 rounded-md focus:border-blue-500">
                 {!content.code ? <span className="text-slate-500 flex items-center justify-between">{title} <FaCaretDown className='text-zinc-500' /> </span> : <div className='flex items-center gap-2'> <Imaged src={content.img} className='w-5 h-5' /> <div className='flex items-center justify-between w-full'>{content.code} <FaCaretDown className='text-zinc-500' /> </div> </div>}</div>
-            {/* <input className='input' onClick={() => setView(true)} placeholder={title} value={content} readOnly /> */}
         </div>
     )
 }

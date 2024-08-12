@@ -32,6 +32,7 @@ const Savings = () => {
     const [closeview, setCloseView] = useState(false)
     const [add, setAdd] = useState(false)
     const [topup, setTopup] = useState(false)
+    const [adminBanks, setAdminBanks] = useState([])
     const [createsave, setCreateSave] = useState(false)
 
     const profile = useSelector((state) => state.profile.profile)
@@ -39,6 +40,19 @@ const Savings = () => {
 
 
 
+    const fetchAdminBanks = useCallback(async () => {
+        try {
+            const res = await GetApi(Apis.auth.get_adminBanks)
+            if (res.status === 200) {
+                setAdminBanks(res.data)
+            } else {
+                errorMessage(res.msg)
+            }
+        } catch (error) {
+            errorMessage(error.message)
+            console.log(error)
+        }
+    }, [])
     const fetchUserSavings = useCallback(async () => {
         if (!profile) return;
         try {
@@ -55,6 +69,7 @@ const Savings = () => {
 
     useEffect(() => {
         fetchUserSavings()
+        fetchAdminBanks()
     }, [profile])
 
     const steps = [
@@ -79,6 +94,9 @@ const Savings = () => {
         current: ''
     })
 
+    const [proofForm, setProofForm] = useState({
+        amount: ''
+    })
 
     const handleChange = (e) => {
         setSaveForms({
@@ -159,13 +177,17 @@ const Savings = () => {
 
     const submitForm = async (e) => {
         e.preventDefault()
+        if (!proofForm.amount) return errorMessage(`Input amount is required to proceed`)
+        if (proofForm.amount <= 0) return errorMessage(`No negative amount`)
         const formdata = new FormData()
-        formdata.append('firstname',profile?.firstname)
+        formdata.append('firstname', profile?.firstname)
+        formdata.append('amount', proofForm.amount)
         formdata.append('image', proofimg.image)
+        // return console.log(formdata)
         setLoad(true)
         try {
-            const res = await PostApi(Apis.auth.deposit,formdata)
-            if(res.status === 200){
+            const res = await PostApi(Apis.auth.deposit, formdata)
+            if (res.status === 200) {
                 setTimeout(() => {
                     setLoad(false)
                     setSupport(false)
@@ -174,19 +196,22 @@ const Savings = () => {
                         img: '',
                         image: null
                     })
+                    setProofForm({
+                        amount: ''
+                    })
                 }, 2000)
-            }else{
+            } else {
                 errorMessage(res.msg)
             }
         } catch (error) {
             errorMessage(error.message)
         }
-        
+
     }
 
-    const fetchTransHistory = useCallback(async () => {
+    const fetchSavingsHistory = useCallback(async () => {
         try {
-            const response = await GetApi(Apis.auth.trans_history)
+            const response = await GetApi(Apis.auth.all_savings)
             if (response.status === 200) {
                 setRecords(response.data)
             } else {
@@ -199,7 +224,7 @@ const Savings = () => {
 
 
     useEffect(() => {
-        fetchTransHistory()
+        fetchSavingsHistory()
     }, [profile, createSavings])
 
     const selectItem = (items) => {
@@ -210,6 +235,8 @@ const Savings = () => {
         id: selectedItem.id,
         amount: ''
     })
+    const deposit = 'Deposit'
+    const withdraw = 'Withdraw'
 
     const topUpSavings = async (e) => {
         e.preventDefault()
@@ -228,6 +255,7 @@ const Savings = () => {
                 setCloseView(false)
                 setForms({ ...forms, id: '', amount: '' })
                 fetchUserSavings()
+                fetchSavingsHistory()
             } else {
                 errorMessage(response.msg)
             }
@@ -304,26 +332,45 @@ const Savings = () => {
                     <div ref={proofDiv} className={`w-full p-10 rounded-lg bg-white h-fit `}>
                         <div className="w-full">
                             <form onSubmit={submitForm} className="lg:w-3/4 w-full mx-auto">
-                                <div className="text-lg font-semibold text-primary">Bank Details to make your transfer to:</div>
-                                <div className="w-full flex items-start flex-col mt-5">
-                                    <div className="flex items-center gap-3">
-                                        <div className="font-bold lg:text-xl">Bank Name:</div>
-                                        <div className="md:text-xl">Barclays</div>
-                                    </div>
-                                    <div className="flex items-center gap-3">
-                                        <div className="font-bold lg:text-xl">Bank Acount No.:</div>
-                                        <div className="md:text-xl">0935474883774</div>
-                                    </div>
-                                    <div className="flex items-center gap-3">
-                                        <div className="font-bold lg:text-xl">Sort Code:</div>
-                                        <div className="md:text-xl">07478374838</div>
-                                    </div>
-                                    <div className="flex items-center gap-3">
-                                        <div className="font-bold lg:text-xl">Route No:</div>
-                                        <div className="md:text-xl">374763</div>
+                                <div className="text-lg font-semibold text-primary">
+                                    {adminBanks.length > 1 ? 'Make payment to any of these bank accounts below' : 'Make payment to this bank account below'}</div>
+                                <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-10">
+                                    {adminBanks.map((bank, i) => (
+                                        <div className="flex items-start  flex-col gap-1  p-2 bg-primary text-white mb-5 rounded-md w-full " key={i}>
+                                            <div className="text-base font-light gap-2 flex items-center">
+                                                <div className="">Account Name:</div>
+                                                <div className="">{bank.fullname}</div>
+                                            </div>
+                                            <div className="text-base font-light gap-2 flex items-center">
+                                                <div className="">Bank Name:</div>
+                                                <div className="">{bank.bank_name}</div>
+                                            </div>
+                                            <div className="text-base font-light gap-2 flex items-center">
+                                                <div className="">Account No:</div>
+                                                <div className="">{bank.account_no}</div>
+                                            </div>
+                                            {bank.route_no && <div className="text-base font-light gap-2 flex items-center">
+                                                <div className="">Route:</div>
+                                                <div className="">{bank.route_no}</div>
+                                            </div>}
+                                            {bank.swift && <div className="text-base font-light gap-2 flex items-center">
+                                                <div className="">Swift No:</div>
+                                                <div className="">{bank.route_no}</div>
+                                            </div>}
+                                            {bank.iban && <div className="text-base font-light gap-2 flex items-center">
+                                                <div className="">IBAN No:</div>
+                                                <div className="">{bank.route_no}</div>
+                                            </div>}
+                                        </div>
+                                    ))}
+                                </div>
+                                <div className="my-3 flex items-center gap-3">
+                                    <div className="">Amount Transfered:</div>
+                                    <div className="w-2/4 ">
+                                        <FormComponent name={`amount`} value={proofForm.amount} onchange={(e) => setProofForm({ ...proofForm, [e.target.name]: e.target.value })} formtype='phone' />
                                     </div>
                                 </div>
-                                <div className="mt-3 relative w-fit ml-auto">
+                                <div className="mt-3 relative w-fit mx-auto">
                                     <label className={`${proofimg.img ? '' : 'border-2 border-black'} mt-5 w-full  h-full border-dashed flex cursor-pointer items-center justify-center `}>
                                         {proofimg.img ? <div className="">
                                             <div onChange={changeImage} className="absolute top-0 right-0 main font-bold ">
@@ -472,37 +519,38 @@ const Savings = () => {
             </div>
 
             <div className="mt-5 text-xl font-semibold">Latest Savings Transactions</div>
-            <div className=" w-full bg-white shadow-lg">
-                {records.slice(0, 5).map((item, index) => (
+            <div className=" w-full bg-white shadow-lg ">
+                {Array.isArray(records) ? records.slice(0, 5).map((item, index) => (
                     <div className="rounded-xl border-b " key={index}>
-                        <div className=""> {item.title}</div>
+                        {/* <div className="pl-2 pt-1"> {item.name}</div> */}
                         <div className="flex flex-col">
                             <div className="p-3 border-b last:border-none cursor-pointer">
-                                <div className="grid grid-cols-2">
-                                    <div className="flex items-center gap-3">
-                                        <div className="rounded-full p-1 bg-blue-300 text-blue-50">
-                                            <div className="bg-blue-400 rounded-full p-1">
-                                                <IoIosMailUnread className='text-xl' />
+                                <div className="flex items-center w-full justify-between">
+                                    <div className="flex flex-col items-center gap-3">
+                                        <div className="flex items-center gap-3">
+                                            <div className="rounded-full p-1 bg-blue-300 text-blue-50">
+                                                <div className="bg-blue-400 rounded-full p-1">
+                                                    <IoIosMailUnread className='text-xl' />
+                                                </div>
                                             </div>
+                                            <div className="text-sm font-bold capitalize">{item.name}</div>
                                         </div>
-                                        <div className="text-sm font-bold">{item.type}</div>
-                                        <FaMinus className='text-slate-500' />
-                                        <div className={`text-xs font-semibold ${item.status === 'success' ? 'text-green-600' : 'text-red-600'}`}>{item.status}</div>
+                                        <div className="flex items-center gap-3">
+                                            <div className="text-sm">Amount</div>
+                                            <div className={`text-xl font-bold`}>{currency}{item.goal} </div>
+                                        </div>
                                     </div>
-                                    <div className="">
-                                        <div className={`text-base font-bold text-right ${item.status === 'success' ? 'text-green-600' : 'text-red-600'}`}>{item.status === "success" ? '+' : '-'}{currency}{parseInt(item.amount).toLocaleString()}</div>
-                                        <div className="text-xs text-right">{item.date}</div>
+                                    <div className="flex items-center flex-col">
+                                        <div className="text-sm">last saved</div>
+                                        <div className="text-xs text-right">{item.lastsaved}</div>
                                     </div>
-                                </div>
-                                <div className="text-sm text-slate-500 lg:max-w-[75%]">{item.message}</div>
-                                <div className="flex items-center gap-3 text-sm mt-2 text-slate-500">
-                                    <div className="">Transaction ID:</div>
-                                    <div className="">{item.transaction_id}</div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                ))}
+                )) :
+                    <div className="text-lg font-semibold text-center">No savings records found</div>
+                }
             </div>
         </div>
     )

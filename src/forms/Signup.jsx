@@ -1,142 +1,190 @@
-import { MenuItem } from '@mui/material';
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import ButtonComponent from 'utils/ButtonComponent';
-import CountryStates from 'utils/CountryStates';
-import DailOptions from 'utils/DailOption';
-import Formbutton from 'utils/Formbutton';
-import FormComponent from 'utils/FormComponent';
-import Forminput from 'utils/Forminput';
+import { MenuItem } from '@mui/material'
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { Apis, PostApi } from 'services/Api'
+import CountryStates from 'utils/CountryStates'
+import DailOptions from 'utils/DailOption'
+import Formbutton from 'utils/Formbutton'
+import Forminput from 'utils/Forminput'
+import { errorMessage, successMessage } from 'utils/functions'
 
 export default function Signup() {
     const [forms, setForms] = useState({
         firstname: '',
         lastname: '',
-        gender: '',
-        dial_code: '',
         email: '',
+        gender: '',
         country: '',
         state: '',
+        dialcode: '',
+        phone: '',
         password: '',
         confirm_password: '',
-    });
+    })
+    const [submit, setSubmit] = useState(false)
+    const [loading,setLoading] = useState(false)
 
-    const handleChange = (e) => {
-        setForms({
-            ...forms,
-            [e.target.name]: e.target.value,
-        });
+    const [agree, setAgree] = useState(false);
+    const [checkError, setCheckError] = useState(false);
+    const navigate = useNavigate()
+
+    const handleCheckboxChange = (e) => {
+        setAgree(e.target.checked);
+        if (!e.target.checked) {
+            setCheckError(true);
+        } else {
+            setCheckError(false);
+        }
     };
 
-    const handleCountryChange = (data) => {
-        setForms({
-            ...forms,
-            country: data.country,
-            state: data.state,
-        });
-    };
+    const handleForms = (e) => {
+        setForms({ ...forms, [e.target.name]: e.target.value })
+    }
 
-    const handleDialCodeChange = (val) => {
-        setForms({
-            ...forms,
-            dial_code: val.dial_code,
-        });
-    };
+    const setup = (value) => {
+        setForms({ ...forms, dialcode: value })
+    }
 
-    const submitForms = (e) => {
-        e.preventDefault();
-        console.log(forms);
-    };
+    const handleCountry = (country, state) => {
+        setForms({ ...forms, country: country, state: state })
+    }
 
+    async function handleSubmission (e) {
+        e.preventDefault()
+        setSubmit(true)
+        if (!agree) {
+          return  setCheckError(true);
+        }
+       if(!forms.dialcode) return errorMessage('Country dial code is required')
+       if(!forms.country) return errorMessage('Country  is required')
+       if(!forms.state) return errorMessage('State is required')
+        const formdata = {
+            firstname: forms.firstname,
+            lastname: forms.lastname,
+            email: forms.email,
+            gender: forms.gender,
+            country: forms.country,
+            state: forms.state,
+            dialcode: forms.dialcode,
+            phone: forms.phone,
+            password: forms.password,
+            confirm_password: forms.confirm_password,
+        }
+        setLoading(true)
+        try {
+            const res = await PostApi(Apis.non_auth.create_acc, formdata)
+            if(res.status === 200){
+                successMessage(`sign up success`)
+                navigate('/verify-email')
+            }else{
+                errorMessage(res.msg)
+            }
+        } catch (error) {
+            errorMessage(`sorry, something went wrong on our end`,error.message)
+            console.log(error)
+        }finally{
+            setLoading(false)
+        }
+    }
     return (
         <div className='bg-gradient-to-tr from-primary to-purple-700 h-screen overflow-x-hidden'>
             <div className="w-[97%] mx-auto max-w-xl bg-white backdrop-blur-sm p-5 rounded-lg my-10 lg:my-20">
                 <div className="text-3xl lg:text-4xl font-bold text-primary">Create Account</div>
-                <form onSubmit={submitForms} className="mt-5 flex flex-col gap-3">
-                    <FormComponent
-                        formtype="text"
-                        placeholder="First Name"
-                        name="firstname"
+                <form onSubmit={handleSubmission} className="mt-5">
+                    <Forminput isError={submit && !forms.firstname ? "First name is missing" : ""}
+                        name={'firstname'}
+                        onClick={() => setSubmit(false)}
                         value={forms.firstname}
-                        onchange={handleChange}
-                    />
+                        onChange={handleForms} formtype="text" label="First Name" />
+
+
                     <div className="grid grid-cols-7 gap-1 lg:gap-5">
                         <div className="col-span-5">
-                            <FormComponent
-                                formtype="text"
-                                placeholder="Last Name"
-                                name="lastname"
+                            <Forminput
+                                name={'lastname'}
                                 value={forms.lastname}
-                                onchange={handleChange}
+                                onClick={() => setSubmit(false)}
+                                onChange={handleForms} formtype="text" label="Last Name"
+                                isError={submit && !forms.lastname ? "Last name is missing" : ""}
                             />
                         </div>
+
+
                         <div className="col-span-2">
-                            <label>
-                                <select
-                                    className="w-full cursor-pointer outline-none h-12 rounded-md border"
-                                    name="gender"
-                                    onChange={handleChange}
-                                    value={forms.gender}
-                                >
-                                    <option value="">--select--</option>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                                </select>
-                            </label>
+                            <Forminput
+                                name={'gender'}
+                                value={forms.gender}
+                                onClick={() => setSubmit(false)}
+                                isError={submit && !forms.gender ? "Gender is missing" : ""}
+                                onChange={handleForms}
+                                formtype="select" label={'Gender'}>
+                                <MenuItem value={'male'}>Male</MenuItem>
+                                <MenuItem value={'female'}>Female</MenuItem>
+                            </Forminput>
                         </div>
                     </div>
                     <div className="grid grid-cols-7 gap-1 lg:gap-3">
                         <div className="col-span-2">
-                            <DailOptions title="+234" />
+                            <DailOptions title="+234" setup={setup} />
                         </div>
                         <div className="col-span-5">
-                            <FormComponent
-                                formtype="text"
-                                placeholder="Phone Number"
-                                name="phone"
+                            <Forminput
+                                name={'phone'}
                                 value={forms.phone}
-                                onchange={handleDialCodeChange}
+                                onChange={handleForms}
+                                formtype="text"
+                                onClick={() => setSubmit(false)}
+                                isError={submit && !forms.phone ? "Phone number is missing" : ""}
                             />
                         </div>
                     </div>
-                    <FormComponent
-                        formtype="text"
-                        placeholder="Email Address"
-                        name="email"
+
+
+                    <Forminput
+                        name={'email'}
                         value={forms.email}
-                        onchange={handleChange}
+                        onClick={() => setSubmit(false)}
+                        onChange={handleForms}
+                        formtype="text" label="Email Address"
+                        isError={submit && !forms.email ? "Email is missing" : ""}
                     />
-                    <CountryStates onChange={handleCountryChange} />
-                    <FormComponent
-                        formtype="password"
-                        placeholder="Password"
-                        name="password"
+                    <CountryStates onChange={handleCountry} />
+
+
+                    <Forminput
+                        name={'password'}
                         value={forms.password}
-                        onchange={handleChange}
-                    />
-                    <FormComponent
+                        onChange={handleForms}
                         formtype="password"
-                        placeholder="Confirm Password"
-                        name="confirm_password"
-                        value={forms.confirm_password}
-                        onchange={handleChange}
+                        label="Password"
+                        onClick={() => setSubmit(false)}
+                        isError={submit && !forms.password ? "Password is missing" : ""}
                     />
-                    <FormComponent
+
+                    <Forminput
+                        name={'confirm_password'}
+                        value={forms.confirm_password}
+                        onChange={handleForms}
+                        formtype="password"
+                        label="Confirm Password"
+                        onClick={() => setSubmit(false)}
+                        isError={submit && !forms.confirm_password ? "Confirm password is missing" : ""}
+                    />
+
+
+                    <Forminput
+                        isError={checkError ? "Agree to our T&C's" : ""}
                         formtype="checkbox"
                         placeholder="Confirm you agree to our terms and policies."
-                        name="terms"
-                        value={forms.terms}
-                        onchange={handleChange}
+                        onChange={handleCheckboxChange}
                     />
-                    <ButtonComponent bg="bg-primary h-12 text-white" title="Create Account" />
-                    <div className="text-zinc-500 mt-5 text-center">
-                        Already have an account? <Link to="/login" className="text-blue-600">Login Account</Link>
-                    </div>
-                    <div className="text-zinc-500 mt-3 text-center">
-                        <Link to="/" className="text-blue-600">Go back home</Link>
-                    </div>
+
+
+                    <Formbutton label="Create Account" loading={loading ? true :false}/>
+                    <div className="text-zinc-500 mt-5 text-center">Already have an account? <Link to="/login" className='text-blue-600'>Login Account</Link> </div>
+                    <div className="text-zinc-500 mt-3 text-center"><Link to="/" className='text-blue-600'>Go back home</Link> </div>
                 </form>
             </div>
         </div>
-    );
+    )
 }

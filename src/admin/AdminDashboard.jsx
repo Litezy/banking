@@ -114,16 +114,11 @@ const AdminDashboard = () => {
     
     return (
         <div className='mt-20 md:mt-5 w-11/12 mx-auto h-fit pb-20  '>
-           <div className="md:grid block md:grid-cols-4 md:w-full w-3/4 mx-auto gap-3 md:h-40">
+           <div className="md:grid block md:grid-cols-2 md:w-full w-3/4 mx-auto gap-5 md:h-40">
            <Summary  color='bg-black text-white' title={'Total Users'} data={users.length}/>
             <Summary   color='bg-green-500 text-white' title={'Total Deposits'} data={`$${savings}`}/>
             <Summary   color='bg-red-500 text-white' title={'Total Transactions'} data={transactions.length}/>
             <Summary   color='bg-orange-500 text-white' title={'Total Savings Plans'} data={plans.length}/>
-           </div>
-           <div className="md:grid md:grid-cols-4 md:w-full block  w-3/4 mx-auto gap-3 md:h-40 md:mt-10">
-            <Summary text='text-white' color='bg-gray-500 text-white' title={'Active Loans'} data={`0`}/>
-            <Summary  color='bg-teal-500 text-white' title={"KYC'ed Users"} data={`0`}/>
-           
            </div>
         </div>
       )

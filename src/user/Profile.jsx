@@ -98,7 +98,7 @@ const Profile = () => {
         if (!edit) {
             setEdit(true)
         }
-        else if(edit){
+        else if (edit) {
             setLoading(true)
             const formdata = {
                 firstname: forms.firstname,
@@ -123,7 +123,7 @@ const Profile = () => {
                 setLoading(false)
             }
         }
-        
+
     }
     return (
         <div className='w-full lg:mt-10 mt-5'>
@@ -132,7 +132,7 @@ const Profile = () => {
 
                 <div className="my-10 flex items-start flex-col md:flex-row gap-10 ">
                     <div className="md:w-1/2 w-full px-3 py-5 h-fit bg-white shadow-lg rounded-md">
-                        <form onSubmit={submitForm}  className="w-full">
+                        <form onSubmit={submitForm} className="w-full">
                             <div className="mb-2 text-xl font-light">Edit Account</div>
                             <div className="w-full flex items-center justify-between">
                                 <div className="w-fit cursor-pointer p-5 rounded-md flex border border-gray text-center ">
@@ -177,15 +177,17 @@ const Profile = () => {
 
                                 </div>
                             </div>
-                            <ButtonComponent  title={`${edit ? 'Save Details' : "Edit Details"}`} bg={`bg-primary h-12 text-white mt-5`} />
+                            <ButtonComponent title={`${edit ? 'Save Details' : "Edit Details"}`} bg={`bg-primary h-12 text-white mt-5`} />
                         </form>
                     </div>
                     <div className="md:w-1/2 w-full h-fit pb-5  px-3 bg-white rounded-md">
                         <div className="mt-5 w-full flex items-start flex-col gap-5">
                             <div className="text-xl font-light ">Account Information</div>
-                    <div className="w-full flex items-center justify-center">
-                        <img src={`${profileImg}/profiles/${profile?.image}`} className='w-32 h-32 object-cover rounded-full' alt={`profile image`} />
-                    </div>
+                            <div className="w-full flex items-center justify-center">
+                                {profile?.image ? <img src={`${profileImg}/profiles/${profile?.image}`} className='w-32 h-32 object-cover rounded-full' alt={`profile image`} /> :
+                                    <div className=""></div>
+                                }
+                            </div>
 
                             <div className="flex items-start flex-col w-full justify-between gap-5">
                                 <div className="flex items-start flex-col w-full ">

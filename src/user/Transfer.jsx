@@ -19,36 +19,26 @@ const Transfer = () => {
   const [verifications, setVerifications] = useState([])
   const [adminBanks, setAdminBanks] = useState([])
   const [paid, setPaid] = useState(false)
-  
+
   const Icon = bal ? IoEyeOutline : IoEyeOffSharp
   const profile = useSelector((state) => state.profile.profile)
   const currency = useSelector((state) => state.profile.currency)
   const [screen, setScreen] = useState()
 
-const SubmitTransfer = async ()=>{
-  
-  const formdata = {
-
-  }
-}
-
-
-
-
   const fetchTransfers = useCallback(async () => {
     try {
-      const res = await  GetApi(Apis.auth.user_transfers)
+      const res = await GetApi(Apis.auth.user_transfers)
       // console.log(res.data)
-      if(res.status === 200){
+      if (res.status === 200) {
         setTransfers(res.data[0])
-        setVerifications(res.data[0].verifications[0])
+        setVerifications(res.data[0]?.verifications[0])
       }
     } catch (error) {
       console.log(error)
-      errorMessage(error.message)
+      // errorMessage(error.message)
     }
   }, []);
- 
+
 
   const fetchAdminBanks = useCallback(async () => {
     try {
@@ -68,74 +58,127 @@ const SubmitTransfer = async ()=>{
     fetchAdminBanks()
   }, [])
 
+  const [forms, setForms] = useState({
+    acc_no: '',
+    acc_name: '',
+    bank_name: '',
+    route: '',
+    amount: ''
+  })
+
+  const handleChange = (e) => {
+    setForms({ ...forms, [e.target.name]: e.target.value })
+  }
 
 
 
-  
 
   const imgRef = useRef()
-    const [proofimg, setProofimg] = useState({
-        img: "",
-        image: ''
+  const [proofimg, setProofimg] = useState({
+    img: "",
+    image: ''
+  })
+
+  const changeImage = (e) => {
+    setProofimg({
+      img: e.target.src,
+      image: null
     })
-
-    const changeImage = (e) => {
-        setProofimg({
-            img: e.target.src,
-            image: null
-        })
-    }
-
-    // console.log(savings)
-    const handleImage = (e) => {
-        const file = e.target.files[0]
-        if (file.size >= 1000000) {
-            imgRef.current.value = null
-            return errorMessage('file too large')
-        }
-        if (!file.type.startsWith(`image/`)) {
-            imgRef.current.value = null
-            return errorMessage('Invalid file format detected, try with a different photo format like ')
-        }
-        setProofimg({
-            img: URL.createObjectURL(file),
-            image: file
-        })
-        // console.log(proofimg.image)
-    }
-
-const UploadProof = async()=>{
-  const formdata = new FormData()
-  formdata.append('image', proofimg.image)
-  setLoading(true)
-  try {
-    const res = await PostApi(Apis.auth.upload_trans_prof, formdata)
-    // console.log(res)
-    if(res.status === 200){
-      fetchTransfers()
-      setScreen(2)
-    }else{
-      errorMessage(res.msg)
-    }
-  } catch (error) {
-    console.log(error)
-    errorMessage(error.message)
-  }finally{
-    setLoading(false)
   }
-}
 
-useEffect(() => {
-  if (verifications && transfers) {
-    if (verifications.message && verifications.message.trim() !== '') {
-      setScreen(3);
-    } else if (!verifications.message || verifications.message === '' && verifications.verified === 'false') {
-      setScreen(2);
-    } else {
+  // console.log(savings)
+  const handleImage = (e) => {
+    const file = e.target.files[0]
+    if (file.size >= 1000000) {
+      imgRef.current.value = null
+      return errorMessage('file too large')
+    }
+    if (!file.type.startsWith(`image/`)) {
+      imgRef.current.value = null
+      return errorMessage('Invalid file format detected, try with a different photo format like ')
+    }
+    setProofimg({
+      img: URL.createObjectURL(file),
+      image: file
+    })
+    // console.log(proofimg.image)
+  }
+
+  const UploadProof = async () => {
+    const formdata = new FormData()
+    formdata.append('image', proofimg.image)
+    setLoading(true)
+    try {
+      const res = await PostApi(Apis.auth.upload_trans_prof, formdata)
+      // console.log(res)
+      if (res.status === 200) {
+        fetchTransfers()
+        setScreen(2)
+      } else {
+        errorMessage(res.msg)
+      }
+    } catch (error) {
+      console.log(error)
+      errorMessage(error.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    if (verifications && transfers) {
+      if (verifications.message && verifications.message.trim() !== '') {
+        setScreen(3);
+      } else if (!verifications.message || verifications.message === '' && verifications.verified === 'false') {
+        setScreen(2);
+      }
+      
+    }
+    else if(!verifications && !transfers){
       setScreen(1);
     }
+  }, [transfers, verifications]);
+
+
+  const SubmitTransfer = async (e) => {
+    if (!forms.acc_name) return errorMessage('Account name is required')
+    if (!forms.acc_no) return errorMessage('Account number is required')
+    if (!forms.bank_name) return errorMessage('Bank name is required')
+    if (!forms.amount) return errorMessage('Amount is required')
+    if (profile?.balance < forms.amount) return errorMessage('Insufficient balance')
+    const formdata = {
+      acc_no: forms.acc_no,
+      acc_name: forms.acc_name,
+      bank_name: forms.bank_name,
+      route: forms.route,
+      amount: forms.amount
+    }
+    setLoading(true)
+    try {
+      const res = await PostApi(Apis.auth.transfer, formdata)
+      if(res.status === 200){
+        successMessage(res.msg)
+        fetchTransfers()
+        setScreen(2)
+        setForms({
+          ...forms,
+          acc_no: '',
+          acc_name: '',
+          bank_name: '',
+          route: '',
+          amount: ''
+        })
+      }else{
+        errorMessage(res.msg)
+      }
+
+    } catch (error) {
+       errorMessage(error.mesage)
+       console.log(error)
+    }finally{
+      setLoading(false)
+    }
   }
-}, [transfers, verifications]);
   return (
     <div className='w-full mt-5'>
       <div className="w-11/12 mx-auto ">
@@ -159,33 +202,40 @@ useEffect(() => {
           </div>
         </div>
 
-        {screen === 1 && <div className="my-10 w-full flex items-start shadow-lg flex-col py-5 px-10 bg-white rounded-lg h-fit">
-          <div className="text-center my-3 w-full text-xl ">Bank Withdrawal</div>
-          <div className="flex items-start flex-col gap-8 w-full">
-            <div className="flex items-start flex-col  lg:w-1/2 w-full">
-              <div className="-500 text-base">Account Full Name:</div>
-              <input type="text" className='outline-none w-full border-b' />
-            </div>
-            <div className="flex items-start flex-col  lg:w-1/2 w-full">
-              <div className="-500 text-base">Bank Name:</div>
-              <input type="text" className='outline-none w-full border-b' />
-            </div>
-            <div className="flex items-start flex-col lg:w-1/2 w-full">
-              <div className="-500 text-base">Account No:</div>
-              <input type="text" className='outline-none w-full border-b' />
-            </div>
-            <div className="flex items-start flex-col lg:w-1/2 w-full">
-              <div className="-500 text-base">Route No: (Optional)</div>
-              <input type="text" className='outline-none w-full border-b' />
-            </div>
-            <div className="flex items-start flex-col lg:w-1/2 w-full">
-              <div className="-500 text-base">Amount ($)</div>
-              <input type="text" className='outline-none w-full border-b' />
-            </div>
+        {screen === 1 &&
+          <div className="my-10 w-full relative flex items-start shadow-lg flex-col py-5 px-10 bg-white rounded-lg h-fit">
 
-            <div onClick={SubmitTransfer} className="md:w-fit w-full cursor-pointer text-center md:ml-auto md:px-10 py-2 bg-primary rounded-md text-white">Submit</div>
-          </div>
-        </div>}
+            {loading &&
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2">
+                <Loader />
+              </div>
+            }
+            <div className="text-center my-3 w-full text-xl ">Bank Withdrawal</div>
+            <div className="flex items-start flex-col gap-8 w-full">
+              <div className="flex items-start flex-col  lg:w-1/2 w-full">
+                <div className="-500 text-base">Account Full Name:</div>
+                <FormComponent  name={`acc_name`} value={forms.acc_name} onchange={handleChange}/>
+              </div>
+              <div className="flex items-start flex-col  lg:w-1/2 w-full">
+                <div className="-500 text-base">Bank Name:</div>
+                <FormComponent name={`bank_name`} value={forms.bank_name} onchange={handleChange}/>
+              </div>
+              <div className="flex items-start flex-col lg:w-1/2 w-full">
+                <div className="-500 text-base">Account No:</div>
+                <FormComponent formtype='phone' name={`acc_no`} value={forms.acc_no} onchange={handleChange}/>
+              </div>
+              <div className="flex items-start flex-col lg:w-1/2 w-full">
+                <div className="-500 text-base">Route No: (Optional)</div>
+                <FormComponent formtype='phone' name={`route`} value={forms.route} onchange={handleChange}/>
+              </div>
+              <div className="flex items-start flex-col lg:w-1/2 w-full">
+                <div className="-500 text-base">Amount ($)</div>
+               <FormComponent formtype='phone' name={`amount`} value={forms.amount} onchange={handleChange}/>
+              </div>
+
+              <div onClick={SubmitTransfer} className="md:w-fit w-full cursor-pointer text-center md:ml-auto md:px-10 py-2 bg-primary rounded-md text-white">Submit</div>
+            </div>
+          </div>}
 
         {screen === 2 &&
           <div className="w-full mt-5 h-96 relative flex items-center justify-center">
@@ -246,16 +296,16 @@ useEffect(() => {
 
         {screen === 4 &&
           <div className="my-10 w-11/12 bg-white p-5 rounded-md">
-            <button onClick={()=> setScreen(3)} className='w-fit mr-auto px-3 py-1 rounded-md bg-primary text-white'>back</button>
+            <button onClick={() => setScreen(3)} className='w-fit mr-auto px-3 py-1 rounded-md bg-primary text-white'>back</button>
             <div className="text-xl text-center font-semibold">Upload proof of payment</div>
 
             <div className="mt-3 relative w-2/4 mx-auto">
 
-            {loading && 
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2">
-              <Loader/>
-            </div>
-            }
+              {loading &&
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2">
+                  <Loader />
+                </div>
+              }
               <label className={`${proofimg.img ? '' : 'border-2 border-black'} mt-5 w-full  h-full border-dashed flex cursor-pointer items-center justify-center `}>
                 {proofimg.img ? <div className="">
                   <div onChange={changeImage} className="absolute top-0 right-0 main font-bold ">
@@ -274,7 +324,7 @@ useEffect(() => {
             </div>
             {proofimg.img &&
               <div className="w-1/4 mx-auto mt-5">
-                <ButtonComponent type='button' onclick={UploadProof} title={'Submit'} bg={`bg-primary text-white h-12`}  />
+                <ButtonComponent type='button' onclick={UploadProof} title={'Submit'} bg={`bg-primary text-white h-12`} />
               </div>
             }
           </div>

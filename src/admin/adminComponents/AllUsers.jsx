@@ -5,6 +5,7 @@ import { errorMessage } from 'utils/functions'
 import UserBanks from 'admin/utils/UserBanks'
 import UserCards from 'admin/utils/UserCards'
 import CreateUsers from 'admin/utils/CreateUsers'
+import UserDetails from 'admin/utils/UserDetails'
 
 
 const AllUsers = () => {
@@ -64,6 +65,7 @@ const AllUsers = () => {
       {active === 1 && <UserBanks setActive={setActive} />}
       {active === 2 && <UserCards setActive={setActive} />}
       {active === 3 && <CreateUsers setActive={setActive} />}
+      {active === 4 && <UserDetails setActive={setActive} />}
     </div>
   )
 }

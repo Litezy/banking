@@ -17,7 +17,7 @@ const SideLinks = [
     { path: 'transactions', url: '/user/transactions' },
     { path: 'notifications', url: '/user/notifications' },
     { path: 'profile', url: '/user/profile' },
-    { path: 'loans', url: '/user/loans' },
+   
 ]
 
 const SideLinks2 = [

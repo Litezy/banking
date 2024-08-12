@@ -56,6 +56,7 @@ export default function CountryStates({ title, onChange, defaultValue }) {
         })
         // onChange(val)
         setView2(false)
+        onChange(content.country, val.name)
     }
 
     const handleChange = (val) => {
@@ -78,40 +79,92 @@ export default function CountryStates({ title, onChange, defaultValue }) {
         setView(false)
         setStates(val.states)
         setStates2(val.states)
+        onChange(val.name, '')
     }
     return (
         <div className="grid grid-cols-2 gap-3 mb-3">
             <div className='relative'>
                 <div ref={togref} className={`${view ? '' : 'hidden'} absolute top-[2.5rem] z-10 left-0 w-full bg-white border shadow-2xl`}>
                     <div className="w-11/12 mx-auto mt-3">
-                        <input value={text} onChange={(e) => handleChange(e.target.value)} placeholder='Search!...' type="text" className="w-full p-2 text-sm border rounded-sm" />
+                        <input
+                            value={text}
+                            onChange={(e) => handleChange(e.target.value)}
+                            placeholder='Search!...'
+                            type="text"
+                            className="w-full p-2 text-sm border rounded-sm"
+                        />
                         <div className="max-h-[10rem] pb-2 overflow-y-auto scrolls scrollsdown">
-                            {country.map((item, i) => {
-                                return (
-                                    <div onClick={() => handleSelection(item)} className="text-xs p-1.5 border-b cursor-pointer hover:bg-slate-50 flex items-center gap-2" key={i}> {item.name}</div>
-                                )
-                            })}
+                            {country.map((item, i) => (
+                                <div
+                                    onClick={() => handleSelection(item)}
+                                    className="text-xs p-1.5 border-b cursor-pointer hover:bg-slate-50 flex items-center gap-2"
+                                    key={i}
+                                >
+                                    {item.name}
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>
-                <div onClick={() => setView(true)} className="border px-2 py-[0.9rem] border-zinc-300 hover:border-zinc-600 rounded-md focus:border-blue-500">{!content.country ? <span className="text-slate-500 flex items-center justify-between">Country <FaCaretDown className='text-zinc-500' /> </span> : <div className='flex items-center gap-2'>  <div className='flex items-center justify-between w-full'>{content.country} <FaCaretDown className='text-zinc-500' /> </div> </div>}</div>
+                <div
+                    onClick={() => setView(true)}
+                    className="border px-2 py-[0.9rem] border-zinc-300 hover:border-zinc-600 rounded-md focus:border-blue-500"
+                >
+                    {!content.country ? (
+                        <span className="text-slate-500 flex items-center justify-between">
+                            Country <FaCaretDown className='text-zinc-500' />
+                        </span>
+                    ) : (
+                        <div className='flex items-center gap-2'>
+                            <div className='flex items-center justify-between w-full'>
+                                {content.country} <FaCaretDown className='text-zinc-500' />
+                            </div>
+                        </div>
+                    )}
+                </div>
             </div>
-
+    
             <div className='relative'>
                 <div ref={togref2} className={`${view2 ? '' : 'hidden'} absolute top-[2.5rem] z-10 left-0 w-full bg-white border shadow-2xl`}>
                     <div className="w-11/12 mx-auto mt-3">
-                        <input value={text2} onChange={(e) => handleChange2(e.target.value)} placeholder='Search!...' type="text" className="w-full p-2 text-sm border rounded-sm" />
+                        <input
+                            value={text2}
+                            onChange={(e) => handleChange2(e.target.value)}
+                            placeholder='Search!...'
+                            type="text"
+                            className="w-full p-2 text-sm border rounded-sm"
+                        />
                         <div className="max-h-[10rem] pb-2 overflow-y-auto scrolls scrollsdown">
-                            {states.map((item, i) => {
-                                return (
-                                    <div onClick={() => handleSelection2(item)} className="text-xs p-1.5 border-b cursor-pointer hover:bg-slate-50 flex items-center gap-2" key={i}> {item.name}</div>
-                                )
-                            })}
+                            {states.map((item, i) => (
+                                <div
+                                    onClick={() => handleSelection2(item)}
+                                    className="text-xs p-1.5 border-b cursor-pointer hover:bg-slate-50 flex items-center gap-2"
+                                    key={i}
+                                >
+                                    {item.name}
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>
-                <div onClick={() => setView2(true)} className="border px-2 py-[0.9rem] border-zinc-300 hover:border-zinc-600 rounded-md focus:border-blue-500">{!content.state ? <span className="text-slate-500 flex items-center justify-between">State <FaCaretDown className='text-zinc-500' /> </span> : <div className='flex items-center gap-2'>  <div className='flex items-center justify-between w-full'>{content.state} <FaCaretDown className='text-zinc-500' /> </div> </div>}</div>
+                <div
+                    onClick={() => setView2(true)}
+                    className="border px-2 py-[0.9rem] border-zinc-300 hover:border-zinc-600 rounded-md focus:border-blue-500"
+                >
+                    {!content.state ? (
+                        <span className="text-slate-500 flex items-center justify-between">
+                            State <FaCaretDown className='text-zinc-500' />
+                        </span>
+                    ) : (
+                        <div className='flex items-center gap-2'>
+                            <div className='flex items-center justify-between w-full'>
+                                {content.state} <FaCaretDown className='text-zinc-500' />
+                            </div>
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
-    )
+    );
+    
 }

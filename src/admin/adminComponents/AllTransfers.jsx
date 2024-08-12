@@ -5,6 +5,7 @@ import { Apis, GetApi } from 'services/Api'
 import ValidateDeposit from 'admin/utils/ValidateDeposit'
 import InitiateDeposit from 'admin/utils/InitiateDeposit'
 import InitateWithdrawal from 'admin/utils/InitateWithdrawal'
+import SettledDeposits from 'admin/utils/SettledDeposits'
 
 const AllTransfers = () => {
   const [screen, setScreen] = useState(0)
@@ -12,6 +13,7 @@ const AllTransfers = () => {
     { title: 'Validate Deposit', id: 1 },
     { title: 'Initiate Deposit', id: 2 },
     { title: 'Initiate Withdrawal', id: 3 },
+    { title: 'Settled Deposits', id: 4 },
   ]
 
   const [transhistory, setTranshistory] = useState([])
@@ -60,6 +62,7 @@ const AllTransfers = () => {
       {screen === 1 && <ValidateDeposit setScreen={setScreen}/>}
       {screen === 2 && <InitiateDeposit setScreen={setScreen}/> }
       {screen === 3 && <InitateWithdrawal setScreen={setScreen}/> }
+      {screen === 4 && <SettledDeposits setScreen={setScreen}/> }
       
       </div>
   )
