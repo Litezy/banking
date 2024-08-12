@@ -36,6 +36,8 @@ useEffect(()=>{
   const npage = Math.ceil(transdata.length / recordsPerPage)
   const numbers = Array.from({ length: npage }, (_, i) => i + 1);
 
+  const deposit = 'Deposit'
+  const withdraw = 'Withdraw'
   const prevPage = () => {
     if (currentPage !== 1) {
       setCurrentPage(currentPage - 1);
@@ -90,7 +92,7 @@ useEffect(()=>{
                         <div className={`text-xs font-semibold ${item.status === 'success' ? 'text-green-600' : 'text-red-600'}`}>{item.status}</div>
                       </div>
                       <div className="">
-                        <div className={`text-base font-bold text-right ${item.status === 'success' ? 'text-green-600' : 'text-red-600'}`}>{item.status === "success" ? '+' : '-'}{currency}{parseInt(item.amount).toLocaleString()}</div>
+                        <div className={`text-base font-bold text-right ${item.type === deposit ? 'text-green-600' : 'text-red-600'}`}>{item.type === deposit ? '+' : '-'}{currency}{parseInt(item.amount).toLocaleString()}</div>
                         <div className="text-xs text-right">{item.date}</div>
                       </div>
                     </div>

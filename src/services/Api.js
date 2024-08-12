@@ -38,7 +38,13 @@ export const auth_urls = {
     mark_all: user + '/all-read',
     get_banks: user + '/get-user-banks',
     add_bank: user + '/add-bank',
-    deposit: user + '/deposit'
+    deposit: user + '/deposit',
+    get_transfers : user + '/find-transfers',
+    get_verifications : user + '/find-verifications',
+    get_adminBanks: user +'/admin-banks',
+    transfer: user + '/transfer',
+    upload_trans_prof: user +'/upload-proof',
+    user_transfers : user + '/user-transfers'
 }
 
 export const admin_urls = {
@@ -50,7 +56,17 @@ export const admin_urls = {
     all_trans: admin + '/all-trans',
     all_banks: admin + '/all-banks',
     all_cards: admin + '/all-cards',
+    validate_depo: admin + '/validate-depo',
     create_user: admin + '/create-user',
+    find_email: admin + '/find-email',
+    inititate_depo: admin + '/initiate-depo',
+    initiate_with: admin + '/initiate-with',
+    trans_date: admin + '/trans-date',
+    add_bank: admin + '/add-bank',
+    hide:admin + '/hide',
+    admin_banks: admin +'/admin-banks',
+    create_verify: admin + '/create-verify',
+    update_verify: admin + '/update-verify',
 }
 export const Apis = {
     non_auth: non_auth_urls,

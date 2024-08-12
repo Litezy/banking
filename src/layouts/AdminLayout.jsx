@@ -59,9 +59,8 @@ export default function AdminLayout({ children }) {
         { path: 'overview', url: '/admin/overview' },
         { path: 'users', url: '/admin/users' },
         { path: 'transfers', url: '/admin/transfers' },
-        { path: 'savings', url: '/admin/savings' },
         { path: 'transactions', url: '/admin/transactions' },
-        { path: 'loans', url: '/admin/loans' },
+        { path: 'banks', url: '/admin/banks' },
     ]
 
     const SideLinks2 = [
