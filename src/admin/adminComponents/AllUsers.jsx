@@ -34,6 +34,7 @@ const AllUsers = () => {
     { title: 'User Banks', id: 1 },
     { title: 'User Cards', id: 2 },
     { title: 'Create Users', id: 3 },
+    { title: 'Users Details', id: 4 },
   ]
 
   return (

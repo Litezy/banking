@@ -14,12 +14,11 @@ import Settings from "user/Settings";
 import Profile from "user/Profile";
 import Loans from "user/Loans";
 import AdminDashboard from "admin/AdminDashboard";
-import AllSavings from "admin/adminComponents/AllSavings";
 import AllTransfers from "admin/adminComponents/AllTransfers";
 import AllUsers from "admin/adminComponents/AllUsers";
-import CreateLoans from "admin/adminComponents/CreateLoans";
 import AllTransactions from "admin/adminComponents/AllTransactions";
 import AdminSettings from "admin/adminComponents/AdminSettings";
+import Banks from "admin/adminComponents/Banks";
 
 
 
@@ -51,11 +50,10 @@ export const UserRoutes = [
 ]
 export const AdminRoutes = [
     { path: 'overview', component: AdminDashboard },
-    { path: 'savings', component: AllSavings },
     { path: 'transfers', component: AllTransfers },
     { path: 'transactions', component: AllTransactions },
     { path: 'users', component: AllUsers },
-    { path: 'loans', component: CreateLoans },
+    { path: 'banks', component: Banks },
     { path: 'settings', component: AdminSettings },
    
 ]
