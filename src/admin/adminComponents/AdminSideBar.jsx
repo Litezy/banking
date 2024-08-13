@@ -14,6 +14,8 @@ const AdminLinks = [
     { path: 'transfers', url: '/admin/transfers' },
     { path: 'transactions', url: '/admin/transactions' },
     { path: 'banks', url: '/admin/banks' },
+    { path: 'newsletters', url: '/admin/newsletters' },
+    { path: 'contacts', url: '/admin/contacts' },
 ]
 
 const AdminLinks2 = [
@@ -25,8 +27,8 @@ export default function AdminSideBar() {
     const location = useLocation()
     const dispatch = useDispatch()
     const [logout, setLogout] = useState(false)
-    const [profile,setProfile] = useState({})
-    
+    const [profile, setProfile] = useState({})
+
     const navigate = useNavigate()
     const logOut = (item) => {
         if (item.path === 'logout') {
@@ -63,13 +65,13 @@ export default function AdminSideBar() {
             errorMessage(error.message);
         }
     }, [dispatch]);
-    useEffect(()=>{
+    useEffect(() => {
         fetchUserProfile()
-    },[])
+    }, [])
 
     let firstChar = profile?.firstname?.substring(0, 1)
     let lastChar = profile?.lastname?.substring(0, 1)
-    
+
     return (
         <div>
             <div className="flex flex-col px-3 h-[80dvh]">
@@ -87,10 +89,10 @@ export default function AdminSideBar() {
                 <div className="bg-slate-100/20 rounded-lg p-3 flex flex-col items-center justify-center gap-3 mt-6 mb-5">
                     <div className="py-3 px-3.5 rounded-full text-white bg-gradient-to-tr from-primary to-purple-700 w-fit h-fit uppercase">{firstChar}{lastChar}</div>
                     <div className="text-white text-center text-sm">{profile?.firstname} {profile?.lastname}</div>
-                    
+
                 </div>
                 {AdminLinks.map((item, index) => (
-                    <Link to={item.url} key={index} className={`text-sm rounded-lg hover:scale-105 text-slate-200 hover:bg-slate-100/20 ${item.url === location.pathname ? 'bg-slate-100/40' : ''} px-3 mb py-2 font-extralight capitalize transition-all`}>
+                    <Link to={item.url} key={index} className={`text-sm rounded-lg hover:scale-105 text-slate-200 hover:bg-slate-100/20 ${item.url === location.pathname ? 'bg-slate-100/40' : ''} px-3 mb-1 py-2 font-extralight capitalize transition-all`}>
                         {item.path}
                     </Link>
                 ))}

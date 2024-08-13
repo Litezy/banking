@@ -61,6 +61,8 @@ export default function AdminLayout({ children }) {
         { path: 'transfers', url: '/admin/transfers' },
         { path: 'transactions', url: '/admin/transactions' },
         { path: 'banks', url: '/admin/banks' },
+        { path: 'newsletters', url: '/admin/newsletters' },
+        { path: 'contacts', url: '/admin/contacts' },
     ]
 
     const SideLinks2 = [
@@ -110,7 +112,7 @@ export default function AdminLayout({ children }) {
                     <div className="">Admin</div>
                 </div>
                 {side &&
-                    <div ref={sideDiv} className="w-[40%] absolute py-5  gap-2 flex items-start justify-between  flex-col text-white bg-primary  h-full">
+                    <div ref={sideDiv} className="w-[40%] z-50 absolute py-5  gap-2 flex items-start justify-between  flex-col text-white bg-primary  h-full">
                         <div className="flex flex-col items-start p-2 mt-16 w-full">
                             {SideLinks.map((item, index) => (
                                 <Link to={item.url} onClick={() => setSide(false)} key={index} className={`w-full text-sm rounded-lg hover:scale-105 text-slate-200 hover:bg-slate-100/20 ${item.url === location.pathname ? 'bg-slate-100/40' : ''} px-3 mb-3 py-2 font-extralight capitalize transition-all`}>

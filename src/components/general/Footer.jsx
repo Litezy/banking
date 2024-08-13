@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   BsFacebook,
   BsInstagram,
@@ -7,7 +7,8 @@ import {
 } from "react-icons/bs";
 import { SlClock, SlEarphonesAlt, SlEnvolope } from "react-icons/sl";
 import { Link } from "react-router-dom";
-import { SiteContact, SiteEmail, SiteName } from "utils/functions";
+import { Apis, ClientPostApi } from "services/Api";
+import { errorMessage, SiteContact, SiteEmail, SiteName, successMessage } from "utils/functions";
 
 const QuickLinks = [
   { title: "home", url: "" },
@@ -30,7 +31,39 @@ const SocialMediaLinks = [
   { title: "whatsapp", url: "", Icon: BsWhatsapp },
 ];
 
+
+
 export default function Footer() {
+
+  const [email, setEmail] = useState({
+    email: '',
+  })
+
+  const subscribe = async () => {
+    if (!email.email) return errorMessage('Email is missing')
+    const isValidEmail = (email) => {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    };
+    if (!isValidEmail(email.email)) return errorMessage('Invalid email')
+      const formdata = {
+       email:email.email
+      }
+      try {
+        const res = await ClientPostApi(Apis.non_auth.email_sub, formdata)
+        if(res.status === 200){
+          successMessage('subcribed successfully')
+          setEmail({
+            email:''
+          })
+        }else{
+          errorMessage(res.msg)
+        }
+      } catch (error) {
+        console.log(error)
+        errorMessage('sorry, something went wrong. try again')
+      }
+  }
   return (
     <div className="bg-gradient-to-tr from-primary to-purple-700 py-10">
       <div className="w-11/12 mx-auto lg:w-10/12">
@@ -48,9 +81,9 @@ export default function Footer() {
               ))}
             </div>
             <div className="text-white mt-8 border-t pt-5 flex flex-col gap-3">
-            <div className="flex items-center gap-2"> <SlClock /> Working hours: 24/7</div>
-            <div className="flex items-center gap-2"> <SlEnvolope /> {SiteEmail}</div>
-            <div className="flex items-center gap-2"> <SlEarphonesAlt /> {SiteContact}</div>
+              <div className="flex items-center gap-2"> <SlClock /> Working hours: 24/7</div>
+              <div className="flex items-center gap-2"> <SlEnvolope /> {SiteEmail}</div>
+              <div className="flex items-center gap-2"> <SlEarphonesAlt /> {SiteContact}</div>
             </div>
           </div>
           <div className="">
@@ -58,28 +91,28 @@ export default function Footer() {
               Quick Links
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-            <div className="flex flex-col gap-5">
-              {QuickLinks.map((item, index) => (
-                <Link
-                  className="text-white hover:text-orange-300 capitalize "
-                  to={`${item.url}`}
-                  key={index}
-                >
-                  {item.title}
-                </Link>
-              ))}
-            </div>
-            <div className="flex flex-col gap-5">
-              {QuickLinks2.map((item, index) => (
-                <Link
-                  className="text-white hover:text-orange-300 capitalize "
-                  to={`${item.url}`}
-                  key={index}
-                >
-                  {item.title}
-                </Link>
-              ))}
-            </div>
+              <div className="flex flex-col gap-5">
+                {QuickLinks.map((item, index) => (
+                  <Link
+                    className="text-white hover:text-orange-300 capitalize "
+                    to={`${item.url}`}
+                    key={index}
+                  >
+                    {item.title}
+                  </Link>
+                ))}
+              </div>
+              <div className="flex flex-col gap-5">
+                {QuickLinks2.map((item, index) => (
+                  <Link
+                    className="text-white hover:text-orange-300 capitalize "
+                    to={`${item.url}`}
+                    key={index}
+                  >
+                    {item.title}
+                  </Link>
+                ))}
+              </div>
             </div>
           </div>
           <div className="">
@@ -91,14 +124,17 @@ export default function Footer() {
               directly to your mailbox
             </div>
             <div className="bg-black/20 rounded-lg p-3 flex flex-col gap-5">
-                <input
-                  className="w-full px-5 py-3 rounded-lg text-white bg-gray-200 focus:outline-none"
-                  type="email"
-                  placeholder="Enter your email"
-                />
-                <button className="w-full px-5 py-3 rounded-lg text-white bg-red-600">
-                  Subscribe
-                </button>
+              <input
+                className="w-full px-5 py-3 rounded-lg text-black bg-gray-200 focus:outline-none"
+                type="email"
+                placeholder="Enter your email"
+                name="email"
+                value={email.email}
+                onChange={(e) => setEmail({...email,[e.target.name]:e.target.value})}
+              />
+              <button onClick={subscribe} className="w-full px-5 py-3 rounded-lg text-white bg-red-600">
+                Subscribe
+              </button>
             </div>
           </div>
         </div>

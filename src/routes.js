@@ -19,6 +19,8 @@ import AllUsers from "admin/adminComponents/AllUsers";
 import AllTransactions from "admin/adminComponents/AllTransactions";
 import AdminSettings from "admin/adminComponents/AdminSettings";
 import Banks from "admin/adminComponents/Banks";
+import Contacts from "admin/adminComponents/Contacts";
+import Newsletters from "admin/adminComponents/Newsletters";
 
 
 
@@ -55,5 +57,7 @@ export const AdminRoutes = [
     { path: 'users', component: AllUsers },
     { path: 'banks', component: Banks },
     { path: 'settings', component: AdminSettings },
+    { path: 'contacts', component: Contacts },
+    { path: 'newsletters', component: Newsletters },
    
 ]

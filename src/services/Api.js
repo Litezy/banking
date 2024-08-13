@@ -72,7 +72,9 @@ export const admin_urls = {
     update_verify: admin + '/update-verify',
     decline_depo: admin + '/decline-depo',
     settled_depos: admin + '/settled-depo',
-    remove_bank: admin + '/remove-bank'
+    remove_bank: admin + '/remove-bank',
+    contacts:admin + '/contacts',
+    subs:admin + '/subs',
 }
 export const Apis = {
     non_auth: non_auth_urls,

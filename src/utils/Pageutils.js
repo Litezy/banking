@@ -21,13 +21,13 @@ export const HomeServices  = [
     },
     {
         title: 'Saving goals',
-        content: 'Reduce exessive spendings and shortage of finance by increasing your sacings effortlessly',
+        content: 'Reduce exessive spendings and shortage of finance by increasing your savings effortlessly',
         Icon: BsPiggyBank,
     },
 ]
 
 export const HomeAnalyses = [
-    {title: 'total users', total: 46, type: 'k'},
+    {title: 'total users', total: 46, type: 'K  '},
     {title: 'active users', total: 32, type: 'K'},
     {title: 'daily transactions', total: 450, type: 'K'},
     {title: 'weekly transactions', total: 3.5, type: 'B'},
