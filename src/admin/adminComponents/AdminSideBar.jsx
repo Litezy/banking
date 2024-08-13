@@ -19,7 +19,6 @@ const AdminLinks = [
 ]
 
 const AdminLinks2 = [
-    { path: 'settings', url: '/admin/settings' },
     { path: 'logout', url: '' },
 ]
 

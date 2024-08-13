@@ -1,5 +1,6 @@
 
 import ContactForm from "components/general/ContactForm";
+import FAQ from "components/general/FAQ";
 import Testimonials from "components/general/Testimonials";
 import React from "react";
 import { Link } from "react-router-dom";
@@ -8,9 +9,9 @@ import { HomeAnalyses, HomeServices } from "utils/Pageutils";
 
 export default function Home() {
 
-const OPTIONS = { loop: true }
-const SLIDE_COUNT = 5
-const SLIDES = Array.from(Array(SLIDE_COUNT).keys())
+  const OPTIONS = { loop: true }
+  const SLIDE_COUNT = 5
+  const SLIDES = Array.from(Array(SLIDE_COUNT).keys())
 
   return (
     <>
@@ -55,7 +56,7 @@ const SLIDES = Array.from(Array(SLIDE_COUNT).keys())
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-5 -mt-10 relative w-11/12 mx-auto lg:w-10/12 mb-20">
         {HomeServices.map((item, index) => (
-          <div className="bg-white rounded-lg p-5 h-[15rem] shadow-2xl" key={index}>
+          <div className="bg-white rounded-lg transition-all hover:-translate-y-3 cursor-pointer duration-300 p-5 h-[15rem] shadow-2xl" key={index}>
             <div className="text-4xl lg:text-5xl w-fit mx-auto bg-gradient-to-tr from-primary to-purple-700 -mt-10 p-3 rounded-lg text-white"> <item.Icon /> </div>
             <div className="font-bold text-center text-2xl mb-10 mt-5 text-purple-900">{item.title}</div>
             <div className="text-center">{item.content}</div>
@@ -89,17 +90,36 @@ const SLIDES = Array.from(Array(SLIDE_COUNT).keys())
           <Testimonials slides={SLIDES} options={OPTIONS} />
         </div>
       </div>
-      
+
       <div className="w-11/12 mx-auto lg:w-10/12 mb-20">
-          <div className="w-fit mx-auto mb-10 font-bold text-4xl lg:text-5xl">
-            <div className="bg-zinc-500 h-1 w-3/5 mt-3 ml-auto"></div>
-            <div className="">Contact Us</div>
-            <div className="bg-zinc-500 h-1 w-3/5 mt-3"></div>
+        <div className="w-fit mx-auto mb-10 font-bold text-3xl lg:text-4xl">
+          <div className="bg-zinc-500 h-1 w-3/5 mt-3 ml-auto"></div>
+          <div className="">
+            <div className="text-center">Got Questions? We've Got answers</div>
           </div>
+          <div className="bg-zinc-500 h-1 w-3/5 mt-3"></div>
+        </div>
+        <div className="faq rounded-xl py-2 px-5 grid grid-cols-1 lg:grid-cols-2 gap-10">
+          <div className="">
+          </div>
+          <div className="w-full bg-white backdrop-blur-md rounded-s-md">
+          <FAQ />
+          </div>
+        
+        </div>
+      </div>
+
+
+      <div className="w-11/12 mx-auto lg:w-10/12 mb-20">
+        <div className="w-fit mx-auto mb-10 font-bold text-4xl lg:text-5xl">
+          <div className="bg-zinc-500 h-1 w-3/5 mt-3 ml-auto"></div>
+          <div className="">Contact Us</div>
+          <div className="bg-zinc-500 h-1 w-3/5 mt-3"></div>
+        </div>
         <div className="contacts rounded-xl py-10 px-5 grid grid-cols-1 lg:grid-cols-2 gap-10">
           <div className="">
           </div>
-            <ContactForm />
+          <ContactForm />
         </div>
       </div>
     </>

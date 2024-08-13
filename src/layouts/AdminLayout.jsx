@@ -66,7 +66,6 @@ export default function AdminLayout({ children }) {
     ]
 
     const SideLinks2 = [
-        { path: 'settings', url: '/admin/settings' },
         { path: 'logout', url: '' },
     ]
     const location = useLocation()

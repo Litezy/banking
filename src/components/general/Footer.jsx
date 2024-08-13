@@ -121,7 +121,7 @@ export default function Footer() {
             </div>
             <div className="text-white my-5">
               Be among the first to get latest financial and economical updates
-              directly to your mailbox
+              directly to your mailbox.
             </div>
             <div className="bg-black/20 rounded-lg p-3 flex flex-col gap-5">
               <input

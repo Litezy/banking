@@ -56,7 +56,6 @@ export const AdminRoutes = [
     { path: 'transactions', component: AllTransactions },
     { path: 'users', component: AllUsers },
     { path: 'banks', component: Banks },
-    { path: 'settings', component: AdminSettings },
     { path: 'contacts', component: Contacts },
     { path: 'newsletters', component: Newsletters },
    

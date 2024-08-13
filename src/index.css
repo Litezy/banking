@@ -5,7 +5,7 @@
 
 
 body {
-    font-family: "Rubik", sans-serif;
+    font-family: "Nunito Sans", sans-serif;
     font-optical-sizing: auto;
     font-weight: 300;
     font-style: normal;
@@ -187,6 +187,12 @@ input[type=number] {
 
 .contacts {
   background: url(./assets/contact.jpg);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+.faq {
+  background: url(./assets/faq.jpg);
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
