@@ -178,7 +178,7 @@ const Banks = () => {
       <div className="w-2/4 mx-auto">
         <Summary color='bg-orange-500 text-white' title={'Total Admin Banks'} data={banks.length} />
       </div>
-      <div class="relative overflow-x-auto rounded-md mt-10 ">
+      <div className="relative overflow-x-auto rounded-md mt-10 ">
         {loading &&
           <div className="absolute top-1/3 left-1/2 -translate-x-1/2">
             <Loader />
@@ -186,66 +186,66 @@ const Banks = () => {
         }
         <div onClick={() => setAdd(true)} className=" cursor-pointer my-4 w-fit ml-auto px-5 py-1 rounded-md bg-primary text-white">Add Bank</div>
 
-        <table class="w-full text-sm text-left rtl:text-right rounded-md">
-          <thead class=" bg-orange-500 text-base text-white">
+        <table className="w-full text-sm text-left rtl:text-right rounded-md">
+          <thead className=" bg-orange-500 text-base text-white">
             <tr>
-              <th scope="col" class="px-3 py-3">
+              <th scope="col" className="px-3 py-3">
                 Bank Name
               </th>
-              <th scope="col" class="px-3 py-3">
+              <th scope="col" className="px-3 py-3">
                 Owner
               </th>
-              <th scope="col" class="px-3 py-3">
+              <th scope="col" className="px-3 py-3">
                 Address
               </th>
-              <th scope="col" class="px-3 py-3">
+              <th scope="col" className="px-3 py-3">
                 Account No.
               </th>
-              <th scope="col" class="px-3 py-3">
+              <th scope="col" className="px-3 py-3">
                 Route No.
               </th>
-              <th scope="col" class="px-3 py-3">
+              <th scope="col" className="px-3 py-3">
                 Swift No
               </th>
-              <th scope="col" class="px-3 py-3">
+              <th scope="col" className="px-3 py-3">
                 Iban No
               </th>
-              <th scope="col" class="px-3 py-3">
+              <th scope="col" className="px-3 py-3">
                 Hide/Unhide
               </th>
-              <th scope="col" class="px-3 py-3">
+              <th scope="col" className="px-3 py-3">
                 Delete
               </th>
             </tr>
           </thead>
           <tbody>
             {banks.length > 0 ? banks.map((item, i) => (
-              <tr class="bg-white border-b " key={i}>
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
+              <tr className="bg-white border-b " key={i}>
+                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
                   {item.bank_name}
                 </th>
-                <td class="px-3 py-3">
+                <td className="px-3 py-3">
                   {item.fullname}
                 </td>
-                <td class="px-3 py-3">
+                <td className="px-3 py-3">
                   {item.bank_address}
                 </td>
-                <td class="px-3 py-3">
+                <td className="px-3 py-3">
                   {item.account_no}
                 </td>
-                <td class="px-3 py-3">
+                <td className="px-3 py-3">
                   {item.route_no}
                 </td>
-                <td class="px-3 py-3">
+                <td className="px-3 py-3">
                   {item.swift}
                 </td>
-                <td class="px-3 py-3">
+                <td className="px-3 py-3">
                   {item.iban}
                 </td>
-                <td class="px-3 py-3">
+                <td className="px-3 py-3">
                   <button onClick={HideOrUnhide} onMouseOver={() => select(item)} className={`${item.hidden === 'true' ? 'bg-orange-500' : 'bg-primary'} text-white px-3 rounded-lg py-2`}>{item.hidden === 'true' ? 'Unhide' : 'Hide'}</button>
                 </td>
-                <td class="px-3 py-3">
+                <td className="px-3 py-3">
                   <button onClick={deleteBank} onMouseOver={() => select(item)} className={` text-white px-3 bg-red-600 rounded-lg py-2`}>delete</button>
                 </td>
               </tr>

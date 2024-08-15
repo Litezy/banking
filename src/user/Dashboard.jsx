@@ -117,9 +117,7 @@ export default function Dashboard() {
                 setUserSavings(response.data)
                 dispatch(dispatchUserSavings(response.data))
                 //    console.log(response.data)
-            } else {
-                console.log(response)
-            }
+            } 
         } catch (error) {
             errorMessage(error.message)
         }

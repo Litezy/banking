@@ -108,16 +108,16 @@ useEffect(()=>{
 
 
         <div className="w-fit ml-auto mr-5 mt-5">
-          <div class="w-full flex flex-col items-center ">
-            <span class="text-sm text-gray-700 ">
-              Showing <span class="font-semibold text-black">{firstIndex === 0? '1': firstIndex}</span> to
-              <span class="font-semibold text-black"> {lastIndex > notifications.length ? notifications.length : lastIndex }</span> of
-              <span class="font-semibold text-black"> {notifications.length} </span>
+          <div className="w-full flex flex-col items-center ">
+            <span className="text-sm text-gray-700 ">
+              Showing <span className="font-semibold text-black">{firstIndex === 0? '1': firstIndex}</span> to
+              <span className="font-semibold text-black"> {lastIndex > notifications.length ? notifications.length : lastIndex }</span> of
+              <span className="font-semibold text-black"> {notifications.length} </span>
               Transactions
             </span>
 
-            <div class=" flex items-center gap-4 mt-2 xs:mt-0">
-              <button onClick={prevPage} class="flex items-center justify-center px-4 h-10 text-base font-medium text-white bg-[#60a5fa] rounded-s hover:bg-[#4789da]
+            <div className=" flex items-center gap-4 mt-2 xs:mt-0">
+              <button onClick={prevPage} className="flex items-center justify-center px-4 h-10 text-base font-medium text-white bg-[#60a5fa] rounded-s hover:bg-[#4789da]
                       ">
                 Prev
               </button>
@@ -129,7 +129,7 @@ useEffect(()=>{
                       ${currentPage === n ? 'bg-[#60a5fa] text-white' : 'bg-white hover:bg-gray-100'}`}>{n}</a>
                 </div>
               ))}
-              <button onClick={nextPage} class="flex items-center justify-center px-4 h-10 text-base font-medium
+              <button onClick={nextPage} className="flex items-center justify-center px-4 h-10 text-base font-medium
                      text-white bg-[#60a5fa] rounded-s hover:bg-[#4789da] rounded-e   ">
                 Next
               </button>

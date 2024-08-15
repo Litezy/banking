@@ -192,43 +192,43 @@ const ValidateDeposit = ({ setScreen }) => {
       </div>
       <div className=" my-5 text-lg">Check and Validate Deposits</div>
 
-      <div class="relative overflow-x-auto rounded-md">
-        <table class="w-full text-sm text-left rtl:text-right">
-          <thead class=" bg-primary text-xl text-white">
+      <div className="relative overflow-x-auto rounded-md">
+        <table className="w-full text-sm text-left rtl:text-right">
+          <thead className=" bg-primary text-xl text-white">
             <tr>
-              <th scope="col" class="px-6 py-3">
+              <th scope="col" className="px-6 py-3">
                 User
               </th>
-              <th scope="col" class="px-6 py-3">
+              <th scope="col" className="px-6 py-3">
                 ID
               </th>
-              <th scope="col" class="px-6 py-3">
+              <th scope="col" className="px-6 py-3">
                 amount
               </th>
-              <th scope="col" class="px-6 py-3">
+              <th scope="col" className="px-6 py-3">
                 Date Submitted
               </th>
-              <th scope="col" class="px-6 py-3">
+              <th scope="col" className="px-6 py-3">
                 Action
               </th>
             </tr>
           </thead>
           <tbody>
             {proofs.length > 0 ? proofs.map((item, i) => (
-              <tr class="bg-white border-b " key={i}>
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
+              <tr className="bg-white border-b " key={i}>
+                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
                   {item.userdeposits?.firstname}  {item.userdeposits?.lastname}
                 </th>
-                <td class="px-6 py-4">
+                <td className="px-6 py-4">
                   {item.userdeposits?.id}
                 </td>
-                <td class="px-6 py-4">
+                <td className="px-6 py-4">
                   {item.userdeposits.currency}{item.amount}
                 </td>
-                <td class="px-6 py-4">
+                <td className="px-6 py-4">
                   {moment(item.createdAt).format(`DD-MM-YYYY hh:mm A`)}
                 </td>
-                <td class="px-6 py-4">
+                <td className="px-6 py-4">
                   <button onMouseOver={() => selectItem(item)} onClick={() => setModal(true)} className="bg-primary text-white px-5 rounded-lg py-2">review</button>
                 </td>
               </tr>

@@ -39,29 +39,29 @@ const UserDetails = ({ setActive }) => {
             </div>
             <div className="my-5 text-xl font-bold text-center">Below are Users Details on your platform</div>
 
-            <div class="relative overflow-x-auto rounded-md mt-10">
-                <table class="w-full text-sm text-left rtl:text-right">
-                    <thead class=" bg-primary text-xl text-white">
+            <div className="relative overflow-x-auto rounded-md mt-10">
+                <table className="w-full text-sm text-left rtl:text-right">
+                    <thead className=" bg-primary text-xl text-white">
                         <tr>
-                            <th scope="col" class="px-3 py-3">
+                            <th scope="col" className="px-3 py-3">
                                 ID
                             </th>
-                            <th scope="col" class="px-3 py-3">
+                            <th scope="col" className="px-3 py-3">
                                 FullName
                             </th>
-                            <th scope="col" class="px-3 py-3">
+                            <th scope="col" className="px-3 py-3">
                                 Email
                             </th>
-                            <th scope="col" class="px-3 py-3">
+                            <th scope="col" className="px-3 py-3">
                                 Country
                             </th>
-                            <th scope="col" class="px-3 py-3">
+                            <th scope="col" className="px-3 py-3">
                                 State
                             </th>
-                            <th scope="col" class="px-3 py-3">
+                            <th scope="col" className="px-3 py-3">
                                 Balance
                             </th>
-                            <th scope="col" class="px-3 py-3">
+                            <th scope="col" className="px-3 py-3">
                                 Date Joined
                             </th>
                             
@@ -69,26 +69,26 @@ const UserDetails = ({ setActive }) => {
                     </thead>
                     <tbody>
                         {Array.isArray(users) ? users.map((item, i) => (
-                            <tr class="bg-white border-b " key={i}>
-                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
+                            <tr className="bg-white border-b " key={i}>
+                                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
                                     {item.id}
                                 </th>
-                                <td class="px-3 py-3">
+                                <td className="px-3 py-3">
                                     {item.firstname } { item.lastname} 
                                 </td>
-                                <td class="px-3 py-3">
+                                <td className="px-3 py-3">
                                     {item.email}
                                 </td>
-                                <td class="px-3 py-3">
+                                <td className="px-3 py-3">
                                     {item.country}
                                 </td>
-                                <td class="px-3 py-3">
+                                <td className="px-3 py-3">
                                     {item.state}
                                 </td>
-                                <td class="px-3 py-3">
+                                <td className="px-3 py-3">
                                    {item.currency}{item.balance}
                                 </td>
-                                <td class="px-3 py-3">
+                                <td className="px-3 py-3">
                                     {moment(item.createdAt).format(`DD-MM-YYYY hh:mm A`)}
                                 </td>
                             </tr>

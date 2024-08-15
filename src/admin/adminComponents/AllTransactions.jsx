@@ -125,61 +125,61 @@ const AllTransactions = () => {
         </ModalLayout>
       }
 
-      <div class="relative overflow-x-auto rounded-md mt-10">
-        <table class="w-full text-sm text-left rtl:text-right">
-          <thead class=" bg-primary text-xl text-white">
+      <div className="relative overflow-x-auto rounded-md mt-10">
+        <table className="w-full text-sm text-left rtl:text-right">
+          <thead className=" bg-primary text-xl text-white">
             <tr>
-              <th scope="col" class="px-3 py-3">
+              <th scope="col" className="px-3 py-3">
                 ID
               </th>
-              <th scope="col" class="px-3 py-3">
+              <th scope="col" className="px-3 py-3">
                 User
               </th>
-              <th scope="col" class="px-3 py-3">
+              <th scope="col" className="px-3 py-3">
                 Email
               </th>
-              <th scope="col" class="px-3 py-3">
+              <th scope="col" className="px-3 py-3">
                 Amount
               </th>
-              <th scope="col" class="px-3 py-3">
+              <th scope="col" className="px-3 py-3">
                 Status
               </th>
-              <th scope="col" class="px-3 py-3">
+              <th scope="col" className="px-3 py-3">
                 Type
               </th>
-              <th scope="col" class="px-3 py-3">
+              <th scope="col" className="px-3 py-3">
                 Date
               </th>
-              <th scope="col" class="px-3 py-3">
+              <th scope="col" className="px-3 py-3">
                 Alter
               </th>
             </tr>
           </thead>
           <tbody>
             {transhistory.length > 0 ? transhistory.map((item, i) => (
-              <tr class="bg-white border-b " key={i}>
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
+              <tr className="bg-white border-b " key={i}>
+                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
                   {item.id}
                 </th>
-                <td class="px-3 py-3">
+                <td className="px-3 py-3">
                   {item.usertransactions?.firstname}
                 </td>
-                <td class="px-3 py-3">
+                <td className="px-3 py-3">
                   {item.usertransactions?.email}
                 </td>
-                <td class="px-3 py-3">
+                <td className="px-3 py-3">
                   {item.amount}
                 </td>
-                <td class="px-3 py-3">
+                <td className="px-3 py-3">
                   {item.status}
                 </td>
-                <td class="px-3 py-3">
+                <td className="px-3 py-3">
                   {item.type}
                 </td>
-                <td class="px-3 py-3">
+                <td className="px-3 py-3">
                   {item.date}
                 </td>
-                <td class="px-3 py-3">
+                <td className="px-3 py-3">
                   <button onClick={() => setModal(true)} onMouseOver={() => selectOne(item)} className="bg-green-500 text-white px-5 rounded-lg py-2">alter</button>
                 </td>
               </tr>

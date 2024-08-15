@@ -8,6 +8,7 @@ import Loader from 'utils/Loader'
 
 const InitiateDeposit = ({ setScreen }) => {
   const [loading, setLoading] = useState(false)
+  const [userdata, setUserdata] = useState({})
 
   const [forms, setForms] = useState({
     email: '',
@@ -33,6 +34,7 @@ const InitiateDeposit = ({ setScreen }) => {
       const res = await PostApi(Apis.admin.find_email, formdata)
       if (res.status === 200) {
         successMessage(res.msg)
+        setUserdata(res.data)
         setView(2)
       } else {
         errorMessage(res.msg)
@@ -47,10 +49,10 @@ const InitiateDeposit = ({ setScreen }) => {
   const deposit = async (e) => {
     e.preventDefault()
     if (!forms.amount) return errorMessage(`Amount is required`)
-    if (forms.amount <= 0 ) return errorMessage(`Negative amount not allowed`)
+    if (forms.amount <= 0) return errorMessage(`Negative amount not allowed`)
     const formdata = {
       email: forms.email,
-      amount:forms.amount
+      amount: forms.amount
     }
     setLoading(true)
     try {
@@ -58,9 +60,9 @@ const InitiateDeposit = ({ setScreen }) => {
       if (res.status === 200) {
         successMessage(res.msg)
         setForms({
-          ...forms, 
-          email:'', 
-          amount:''
+          ...forms,
+          email: '',
+          amount: ''
         })
         setView(1)
       } else {
@@ -100,11 +102,21 @@ const InitiateDeposit = ({ setScreen }) => {
       </div>}
       {view === 2 && <div className="w-11/12 mx-auto bg-white h-fit p-8 rounded-lg flex items-center justify-center">
         <form onSubmit={deposit} className="w-2/4 mx-auto flex flex-col items-start gap-2">
-        {loading &&
+          {loading &&
             <div className="absolute w-20 rounded-md top-1/2 h-full left-1/2 -translate-x-1/2">
               <Loader />
             </div>
           }
+          <div className="text-lg font-bold text-center">User Details</div>
+          <div className="flex items-center gap-3">
+            <div className="text-lg font-bold">Name:</div>
+            <div className="">{userdata.firstname} {userdata.lastname}</div>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="text-lg font-bold">Email:</div>
+            <div className="">{userdata.email}</div>
+          </div>
+
           <div className="w-1/2 text-lg font-bold">Amount($)</div>
           <FormComponent formtype='phone' name={`amount`} value={forms.amount} onchange={handleChange} />
           <div className="w-3/4 mx-auto mt-3">

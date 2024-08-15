@@ -21,6 +21,9 @@ import AdminSettings from "admin/adminComponents/AdminSettings";
 import Banks from "admin/adminComponents/Banks";
 import Contacts from "admin/adminComponents/Contacts";
 import Newsletters from "admin/adminComponents/Newsletters";
+import Services from "components/general/Services";
+import ContactUs from "components/general/ContactUs";
+import AboutUs from "components/general/AboutUs";
 
 
 
@@ -34,8 +37,11 @@ export const FormRoutes = [
 ]
 
 export const GeneralRoutes = [
-    { path: '', component: Home },
+    { path: 'home', component: Home },
     { path: '*', component: Notfound },
+    { path: 'services', component: Services },
+    { path: 'contact-us', component: ContactUs },
+    { path: 'about-us', component: AboutUs },
 ]
 
 

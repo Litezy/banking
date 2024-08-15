@@ -182,7 +182,7 @@ export default function Signup() {
 
                     <Formbutton label="Create Account" loading={loading ? true :false}/>
                     <div className="text-zinc-500 mt-5 text-center">Already have an account? <Link to="/login" className='text-blue-600'>Login Account</Link> </div>
-                    <div className="text-zinc-500 mt-3 text-center"><Link to="/" className='text-blue-600'>Go back home</Link> </div>
+                    <div className="text-zinc-500 mt-3 text-center"><Link to="/home" className='text-blue-600'>Go back home</Link> </div>
                 </form>
             </div>
         </div>

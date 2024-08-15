@@ -11,11 +11,10 @@ import { Apis, ClientPostApi } from "services/Api";
 import { errorMessage, SiteContact, SiteEmail, SiteName, successMessage } from "utils/functions";
 
 const QuickLinks = [
-  { title: "home", url: "" },
-  { title: "services", url: "" },
-  { title: "contact us", url: "" },
-  { title: "about us", url: "" },
-  { title: "faqs", url: "" },
+  { title: "home", url: "/home" },
+  { title: "services", url: "/services" },
+  { title: "contact us", url: "/contact-us" },
+  { title: "about us", url: "/about-us" },
 ];
 
 const QuickLinks2 = [

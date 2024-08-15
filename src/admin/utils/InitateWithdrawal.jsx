@@ -8,6 +8,7 @@ import Loader from 'utils/Loader'
 
 const InitateWithdrawal = ({setScreen}) => {
   const [loading, setLoading] = useState(false)
+  const [userdata, setUserdata] = useState({})
 
   const [forms, setForms] = useState({
     email: '',
@@ -33,6 +34,7 @@ const InitateWithdrawal = ({setScreen}) => {
       const res = await PostApi(Apis.admin.find_email, formdata)
       if (res.status === 200) {
         successMessage(res.msg)
+        setUserdata(res.data)
         setView(2)
       } else {
         errorMessage(res.msg)
@@ -105,6 +107,15 @@ const InitateWithdrawal = ({setScreen}) => {
               <Loader />
             </div>
           }
+          <div className="text-lg font-bold text-center">User Details</div>
+          <div className="flex items-center gap-3">
+            <div className="text-lg font-bold">Name:</div>
+            <div className="">{userdata.firstname} {userdata.lastname}</div>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="text-lg font-bold">Email:</div>
+            <div className="">{userdata.email}</div>
+          </div>
           <div className="w-1/2 text-lg font-bold">Amount($)</div>
           <FormComponent formtype='phone' name={`amount`} value={forms.amount} onchange={handleChange} />
           <div className="w-3/4 mx-auto mt-3">

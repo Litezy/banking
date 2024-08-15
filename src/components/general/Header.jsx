@@ -5,10 +5,10 @@ import { Link } from "react-router-dom";
 import { SiteContact, SiteEmail, SiteName } from "utils/functions";
 
 const HeadNavs = [
-  { title: "home", url: "" },
-  { title: "services", url: "" },
-  { title: "contact us", url: "" },
-  { title: "faqs", url: "" },
+  { title: "home", url: "/home" },
+  { title: "services", url: "/services" },
+  { title: "contact us", url: "/contact-us" },
+  { title: "about us", url: "/about-us" },
 ];
 export default function Header() {
     const [views, setViews] = useState(false)
