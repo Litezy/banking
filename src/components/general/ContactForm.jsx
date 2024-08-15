@@ -72,20 +72,20 @@ export default function ContactForm() {
         }
         <div className="flex md:items-center flex-col md:flex-row justify-between w-full gap-5">
           <div className="md:w-1/2 h-14 ">
-            <input type="text" name='name' value={forms.name} onChange={handleChange} className='border w-full h-full pl-2 rounded-sm border-black  ' placeholder='full name' />
+            <input type="text" name='name' value={forms.name} onChange={handleChange} className='border w-full h-full pl-2 rounded-sm  ' placeholder='full name' />
           </div>
           <div className="md:w-1/2 h-14 ">
-            <input type="email" name='email' value={forms.email} onChange={handleChange} className='border w-full h-full pl-2 rounded-sm border-black ' placeholder='email address' />
+            <input type="email" name='email' value={forms.email} onChange={handleChange} className='border w-full h-full pl-2 rounded-sm ' placeholder='email address' />
           </div>
         </div>
         <div className="my-3 w-full h-14">
-          <input type="text" name='subject' value={forms.subject} onChange={handleChange} className='border w-full h-full pl-2 rounded-sm border-black ' placeholder='subject' />
+          <input type="text" name='subject' value={forms.subject} onChange={handleChange} className='border w-full h-full pl-2 rounded-sm ' placeholder='subject' />
         </div>
         <div className="my-3 w-full ">
-          <textarea name='message' value={forms.message} onChange={handleChange} className='w-full resize-none h-40 lg:h-52 p-3 border-black border ' placeholder='message'></textarea>
+          <textarea name='message' value={forms.message} onChange={handleChange} className='w-full resize-none h-40 lg:h-52 p-3 border ' placeholder='message'></textarea>
         </div>
         <div className="mt-3">
-          <ButtonComponent title={`Send Message`} bg={`text-white bg-black h-12`} />
+          <ButtonComponent title={`Send Message`} bg={`text-white bg-gradient-to-tr from-primary to-purple-700 h-12`} />
         </div>
       </form>
     </div>

@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { PiX } from "react-icons/pi";
 import { SlClock, SlEarphonesAlt, SlEnvolope, SlMenu } from "react-icons/sl";
 import { Link } from "react-router-dom";
+import logo from 'assets/logo.png'
 import { SiteContact, SiteEmail, SiteName } from "utils/functions";
 
 const HeadNavs = [
-  { title: "home", url: "/home" },
+  { title: "home", url: "/" },
   { title: "services", url: "/services" },
   { title: "contact us", url: "/contact-us" },
   { title: "about us", url: "/about-us" },
@@ -29,10 +30,10 @@ export default function Header() {
           <SlEarphonesAlt /> {SiteContact}
         </div>
       </div>
-      <div className="flex items-center justify-evenly p-2">
+      <div className="flex items-center justify-around p-2">
         <div className="">
           <Link to="/" className="">
-            {SiteName}
+            <img src={logo} alt="" className="h-10 w-auto" />
           </Link>
         </div>
         <div className="hidden lg:flex items-center justify-end">

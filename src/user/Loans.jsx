@@ -3,7 +3,7 @@ import { FaEdit } from 'react-icons/fa'
 import { FaArrowLeft, FaPlus } from 'react-icons/fa6'
 import { Apis, GetApi, PostApi } from 'services/Api'
 import { errorMessage, successMessage } from 'utils/functions'
-import loanimg from '../assets/dashboard/loan1.png'
+import loanimg from 'assets/dashboard/loan1.png'
 import { useSelector } from 'react-redux'
 import { FaChevronRight } from "react-icons/fa6";
 import ButtonComponent from 'utils/ButtonComponent'

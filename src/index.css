@@ -185,6 +185,13 @@ input[type=number] {
   }
 }
 
+.abt {
+  background: url(./assets/abt.jpg);
+  filter: brightness(50%);
+  background-size: cover;
+  background-position: center;
+}
+
 .contacts {
   background: url(./assets/contact.jpg);
   background-size: cover;

@@ -38,7 +38,7 @@ export const FormRoutes = [
 ]
 
 export const GeneralRoutes = [
-    { path: 'home', component: Home },
+    { path: '/', component: Home },
     { path: '*', component: Notfound },
     { path: 'services', component: Services },
     { path: 'contact-us', component: ContactUs },
