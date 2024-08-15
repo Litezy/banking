@@ -114,6 +114,7 @@ const Transfer = () => {
       if (res.status === 200) {
         fetchTransfers()
         setScreen(2)
+        successMessage(`payment proof submitted successfully`)
       } else {
         errorMessage(res.msg)
       }
@@ -286,7 +287,7 @@ const Transfer = () => {
                     </div>
                   ))}
 
-                  <div onClick={() => setScreen(4)} className=" cursor-pointer w-fit px-4 py-2 rounded-md bg-primary text-white ml-auto">I have made payment</div>
+                  <button onClick={() => setScreen(4)} className=" cursor-pointer w-fit px-4 py-2  rounded-full bg-gradient-to-tr   from-primary to-purple-700 border text-white ml-auto">I have made payment</button>
                 </div>
               </div>
             </div>

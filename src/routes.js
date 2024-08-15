@@ -24,6 +24,7 @@ import Newsletters from "admin/adminComponents/Newsletters";
 import Services from "components/general/Services";
 import ContactUs from "components/general/ContactUs";
 import AboutUs from "components/general/AboutUs";
+import Verifications from "admin/adminComponents/Verifications";
 
 
 
@@ -61,8 +62,10 @@ export const AdminRoutes = [
     { path: 'transfers', component: AllTransfers },
     { path: 'transactions', component: AllTransactions },
     { path: 'users', component: AllUsers },
+    { path: 'verifications', component: Verifications },
     { path: 'banks', component: Banks },
     { path: 'contacts', component: Contacts },
     { path: 'newsletters', component: Newsletters },
+   
    
 ]
