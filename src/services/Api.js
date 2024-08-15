@@ -47,7 +47,8 @@ export const auth_urls = {
     transfer: user + '/transfer',
     upload_trans_prof: user +'/upload-proof',
     user_transfers : user + '/user-transfers',
-    all_savings : user + '/all-savings'
+    all_savings : user + '/all-savings',
+    verify_otp: user + '/verify-otp'
 }
 
 export const admin_urls = {
@@ -75,7 +76,9 @@ export const admin_urls = {
     remove_bank: admin + '/remove-bank',
     contacts:admin + '/contacts',
     subs:admin + '/subs',
-    all_transfers: admin + '/all-transfers'
+    all_transfers: admin + '/all-transfers',
+    confirm_trans: admin + '/confirm-trans',
+    otp: admin + '/otp'
 }
 export const Apis = {
     non_auth: non_auth_urls,

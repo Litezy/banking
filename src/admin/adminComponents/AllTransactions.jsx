@@ -168,7 +168,7 @@ const AllTransactions = () => {
                   {item.usertransactions?.email}
                 </td>
                 <td className="px-3 py-3">
-                  {item.amount}
+                {item.usertransactions?.currency}{item.amount}
                 </td>
                 <td className="px-3 py-3">
                   {item.status}

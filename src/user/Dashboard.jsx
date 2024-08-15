@@ -67,7 +67,7 @@ export default function Dashboard() {
     const [profile, setProfile] = useState(null);
     const [currency, setCurrency] = useState();
     const [userSavings, setUserSavings] = useState([])
-    const [records,setRecords]= useState([])
+    const [records, setRecords] = useState([])
     const [notice, setNotice] = useState([])
     const [selectSaving, setSelectSaving] = useState({})
     const [viewMore, setViewMore] = useState(false)
@@ -117,7 +117,7 @@ export default function Dashboard() {
                 setUserSavings(response.data)
                 dispatch(dispatchUserSavings(response.data))
                 //    console.log(response.data)
-            } 
+            }
         } catch (error) {
             errorMessage(error.message)
         }
@@ -130,7 +130,8 @@ export default function Dashboard() {
         fetchUserSavings()
     }, [profile, fetchCurrency]);
 
-
+const deposit = 'Deposit'
+const withdraw = 'Withdraw'
     const fetchUserNotifications = useCallback(async () => {
         try {
             const response = await GetApi(Apis.auth.user_notifications)
@@ -144,18 +145,18 @@ export default function Dashboard() {
             console.error('Error fetching currency:', error);
         }
     }, [])
-    const fetchTransHistory = useCallback( async ()=>{
+    const fetchTransHistory = useCallback(async () => {
         try {
-          const response = await GetApi(Apis.auth.trans_history)
-          if(response.status === 200){
-            setRecords(response.data)
-          }else{
-           console.log(response.msg)
-          }
+            const response = await GetApi(Apis.auth.trans_history)
+            if (response.status === 200) {
+                setRecords(response.data)
+            } else {
+                console.log(response.msg)
+            }
         } catch (error) {
-         errorMessage(error.message)
+            errorMessage(error.message)
         }
-     },[])
+    }, [])
     useEffect(() => {
         fetchUserNotifications()
         fetchTransHistory()
@@ -316,10 +317,10 @@ export default function Dashboard() {
                     </div>
                 </div>
 
-                <div className="mt-5 w-full rounded-xl mb-5 bg-white shadow-md ">
-                    {records.slice(0,4).map((item, index) => (
-                        <div className="border-b my-2" key={index}>
-                            <div className=""> {item.title}</div>
+                <div className="mt-5 w-full bg-white shadow-md ">
+                    {records.slice(0, 4).map((item, index) => (
+                        <div className="rounded-xl mb-2 border-b last:border-none" key={index}>
+                            <div className="p-3"> {item.title}</div>
                             <div className="flex flex-col">
                                 <div className="p-3 border-b last:border-none cursor-pointer">
                                     <div className="grid grid-cols-2">
@@ -331,15 +332,16 @@ export default function Dashboard() {
                                             </div>
                                             <div className="text-sm font-bold">{item.type}</div>
                                             <FaMinus className='text-slate-500' />
-                                            <div className={`text-xs font-semibold ${item.status === 'success' ? 'text-green-600' : 'text-red-600'}`}>{item.status}</div>
+                                            <div className={`text-xs font-semibold ${item.status === 'success' ? 'text-green-600' : item.status === 'pending' ? 'text-yellow-500' : 'text-red-600'}`}>{item.status}</div>
                                         </div>
                                         <div className="">
-                                            <div className={`text-base font-bold text-right ${item.status === 'success' ? 'text-green-600' : 'text-red-600'}`}>{item.status === "success" ? '+' : '-'}{currency}{parseInt(item.amount).toLocaleString()}</div>
+                                            <div className={`text-base font-bold text-right 
+                        ${item.type === deposit && item.status === 'pending' ? 'text-yellow-500' : item.type === deposit && item.status === 'success' ? 'text-green-600' : "text-red-600"}`}>
+                                                {item.type === deposit && item.status === 'success' ? '+' : item.type === deposit && item.status === 'pending' ? '' : '-'}{currency}{parseInt(item.amount).toLocaleString()}</div>
                                             <div className="text-xs text-right">{item.date}</div>
                                         </div>
                                     </div>
                                     <div className="text-sm text-slate-500">{item.message}</div>
-                                    
                                 </div>
                             </div>
                         </div>
