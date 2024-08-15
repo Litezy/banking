@@ -18,7 +18,7 @@ export default function VerifyEmailAccount() {
         const form = {
             code: pins.join('')
         }
-        console.log(form)
+        console.log(form);
     }
 
     return (
