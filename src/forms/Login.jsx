@@ -83,7 +83,7 @@ export default function Login() {
                     </div>
                     <ButtonComponent bg={`bg-primary text-white h-12`} title="Login Account" />
                     <div className="text-zinc-500 mt-5 text-center">Don't have an account? <Link to="/signup" className='text-blue-600'>Create Account</Link> </div>
-                    <div className="text-zinc-500 mt-3 text-center"><Link to="/home" className='text-blue-600'>Go back home</Link> </div>
+                    <div className="text-zinc-500 mt-3 text-center"><Link to="/" className='text-blue-600'>Go back home</Link> </div>
                 </form>
             </div>
         </div>

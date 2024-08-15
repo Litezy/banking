@@ -28,6 +28,8 @@ const AboutUs = () => {
     },
   ]
   return (
+    <>
+    <div className="abt h-[20rem] lg:h-[30rem]"></div>
     <div className='w-11/12 mx-auto lg:w-10/12 mb-20'>
       <div className="lg:text-4xl text-3xl font-bold my-3">About Us</div>
       <div className="text-base text-slate-900 w-full 
@@ -81,6 +83,7 @@ const AboutUs = () => {
         </div>
       </div>
     </div>
+    </>
   )
 }
 

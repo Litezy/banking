@@ -9,9 +9,10 @@ import { SlClock, SlEarphonesAlt, SlEnvolope } from "react-icons/sl";
 import { Link } from "react-router-dom";
 import { Apis, ClientPostApi } from "services/Api";
 import { errorMessage, SiteContact, SiteEmail, SiteName, successMessage } from "utils/functions";
+import logo from 'assets/logo.png'
 
 const QuickLinks = [
-  { title: "home", url: "/home" },
+  { title: "home", url: "/" },
   { title: "services", url: "/services" },
   { title: "contact us", url: "/contact-us" },
   { title: "about us", url: "/about-us" },
@@ -68,7 +69,7 @@ export default function Footer() {
       <div className="w-11/12 mx-auto lg:w-10/12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           <div className="">
-            <div className="text-white text-xl">{SiteName}</div>
+            <div className="text-white text-xl"> <div className="bg-white py-1 w-fit rounded-lg px-3"><img src={logo} alt="" className="h-10 w-auto" /> </div> {SiteName}</div>
             <div className="flex flex-row items-center gap-8 text-2xl text-white mt-8">
               {SocialMediaLinks.map((item, index) => (
                 <div
