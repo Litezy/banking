@@ -72,6 +72,25 @@ const Savings = () => {
         fetchAdminBanks()
     }, [profile])
 
+
+    const fetchSavingsHistory = useCallback(async () => {
+        try {
+            const response = await GetApi(Apis.auth.all_savings)
+            if (response.status === 200) {
+                setRecords(response.data)
+            } else {
+                console.log(response.msg)
+            }
+        } catch (error) {
+            errorMessage(error.message)
+        }
+    }, [])
+
+
+    useEffect(() => {
+        fetchSavingsHistory()
+    }, [ fetchSavingsHistory])
+
     const steps = [
         {
             step: 'Contact customer support',
@@ -209,23 +228,7 @@ const Savings = () => {
 
     }
 
-    const fetchSavingsHistory = useCallback(async () => {
-        try {
-            const response = await GetApi(Apis.auth.all_savings)
-            if (response.status === 200) {
-                setRecords(response.data)
-            } else {
-                console.log(response.msg)
-            }
-        } catch (error) {
-            errorMessage(error.message)
-        }
-    }, [])
-
-
-    useEffect(() => {
-        fetchSavingsHistory()
-    }, [profile, createSavings])
+  
 
     const selectItem = (items) => {
         setSelectedItem(items)
@@ -452,7 +455,8 @@ const Savings = () => {
                             </div>}
                         </form>
                         {!topup && <div className="mt-3 w-11/12 mx-auto">
-                            <ButtonComponent onclick={deletsavings} type='button' title={`Delete Savings`} bg={`bg-red-600   text-white h-10`} />
+                            <ButtonComponent onclick={deletsavings} type='button' title={`Terminate Savings`} bg={`bg-red-600   text-white h-10`} />
+                            <div className="">* Once terminated, the amount saved will be transferred back to your balance.</div>
                         </div>}
                     </div>
                 </ModalLayout>

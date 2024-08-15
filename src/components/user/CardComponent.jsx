@@ -150,8 +150,7 @@ const CardComponent = ({ setAdd, add }) => {
                                     <div className="text-lg ">Card CVV:</div>
 
                                     <div className="w-1/4">
-                                        <FormComponent formtype={'phone'} name={`cvv`} value={cards.cvv} onchange={handleChange} />
-
+                                        <FormComponent  formtype={'cvv'} name={`cvv`} value={cards.cvv} onchange={handleChange} />
                                     </div>
                                 </div>
                                 <div className="flex items-center justify-between w-full">

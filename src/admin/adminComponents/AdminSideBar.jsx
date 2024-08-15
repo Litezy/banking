@@ -13,6 +13,7 @@ const AdminLinks = [
     { path: 'users', url: '/admin/users' },
     { path: 'transfers', url: '/admin/transfers' },
     { path: 'transactions', url: '/admin/transactions' },
+    { path: 'verifications', url: '/admin/verifications' },
     { path: 'banks', url: '/admin/banks' },
     { path: 'newsletters', url: '/admin/newsletters' },
     { path: 'contacts', url: '/admin/contacts' },

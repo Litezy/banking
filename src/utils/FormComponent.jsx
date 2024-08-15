@@ -50,6 +50,16 @@ const FormComponent = ({ formtype = 'text', placeholder,name,value,onchange,onKe
             className='w-full  h-12 border px-2 border-zinc-300 py-1 hover:border-zinc-600  rounded-md  outline-none pl-2' 
             placeholder={placeholder} />}
 
+            {formtype === 'cvv' && 
+            <input 
+            onChange={onchange} 
+            value={value} 
+            name={name}  
+            type="number" 
+            onKeyUp={onKeyUp}
+            className='w-full  h-12 border px-2 border-zinc-300 py-1 hover:border-zinc-600  rounded-md  outline-none pl-2' 
+            placeholder={placeholder} />}
+
             {formtype === 'country' &&
                 <div className="border-gray border-2 h-12  rounded-lg pr-3 flex items-center justify-between">
                     <input 

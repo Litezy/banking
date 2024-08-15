@@ -75,6 +75,7 @@ export const admin_urls = {
     remove_bank: admin + '/remove-bank',
     contacts:admin + '/contacts',
     subs:admin + '/subs',
+    all_transfers: admin + '/all-transfers'
 }
 export const Apis = {
     non_auth: non_auth_urls,
