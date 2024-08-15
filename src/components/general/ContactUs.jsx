@@ -3,6 +3,7 @@ import { CiMail } from 'react-icons/ci'
 import { FaFacebookF, FaInstagram, FaLocationArrow, FaPinterestP, FaXTwitter } from 'react-icons/fa6'
 import { FiPhoneIncoming, FiPrinter } from 'react-icons/fi'
 import { FaAsterisk } from "react-icons/fa";
+import { SiteAddress, SiteContact, SiteEmail } from 'utils/functions';
 
 const ContactUs = () => {
 
@@ -10,22 +11,22 @@ const ContactUs = () => {
         {
             img: <CiMail />,
             title: 'Mail',
-            desc: 'furniflex@company.com'
+            desc: SiteEmail
         },
         {
             img: < FiPhoneIncoming />,
             title: 'Phone',
-            desc: '+88 23456789055'
+            desc: SiteContact
         },
         {
             img: <FiPrinter />,
             title: 'Fax',
-            desc: '(402) 8833-4475'
+            desc: SiteContact
         },
         {
             img: <FaLocationArrow />,
             title: 'Office',
-            desc: '5678 Seltice Way Coeur D Alene'
+            desc: SiteAddress
         },
     ]
 
@@ -69,7 +70,7 @@ const ContactUs = () => {
                             </div>
 
                         </div>
-                        <div className="lg:w-1/2 w-full bg-[#6624c1] h-fit rounded-2xl text-white">
+                        <div className="lg:w-1/2 w-full bg-gradient-to-tr from-primary to-purple-700 h-fit rounded-2xl text-white">
                             <div className="h-full py-10 px-2">
                                 <div className="w-full flex items-center justify-center flex-col">
                                     <div className="w-full text-center text-3xl lg:text-4xl font-bold ">Send us a message</div>
@@ -98,7 +99,7 @@ const ContactUs = () => {
                                            </div>
                                         <textarea className='w-full h-40 py-2 pr-2 text-slate-900 resize-none bg-white pl-4 outline-none  rounded-md'></textarea>
                                         </div>
-                                        <button className='w-full py-2 rounded-full text-black font-bold text-center bg-white text-lg'>Submit</button>
+                                        <button className='w-full py-3 rounded-lg text-black font-bold text-center bg-white text-lg'>Submit</button>
                                     </form>
                                 </div>
                             </div>

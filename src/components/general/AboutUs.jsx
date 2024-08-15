@@ -1,6 +1,6 @@
 import React from 'react'
 import aboutusimg from '../../assets/aboutus.jpg'
-import { FaCircleInfo } from "react-icons/fa6";
+import { SiteName } from 'utils/functions';
 import FAQ from './FAQ';
 
 const AboutUs = () => {
@@ -35,13 +35,13 @@ const AboutUs = () => {
       <div className="text-base text-slate-900 w-full 
       grid grid-cols-1 md:grid-cols-2  gap-10">
         <div className="rounded-md bg-white shadow-lg p-5 tracking-wide">
-          At [Your Bank Name], we believe that banking should be more than just a transaction; it should be a partnership. Founded on the principles of trust, transparency, and innovation, we are committed to revolutionizing the way you manage your finances. Our mission is to empower individuals and businesses by providing them with the tools and resources they need to achieve financial success.
+          At {SiteName}, we believe that banking should be more than just a transaction; it should be a partnership. Founded on the principles of trust, transparency, and innovation, we are committed to revolutionizing the way you manage your finances. Our mission is to empower individuals and businesses by providing them with the tools and resources they need to achieve financial success.
         </div>
         <div className="rounded-md bg-white shadow-lg p-5 tracking-wide">
           With a customer-first approach, we offer personalized banking solutions that cater to your unique needs. Whether you're saving for a dream, investing in your future, or simply managing your day-to-day expenses, we are here to support you every step of the way.
         </div>
         <div className="rounded-md bg-white shadow-lg p-5  tracking-wide">
-          Our team of financial experts is dedicated to delivering exceptional service and cutting-edge technology to ensure your experience with us is seamless, secure, and rewarding. At [Your Bank Name], we don’t just manage money – we help you make the most of it.
+          Our team of financial experts is dedicated to delivering exceptional service and cutting-edge technology to ensure your experience with us is seamless, secure, and rewarding. At {SiteName}, we don’t just manage money – we help you make the most of it.
 
           Join us on a journey to redefine banking, where your financial goals are our priority.
         </div>
@@ -53,7 +53,7 @@ const AboutUs = () => {
           <img src={aboutusimg} className='rounded-md' alt="" />
         </div>
         <div className="w-11/12 lg:w-1/2">
-          <div className="p-10 bg-white shadow-lg  text-lg font-semibold tracking-wide ">At [Your Bank App Name], we understand that your financial journey is unique, and we're here to support you every step of the way. Here’s why we stand out:</div>
+          <div className="p-10 bg-white shadow-lg  text-lg font-semibold tracking-wide ">At {SiteName}, we understand that your financial journey is unique, and we're here to support you every step of the way. Here’s why we stand out:</div>
         </div>
       </div>
 

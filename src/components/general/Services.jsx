@@ -1,4 +1,4 @@
-import GeneralLayout from 'layouts/GeneralLayout'
+import { SiteName } from 'utils/functions'
 import React from 'react'
 import { services } from 'utils/Pageutils'
 import FAQ from './FAQ'
@@ -9,7 +9,7 @@ const Services = () => {
             <div className="lg:w-10/12 w-11/12 mx-auto mb-20">
                 <div className="text-center font-bold text-3xl lg:text-4xl">Our Services</div>
                 <div className="text-sm text-center text-slate-600">
-                    At [Your Bank Name], we are dedicated to providing you with a banking experience that’s not just secure and reliable but also tailored to meet your financial goals. Our innovative services are designed to simplify your life, empower your savings, and enhance your financial freedom. Explore the array of services we offer to help you manage, grow, and protect your money with ease and confidence.
+                    At {SiteName}, we are dedicated to providing you with a banking experience that’s not just secure and reliable but also tailored to meet your financial goals. Our innovative services are designed to simplify your life, empower your savings, and enhance your financial freedom. Explore the array of services we offer to help you manage, grow, and protect your money with ease and confidence.
                 </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-10  relative mt-10 w-11/12 mx-auto lg:w-10/12 mb-20">
