@@ -75,7 +75,7 @@ export default function Signup() {
             const res = await PostApi(Apis.non_auth.create_acc, formdata)
             if(res.status === 200){
                 successMessage(`sign up success`)
-                navigate('/verify-email')
+                navigate(`/verify-email?email=${encodeURIComponent(forms.email)}`);
             }else{
                 errorMessage(res.msg)
             }

@@ -115,7 +115,7 @@ const Transactions = () => {
         <div className="w-fit ml-auto mr-5 mt-5">
           <div className="w-full flex flex-col items-center ">
             <span className="text-sm text-gray-700 ">
-              Showing <span className="font-semibold text-black">{firstIndex === 0 ? '1' : firstIndex}</span> to
+              Showing <span className="font-semibold text-black">{firstIndex}</span> to
               <span className="font-semibold text-black"> {lastIndex > transdata.length ? transdata.length : lastIndex}</span> of
               <span className="font-semibold text-black"> {transdata.length} </span>
               Transactions

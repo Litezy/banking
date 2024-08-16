@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { dispatchCurrency, dispatchProfile, dispatchUserSavings } from 'app/reducer'
 import axios from 'axios'
 import ModalLayout from 'utils/ModalLayout'
+import VerifyEmailAccount from 'forms/VerifyEmail'
 
 const TransData = [
     {
@@ -130,8 +131,8 @@ export default function Dashboard() {
         fetchUserSavings()
     }, [profile, fetchCurrency]);
 
-const deposit = 'Deposit'
-const withdraw = 'Withdraw'
+    const deposit = 'Deposit'
+    const withdraw = 'Withdraw'
     const fetchUserNotifications = useCallback(async () => {
         try {
             const response = await GetApi(Apis.auth.user_notifications)
@@ -169,7 +170,6 @@ const withdraw = 'Withdraw'
     return (
         <div>
             <div className="w-11/12 mx-auto">
-
                 {viewMore &&
                     <ModalLayout setModal={setViewMore} clas={`lg:w-fit w-11/12 mx-auto`}>
                         <div className="w-full bg-white h-fit p-10 rounded-lg ">
@@ -206,7 +206,7 @@ const withdraw = 'Withdraw'
                         </div>
                     </ModalLayout>
                 }
-
+                
                 <div className="flex items-center gap-5 justify-between mt-7">
                     <div className="flex items-center gap-2">
                         <div className="">
@@ -219,7 +219,7 @@ const withdraw = 'Withdraw'
                         <div className="">
                             <div className="flex items-center gap-2">
                                 <div className="">Hi,</div>
-                                <div className="font-semibold text-lg">{profile?.firstname} {profile?.lastname}</div>
+                                <div className="font-semibold capitalize text-lg">{profile?.firstname} {profile?.lastname}</div>
                             </div>
                             <div className="flex items-center gap-2 text-zinc-500 text-sm"> {profile?.account_number} <IoCopy className='text-primary' /> </div>
                         </div>
@@ -278,7 +278,7 @@ const withdraw = 'Withdraw'
                         </div>
                     </div>
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 lg:gap-10">
-                        {userSavings.length > 0 && userSavings.map((item, index) => (
+                        {userSavings.length > 0 ? userSavings.map((item, index) => (
                             <div key={index} className="flex gap-2 justify-center items-center">
                                 <Progress
                                     type="dashboard"
@@ -307,7 +307,10 @@ const withdraw = 'Withdraw'
                                     </div>
                                 </div>
                             </div>
-                        ))}
+                        )) :
+                            <div className="text-xl ">No savings</div>
+
+                        }
                     </div>
                 </div>
                 <div className="flex items-center justify-between my-6">
@@ -318,7 +321,7 @@ const withdraw = 'Withdraw'
                 </div>
 
                 <div className="mt-5 w-full bg-white shadow-md ">
-                    {records.slice(0, 4).map((item, index) => (
+                    {records.length > 0 ? records.slice(0, 4).map((item, index) => (
                         <div className="rounded-xl mb-2 border-b last:border-none" key={index}>
                             <div className="p-3"> {item.title}</div>
                             <div className="flex flex-col">
@@ -345,7 +348,10 @@ const withdraw = 'Withdraw'
                                 </div>
                             </div>
                         </div>
-                    ))}
+                    )) :
+                        <div className="text-xl p-5">No Transactions</div>
+
+                    }
                 </div>
             </div>
         </div>

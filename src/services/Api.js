@@ -13,6 +13,7 @@ const admin = 'admin'
 
 export const non_auth_urls = {
     create_acc: user + `/signup`,
+    change_user_pass: user +'/change-pass',
     login: user + '/login',
     verify_email: user + '/verify-email',
     resend_otp: user + '/resend-otp',
