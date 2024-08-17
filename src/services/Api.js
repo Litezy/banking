@@ -17,7 +17,6 @@ if(window.location.origin.includes('greenfordbank.com')) {
     profileImg = 'https://api.greenfordbank.com/api'
 }
 
-
 const user = 'user'
 const admin = 'admin'
 
