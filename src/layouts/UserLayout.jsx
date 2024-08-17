@@ -1,10 +1,36 @@
 import { Box, LinearProgress } from '@mui/material';
+import { dispatchProfile } from 'app/reducer';
 import UserSidebar from 'components/user/UserSidebar';
 import Userfooter from 'components/user/Userfooter';
-import React, { useState } from 'react'
+import VerifyEmailAccount from 'forms/VerifyEmail';
+import React, { useCallback, useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux';
+import { Apis, GetApi } from 'services/Api';
+import { errorMessage } from 'utils/functions';
 
 export default function UserLayout({ children }) {
     const [loading, setLoading] = useState(true)
+    const [profile,setProfile] = useState({})
+    const dispatch = useDispatch()
+
+    const fetchUserProfile = useCallback(async () => {
+        try {
+            const response = await GetApi(Apis.auth.profile);
+            if (response.status === 200) {
+                setProfile(response.data);
+                dispatch(dispatchProfile(response.data));
+            } else {
+                errorMessage(response.msg);
+            }
+        } catch (error) {
+            errorMessage(error.message);
+        }
+    }, [dispatch]);
+
+
+    useEffect(()=>{
+        fetchUserProfile()
+    },[])
 
     React.useEffect(() => {
         setTimeout(() => {
@@ -42,7 +68,10 @@ export default function UserLayout({ children }) {
     )
     return (
         <div>
-            <div className="flex items-center h-screen overflow-hidden bg-white">
+            {profile?.verified === 'false' &&
+                <VerifyEmailAccount />
+            }
+           {profile?.verified === 'true'  && <div className="flex items-center h-screen overflow-hidden bg-white">
                 <div className="h-screen hidden lg:block w-[20%] bg-gradient-to-tr from-primary to-purple-700 text-white">
                     <UserSidebar />
                 </div>
@@ -53,7 +82,7 @@ export default function UserLayout({ children }) {
                     <Userfooter />
 
                 </div>
-            </div>
+            </div>}
         </div>
     )
 }

@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { dispatchCurrency, dispatchProfile, dispatchUserSavings } from 'app/reducer'
 import axios from 'axios'
 import ModalLayout from 'utils/ModalLayout'
+import VerifyEmailAccount from 'forms/VerifyEmail'
 
 const TransData = [
     {
@@ -67,7 +68,7 @@ export default function Dashboard() {
     const [profile, setProfile] = useState(null);
     const [currency, setCurrency] = useState();
     const [userSavings, setUserSavings] = useState([])
-    const [records,setRecords]= useState([])
+    const [records, setRecords] = useState([])
     const [notice, setNotice] = useState([])
     const [selectSaving, setSelectSaving] = useState({})
     const [viewMore, setViewMore] = useState(false)
@@ -117,7 +118,7 @@ export default function Dashboard() {
                 setUserSavings(response.data)
                 dispatch(dispatchUserSavings(response.data))
                 //    console.log(response.data)
-            } 
+            }
         } catch (error) {
             errorMessage(error.message)
         }
@@ -130,7 +131,8 @@ export default function Dashboard() {
         fetchUserSavings()
     }, [profile, fetchCurrency]);
 
-
+    const deposit = 'Deposit'
+    const withdraw = 'Withdraw'
     const fetchUserNotifications = useCallback(async () => {
         try {
             const response = await GetApi(Apis.auth.user_notifications)
@@ -144,18 +146,18 @@ export default function Dashboard() {
             console.error('Error fetching currency:', error);
         }
     }, [])
-    const fetchTransHistory = useCallback( async ()=>{
+    const fetchTransHistory = useCallback(async () => {
         try {
-          const response = await GetApi(Apis.auth.trans_history)
-          if(response.status === 200){
-            setRecords(response.data)
-          }else{
-           console.log(response.msg)
-          }
+            const response = await GetApi(Apis.auth.trans_history)
+            if (response.status === 200) {
+                setRecords(response.data)
+            } else {
+                console.log(response.msg)
+            }
         } catch (error) {
-         errorMessage(error.message)
+            errorMessage(error.message)
         }
-     },[])
+    }, [])
     useEffect(() => {
         fetchUserNotifications()
         fetchTransHistory()
@@ -168,7 +170,6 @@ export default function Dashboard() {
     return (
         <div>
             <div className="w-11/12 mx-auto">
-
                 {viewMore &&
                     <ModalLayout setModal={setViewMore} clas={`lg:w-fit w-11/12 mx-auto`}>
                         <div className="w-full bg-white h-fit p-10 rounded-lg ">
@@ -205,7 +206,7 @@ export default function Dashboard() {
                         </div>
                     </ModalLayout>
                 }
-
+                
                 <div className="flex items-center gap-5 justify-between mt-7">
                     <div className="flex items-center gap-2">
                         <div className="">
@@ -218,7 +219,7 @@ export default function Dashboard() {
                         <div className="">
                             <div className="flex items-center gap-2">
                                 <div className="">Hi,</div>
-                                <div className="font-semibold text-lg">{profile?.firstname} {profile?.lastname}</div>
+                                <div className="font-semibold capitalize text-lg">{profile?.firstname} {profile?.lastname}</div>
                             </div>
                             <div className="flex items-center gap-2 text-zinc-500 text-sm"> {profile?.account_number} <IoCopy className='text-primary' /> </div>
                         </div>
@@ -277,7 +278,7 @@ export default function Dashboard() {
                         </div>
                     </div>
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 lg:gap-10">
-                        {userSavings.length > 0 && userSavings.map((item, index) => (
+                        {userSavings.length > 0 ? userSavings.map((item, index) => (
                             <div key={index} className="flex gap-2 justify-center items-center">
                                 <Progress
                                     type="dashboard"
@@ -306,7 +307,10 @@ export default function Dashboard() {
                                     </div>
                                 </div>
                             </div>
-                        ))}
+                        )) :
+                            <div className="text-xl ">No savings</div>
+
+                        }
                     </div>
                 </div>
                 <div className="flex items-center justify-between my-6">
@@ -316,10 +320,10 @@ export default function Dashboard() {
                     </div>
                 </div>
 
-                <div className="mt-5 w-full rounded-xl mb-5 bg-white shadow-md ">
-                    {records.slice(0,4).map((item, index) => (
-                        <div className="border-b my-2" key={index}>
-                            <div className=""> {item.title}</div>
+                <div className="mt-5 w-full bg-white shadow-md ">
+                    {records.length > 0 ? records.slice(0, 4).map((item, index) => (
+                        <div className="rounded-xl mb-2 border-b last:border-none" key={index}>
+                            <div className="p-3"> {item.title}</div>
                             <div className="flex flex-col">
                                 <div className="p-3 border-b last:border-none cursor-pointer">
                                     <div className="grid grid-cols-2">
@@ -331,19 +335,23 @@ export default function Dashboard() {
                                             </div>
                                             <div className="text-sm font-bold">{item.type}</div>
                                             <FaMinus className='text-slate-500' />
-                                            <div className={`text-xs font-semibold ${item.status === 'success' ? 'text-green-600' : 'text-red-600'}`}>{item.status}</div>
+                                            <div className={`text-xs font-semibold ${item.status === 'success' ? 'text-green-600' : item.status === 'pending' ? 'text-yellow-500' : 'text-red-600'}`}>{item.status}</div>
                                         </div>
                                         <div className="">
-                                            <div className={`text-base font-bold text-right ${item.status === 'success' ? 'text-green-600' : 'text-red-600'}`}>{item.status === "success" ? '+' : '-'}{currency}{parseInt(item.amount).toLocaleString()}</div>
+                                            <div className={`text-base font-bold text-right 
+                        ${item.type === deposit && item.status === 'pending' ? 'text-yellow-500' : item.type === deposit && item.status === 'success' ? 'text-green-600' : "text-red-600"}`}>
+                                                {item.type === deposit && item.status === 'success' ? '+' : item.type === deposit && item.status === 'pending' ? '' : '-'}{currency}{parseInt(item.amount).toLocaleString()}</div>
                                             <div className="text-xs text-right">{item.date}</div>
                                         </div>
                                     </div>
                                     <div className="text-sm text-slate-500">{item.message}</div>
-                                    
                                 </div>
                             </div>
                         </div>
-                    ))}
+                    )) :
+                        <div className="text-xl p-5">No Transactions</div>
+
+                    }
                 </div>
             </div>
         </div>

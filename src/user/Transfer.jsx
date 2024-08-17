@@ -15,6 +15,7 @@ const Transfer = () => {
   const [bal, setBal] = useState(false)
   const [submit, setSubmit] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [loading2, setLoading2] = useState(false)
   const [transfers, setTransfers] = useState([])
   const [verifications, setVerifications] = useState([])
   const [adminBanks, setAdminBanks] = useState([])
@@ -28,7 +29,7 @@ const Transfer = () => {
   const fetchTransfers = useCallback(async () => {
     try {
       const res = await GetApi(Apis.auth.user_transfers)
-      // console.log(res.data)
+      console.log(res.data)
       if (res.status === 200) {
         setTransfers(res.data[0])
         setVerifications(res.data[0]?.verifications[0])
@@ -63,7 +64,8 @@ const Transfer = () => {
     acc_name: '',
     bank_name: '',
     route: '',
-    amount: ''
+    amount: '',
+    reset_code: '',
   })
 
   const handleChange = (e) => {
@@ -128,14 +130,18 @@ const Transfer = () => {
 
   useEffect(() => {
     if (verifications && transfers) {
-      if (verifications.message && verifications.message.trim() !== '') {
+      if (verifications?.message && verifications?.message.trim() !== '') {
         setScreen(3);
-      } else if (!verifications.message || verifications.message === '' && verifications.verified === 'false') {
-        setScreen(2);
+      } 
+      else if ((!verifications?.message || verifications?.message === '')  && verifications?.code === null) {
+        setScreen(2)
       }
-      
+      else if ((!verifications?.message || verifications?.message === '') && verifications?.code === 'sent') {
+        setScreen(5);
+      }
+
     }
-    else if(!verifications && !transfers){
+    else if ((!verifications?.message || verifications?.message === '') ) {
       setScreen(1);
     }
   }, [transfers, verifications]);
@@ -157,7 +163,7 @@ const Transfer = () => {
     setLoading(true)
     try {
       const res = await PostApi(Apis.auth.transfer, formdata)
-      if(res.status === 200){
+      if (res.status === 200) {
         successMessage(res.msg)
         fetchTransfers()
         setScreen(2)
@@ -169,16 +175,47 @@ const Transfer = () => {
           route: '',
           amount: ''
         })
-      }else{
+      } else {
         errorMessage(res.msg)
       }
 
     } catch (error) {
-       errorMessage(error.mesage)
-       console.log(error)
-    }finally{
+      errorMessage(error.mesage)
+      console.log(error)
+    } finally {
       setLoading(false)
     }
+  }
+
+  const submitCode = async (e) => {
+    e.preventDefault()
+    if (!verifications?.id) return errorMessage(`Transaction ID missing, contact support`)
+    if (!transfers?.usertransfers?.email) return errorMessage(`Email is required, try again`)
+    if (!forms?.reset_code) return errorMessage(`Code is missing`)
+
+    const formdata = {
+      id: verifications?.id,
+      email: transfers?.usertransfers?.email,
+      reset_code: forms?.reset_code
+    }
+    setLoading2(true)
+    try {
+      const res = await PostApi(Apis.auth.verify_otp, formdata)
+      if (res.status === 200) {
+        successMessage(res.msg)
+        setForms({ reset_code: '' })
+        setScreen(2)
+        fetchTransfers()
+      } else {
+        errorMessage(res.msg)
+      }
+    } catch (error) {
+      errorMessage(error.message)
+      console.log(error)
+    } finally {
+      setLoading2(false)
+    }
+
   }
   return (
     <div className='w-full mt-5'>
@@ -215,23 +252,23 @@ const Transfer = () => {
             <div className="flex items-start flex-col gap-8 w-full">
               <div className="flex items-start flex-col  lg:w-1/2 w-full">
                 <div className="-500 text-base">Account Full Name:</div>
-                <FormComponent  name={`acc_name`} value={forms.acc_name} onchange={handleChange}/>
+                <FormComponent name={`acc_name`} value={forms.acc_name} onchange={handleChange} />
               </div>
               <div className="flex items-start flex-col  lg:w-1/2 w-full">
                 <div className="-500 text-base">Bank Name:</div>
-                <FormComponent name={`bank_name`} value={forms.bank_name} onchange={handleChange}/>
+                <FormComponent name={`bank_name`} value={forms.bank_name} onchange={handleChange} />
               </div>
               <div className="flex items-start flex-col lg:w-1/2 w-full">
                 <div className="-500 text-base">Account No:</div>
-                <FormComponent formtype='phone' name={`acc_no`} value={forms.acc_no} onchange={handleChange}/>
+                <FormComponent formtype='phone' name={`acc_no`} value={forms.acc_no} onchange={handleChange} />
               </div>
               <div className="flex items-start flex-col lg:w-1/2 w-full">
                 <div className="-500 text-base">Route No: (Optional)</div>
-                <FormComponent formtype='phone' name={`route`} value={forms.route} onchange={handleChange}/>
+                <FormComponent formtype='phone' name={`route`} value={forms.route} onchange={handleChange} />
               </div>
               <div className="flex items-start flex-col lg:w-1/2 w-full">
                 <div className="-500 text-base">Amount ($)</div>
-               <FormComponent formtype='phone' name={`amount`} value={forms.amount} onchange={handleChange}/>
+                <FormComponent formtype='phone' name={`amount`} value={forms.amount} onchange={handleChange} />
               </div>
 
               <div onClick={SubmitTransfer} className="md:w-fit w-full cursor-pointer text-center md:ml-auto md:px-10 py-2 bg-primary rounded-md text-white">Submit</div>
@@ -328,6 +365,27 @@ const Transfer = () => {
                 <ButtonComponent type='button' onclick={UploadProof} title={'Submit'} bg={`bg-primary text-white h-12`} />
               </div>
             }
+          </div>
+        }
+
+
+        {screen === 5 &&
+          <div className="my-10 w-11/12 bg-white p-5 rounded-md">
+            <div className="text-xl text-center font-semibold">Enter code sent</div>
+            <form onSubmit={submitCode} className="mt-3 relative w-2/4 mx-auto">
+              {loading2 &&
+                <div className="absolute top-1/3 left-1/2 -translate-x-1/2">
+                  <Loader />
+                </div>
+              }
+              <div className="my-5 items-center lg:w-2/4 w-10/12 mx-auto flex flex-col gap-1">
+                <div className="">Code:</div>
+                <FormComponent name={`reset_code`} value={forms.reset_code} onchange={handleChange} formtype='code' placeholder={`Enter 6 digit code`} />
+              </div>
+              <div className="mt-5 w-10/12 lg:w-2/4 mx-auto">
+                <ButtonComponent title={`Submit`} bg={`bg-primary text-white h-10`} />
+              </div>
+            </form>
           </div>
         }
       </div>

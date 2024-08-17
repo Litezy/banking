@@ -13,6 +13,9 @@ const Verifications = () => {
     const [data, setData] = useState([])
     const [modal, setModal] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [load2, setLoad2] = useState(false)
+    const [load3, setLoad3] = useState(false)
+    const [show, setShow] = useState(false)
     const [selectedItem, setSelectedItem] = useState({})
     const [viewimage, setViewImage] = useState(false)
     const [form, setForm] = useState({
@@ -25,7 +28,7 @@ const Verifications = () => {
             const res = await GetApi(Apis.admin.all_transfers)
             if (res.status === 200) {
                 setData(res.data)
-                console.log(res.data)
+                // console.log(res.data)
             } else {
                 console.log(res)
             }
@@ -55,22 +58,68 @@ const Verifications = () => {
         if (!form.amount) return errorMessage(`Transfer amount missing`)
         if (!form.message) return errorMessage(`Transfer message missing`)
         const formdata = {
-            id: selectedItem.id,
+            id: selectedItem?.times === 0 ? selectedItem?.id : selectedItem?.verifications[0].id,
             amount: form.amount,
             message: form.message
         }
         setLoading(true)
+        if (selectedItem?.times === 0) {
+            try {
+                const res = await PostApi(Apis.admin.create_verify, formdata)
+                if (res.status === 200) {
+                    successMessage(res.msg)
+                    setModal(false)
+                    fetchVerifications()
+                    setForm({
+                        ...form,
+                        amount: '',
+                        message: ''
+                    })
+                } else {
+                    errorMessage(res.msg)
+                }
+            } catch (error) {
+                console.log(error)
+                errorMessage(error.message)
+            } finally {
+                setLoading(false)
+            }
+        }
+        if (selectedItem?.times >= 1) {
+            try {
+                const res = await PostApi(Apis.admin.update_verify, formdata)
+                if (res.status === 200) {
+                    successMessage(res.msg)
+                    setModal(false)
+                    fetchVerifications()
+                    setForm({
+                        ...form,
+                        amount: '',
+                        message: ''
+                    })
+                } else {
+                    errorMessage(res.msg)
+                }
+            } catch (error) {
+                console.log(error)
+                errorMessage(error.message)
+            } finally {
+                setLoading(false)
+            }
+        }
+    }
+
+    const sendOtp = async () => {
+        if (!selectedItem?.usertransfers?.email) return errorMessage(`Email is missing`)
+        const formdata = {
+            email: selectedItem?.usertransfers?.email,
+            id: selectedItem?.verifications[0]?.id
+        }
+        setLoad2(true)
         try {
-            const res = await PostApi(Apis.admin.create_verify, formdata)
+            const res = await PostApi(Apis.admin.otp, formdata)
             if (res.status === 200) {
                 successMessage(res.msg)
-                setModal(false)
-                fetchVerifications()
-                setForm({
-                    ...form,
-                    amount: '',
-                    message: ''
-                })
             } else {
                 errorMessage(res.msg)
             }
@@ -78,7 +127,29 @@ const Verifications = () => {
             console.log(error)
             errorMessage(error.message)
         } finally {
-            setLoading(false)
+            setLoad2(false)
+        }
+    }
+
+    const completeTransfer = async () => {
+        if (!selectedItem?.id) return errorMessage(`ID is missing`)
+        const formdata = {
+            id: selectedItem?.id
+        }
+        setLoad3(true)
+        try {
+            const res = await PostApi(Apis.admin.confirm_trans, formdata)
+            if (res.status === 200) {
+                successMessage(res.msg)
+                fetchVerifications()
+            } else {
+                errorMessage(res.msg)
+            }
+        } catch (error) {
+            errorMessage(error.message)
+            console.log(error)
+        } finally {
+            setLoad2(false)
         }
     }
     return (
@@ -99,7 +170,7 @@ const Verifications = () => {
                                 <Loader />
                             </div>
                         }
-                        <div className="text-xl font-bold text-center mb-3">Create Verification Message</div>
+                        <div className="text-xl font-bold text-center mb-3">{selectedItem?.times > 0 ? 'Update Verification Message' : 'Create Verification Message'}</div>
                         <div className="flex items-start flex-col gap-5 w-full">
                             <div className="flex items-center gap-5 lg:w-1/2 w-full">
                                 <div className="">Amount ({selectedItem?.usertransfers?.currency}):</div>
@@ -135,6 +206,30 @@ const Verifications = () => {
                 </ModalLayout>
             }
 
+            {load2 &&
+                <div className="absolute top-1/3 z-50 bg-white rounded-md flex items-center justify-center p-10 left-1/2 -translate-x-1/2  ">
+                    <Loader />
+                </div>
+            }
+            {show &&
+                <ModalLayout setModal={setShow} clas={`w-11/12 mx-auto lg:w-[40%]`}>
+                    <div className="w-full bg-white p-10 rounded-md relative">
+
+                        {load3 &&
+                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2  ">
+                                <Loader />
+                            </div>
+                        }
+                        <div className="text-xl text-center mb-3">Are you sure you want to confirm?</div>
+                        <div className="flex items-center justify-between">
+                            <button onClick={() => setShow(false)} className='px-3 w-fit py-2 rounded-md text-white bg-red-500'>cancel</button>
+                            <button onClick={completeTransfer} className='px-3 w-fit py-2 rounded-md text-white bg-green-500'>proceed</button>
+                        </div>
+
+                    </div>
+
+                </ModalLayout>
+            }
             <div className="relative overflow-x-auto rounded-md mt-10">
                 <table className="w-full text-sm text-left rtl:text-right">
                     <thead className=" bg-zinc-500 text-xl text-white">
@@ -155,10 +250,16 @@ const Verifications = () => {
                                 Image Proof
                             </th>
                             <th scope="col" className="px-3 py-3">
+                                verified
+                            </th>
+                            <th scope="col" className="px-3 py-3">
                                 OTP code
                             </th>
                             <th scope="col" className="px-3 py-3">
                                 Verification
+                            </th>
+                            <th scope="col" className="px-3 py-3">
+                                complete
                             </th>
                         </tr>
                     </thead>
@@ -179,14 +280,24 @@ const Verifications = () => {
                                 </td>
                                 <td className="px-3 py-3">
                                     {item.verifications[0]?.image ?
-                                        <button onClick={()=> setViewImage(true)} onMouseOver={() => selectOne(item)} className="bg-green-500 text-white px-5 rounded-lg py-2">click to view</button>
+                                        <button onClick={() => setViewImage(true)} onMouseOver={() => selectOne(item)} className="bg-zinc-600 text-white px-5 rounded-lg py-2">view</button>
                                         : 'no image uploaded'}
                                 </td>
                                 <td className="px-3 py-3">
-                                    {item.verifications[0]?.image && <button onMouseOver={() => selectOne(item)} className="bg-yellow-500 text-white px-5 rounded-lg py-2">send otp</button>}
+                                    {item.verifications[0].verified}
                                 </td>
                                 <td className="px-3 py-3">
-                                    <button onClick={() => setModal(true)} onMouseOver={() => selectOne(item)} className="bg-primary text-white px-5 rounded-lg py-2">create verification</button>
+                                    {item.verifications[0]?.image && <button onClick={sendOtp} onMouseOver={() => selectOne(item)} className="bg-yellow-500 text-white px-5 rounded-lg py-2">send</button>}
+                                </td>
+                                {item.times === 0 ? <td className="px-3 py-3">
+                                    <button onClick={() => setModal(true)} onMouseOver={() => selectOne(item)} className="bg-primary text-white px-5 rounded-lg py-2">create</button>
+                                </td> :
+                                    <td className="px-3 py-3">
+                                        <button onClick={() => setModal(true)} onMouseOver={() => selectOne(item)} className="bg-primary text-white px-5 rounded-lg py-2">update </button>
+                                    </td>
+                                }
+                                <td className="px-3 py-3">
+                                    <button onClick={() => setShow(true)} onMouseOver={() => selectOne(item)} className="bg-green-500 text-white px-5 rounded-lg py-2">complete</button>
                                 </td>
                             </tr>
                         )) :

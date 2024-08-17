@@ -219,9 +219,7 @@ const Profile = () => {
                                     <div className="">State</div>
                                     <FormComponent value={profile?.state} />
                                 </div>
-                                <div className="mt-5 w-full">
-                                    <ButtonComponent title={'Delete Account'} bg={`bg-red-600 text-white h-14`} />
-                                </div>
+                                
                             </div>
 
                         </div>
