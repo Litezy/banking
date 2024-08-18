@@ -16,7 +16,7 @@ const EmailandPassModal = ({ email, pass, emaildiv, setModal }) => {
     const profile = useSelector((state) => state.profile.profile)
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
-    const [, setCode] = useState(false)
+    const [code, setCode] = useState(false)
     const [countdown, setCoundown] = useState(0)
     const [verifyemail, setVerifyEmail] = useState(false)
     const [btnDisabled, setBtnDisabled] = useState(false)
