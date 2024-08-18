@@ -3,6 +3,22 @@ import Cookies from 'js-cookie'
 import { CookieName } from 'utils/functions'
 
 
+/*
+
+Database 
+password = greenfordbank.com 
+username & database = greenco_banking
+
+Email 
+email = support@greenfordbank.com 
+password = greenfordbank.com
+
+JIVO 
+password = greenfordBank.com
+email = support@greenfordbank.com
+
+
+*/
 
 export let URL;
 export let profileImg;
@@ -16,6 +32,7 @@ if(window.location.origin.includes('greenfordbank.com')) {
     URL = 'https://api.greenfordbank.com/api'
     profileImg = 'https://api.greenfordbank.com/api'
 }
+
 
 const user = 'user'
 const admin = 'admin'

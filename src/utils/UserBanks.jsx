@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
 import { Apis, GetApi, PostApi } from 'services/Api'
 import { errorMessage } from './functions'
 import ModalLayout from './ModalLayout'
@@ -9,7 +8,6 @@ import Loader from './Loader'
 
 const UserBanks = () => {
 
-    const profile = useSelector((state) => state.profile.profile)
     const [banksArr, setBanksArr] = useState([])
     const [loading, setLoading] = useState(false)
     const [modal, setModal] = useState(false)
@@ -32,7 +30,7 @@ const UserBanks = () => {
 
     useEffect(() => {
         fetchUserBanks()
-    }, [profile])
+    }, [fetchUserBanks])
 
     const [forms, setForms] = useState({
         bank_name: '',

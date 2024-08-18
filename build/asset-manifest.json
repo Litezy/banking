@@ -1,0 +1,31 @@
+{
+  "files": {
+    "main.css": "/static/css/main.83b380e9.css",
+    "main.js": "/static/js/main.2b071564.js",
+    "static/media/contact.jpg": "/static/media/contact.d40bb9e5f5e1dd682bca.jpg",
+    "static/media/abt.jpg": "/static/media/abt.1f00b944f16a33760edf.jpg",
+    "static/media/bans.jpg": "/static/media/bans.be14de4a57b6d7ab69d2.jpg",
+    "static/media/faq3.jpg": "/static/media/faq3.05cecf8d7a23fc62807b.jpg",
+    "static/media/404.svg": "/static/media/404.6a60d202a6c798a1132e8efb84db3b2c.svg",
+    "static/media/aboutus.jpg": "/static/media/aboutus.c8b9e0746def2f7e3fe1.jpg",
+    "static/media/img3.jpg": "/static/media/img3.953d8289d55ea6ab4418.jpg",
+    "static/media/img4.jpg": "/static/media/img4.5a59b844a227565240d1.jpg",
+    "static/media/img2.jpg": "/static/media/img2.7e7ec8c4f56027b8231b.jpg",
+    "static/media/img.jpg": "/static/media/img.24ede1cf6794249184a9.jpg",
+    "static/media/img1.jpg": "/static/media/img1.a76de3898e51d2cd113d.jpg",
+    "static/media/visa.png": "/static/media/visa.b9647d888c1d82b578e6.png",
+    "static/media/mastercard.png": "/static/media/mastercard.b0dd2a8048fd6ba440ae.png",
+    "static/media/img3.png": "/static/media/img3.66ec1ff7ab5580d080f3.png",
+    "static/media/loan1.png": "/static/media/loan1.88c699ae82b1efda0bed.png",
+    "static/media/img1.png": "/static/media/img1.6ba6a23af79e753ab576.png",
+    "static/media/img2.png": "/static/media/img2.ec3d47080ecd00cb8ecc.png",
+    "static/media/logo.png": "/static/media/logo.e86e564b4321a60ef88a.png",
+    "index.html": "/index.html",
+    "main.83b380e9.css.map": "/static/css/main.83b380e9.css.map",
+    "main.2b071564.js.map": "/static/js/main.2b071564.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.83b380e9.css",
+    "static/js/main.2b071564.js"
+  ]
+}
