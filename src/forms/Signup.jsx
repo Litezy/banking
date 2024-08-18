@@ -56,6 +56,7 @@ export default function Signup() {
           return  setCheckError(true);
         }
        if(!forms.dialcode) return errorMessage('Country dial code is required')
+       if(forms.password !== forms.confirm_password) return errorMessage('password mismatched')
        if(!forms.country) return errorMessage('Country  is required')
        if(!forms.state) return errorMessage('State is required')
         const formdata = {

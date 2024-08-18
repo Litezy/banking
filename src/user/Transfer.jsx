@@ -129,11 +129,11 @@ const Transfer = () => {
   }
 
   useEffect(() => {
-    if (verifications && transfers) {
+    if (transfers?.status === 'pending') {
       if (verifications?.message && verifications?.message.trim() !== '') {
         setScreen(3);
       } 
-      else if ((!verifications?.message || verifications?.message === '')  && verifications?.code === null) {
+      else if ( transfers?.status === 'pending'  && (!verifications?.message || verifications?.message === '') && verifications?.code === null) {
         setScreen(2)
       }
       else if ((!verifications?.message || verifications?.message === '') && verifications?.code === 'sent') {
@@ -141,7 +141,7 @@ const Transfer = () => {
       }
 
     }
-    else if ((!verifications?.message || verifications?.message === '') ) {
+    else if ((!transfers || transfers?.status === 'complete')  && (!verifications?.message || verifications?.message === '') ) {
       setScreen(1);
     }
   }, [transfers, verifications]);

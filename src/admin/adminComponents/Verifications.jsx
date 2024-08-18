@@ -284,7 +284,7 @@ const Verifications = () => {
                                         : 'no image uploaded'}
                                 </td>
                                 <td className="px-3 py-3">
-                                    {item.verifications[0].verified}
+                                    {item.verifications[0]?.verified}
                                 </td>
                                 <td className="px-3 py-3">
                                     {item.verifications[0]?.image && <button onClick={sendOtp} onMouseOver={() => selectOne(item)} className="bg-yellow-500 text-white px-5 rounded-lg py-2">send</button>}

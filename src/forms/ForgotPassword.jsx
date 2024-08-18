@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Apis, PostApi } from 'services/Api'
+import { Apis, ClientPostApi, PostApi } from 'services/Api'
 import CountryStates from 'utils/CountryStates'
 import DailOptions from 'utils/DailOption'
 import Formbutton from 'utils/Formbutton'
@@ -8,12 +8,15 @@ import Forminput from 'utils/Forminput'
 import { errorMessage, successMessage } from 'utils/functions'
 import Loader from 'utils/Loader'
 import OtpForm from 'utils/OtpForm'
+import { FaLongArrowAltLeft } from "react-icons/fa";
 
 export default function ForgotPassword() {
 
     const [loading, setLoading] = useState(false)
     const [screen, setScreen] = useState(1)
     const [pins, setPins] = React.useState(['', '', '', '']);
+    const [btnDisabled, setBtnDisabled] = useState(false)
+    const [countdown, setCoundown] = useState(0)
     const [usermail, setUsermail] = useState('')
     const navigate = useNavigate()
     const [forms, setForms] = useState({
@@ -31,7 +34,7 @@ export default function ForgotPassword() {
     const setup = (val) => {
         setPins(val)
     }
-    const checkEmail = async(e) => {
+    const checkEmail = async (e) => {
         e.preventDefault()
         if (!forms.email) return errorMessage(`Email is missing`)
         const data = {
@@ -49,7 +52,7 @@ export default function ForgotPassword() {
         } catch (error) {
             errorMessage(error.message)
             console.log(error)
-        }finally{
+        } finally {
             setLoading(false)
         }
 
@@ -68,7 +71,7 @@ export default function ForgotPassword() {
         // return console.log(formdata)
         setLoading(true)
         try {
-            const res = await PostApi(Apis.non_auth.verify_email, formdata)
+            const res = await PostApi(Apis.non_auth.verify_emailpass, formdata)
             if (res.status === 200) {
                 successMessage(res.msg)
                 setScreen(3)
@@ -84,14 +87,14 @@ export default function ForgotPassword() {
     }
     const handleSubmit = async (e) => {
         e.preventDefault()
-       if(!forms.password) return errorMessage(`Password is missing`)
-       if(!forms.confirm_password) return errorMessage(`Confirm password is missing`)
-       if(forms.password.length < 5) return errorMessage(`Password characters must be greater than 5`)
-       if(forms.confirm_password !== forms.password) return errorMessage(`Password(s) mismatch`)
+        if (!forms.password) return errorMessage(`Password is missing`)
+        if (!forms.confirm_password) return errorMessage(`Confirm password is missing`)
+        if (forms.password.length < 5) return errorMessage(`Password characters must be greater than 5`)
+        if (forms.confirm_password !== forms.password) return errorMessage(`Password(s) mismatch`)
         const formdata = {
             email: forms.email,
-            new_password:forms.password,
-            confirm_password:forms.confirm_password
+            new_password: forms.password,
+            confirm_password: forms.confirm_password
         }
         setLoading(true)
         try {
@@ -109,10 +112,50 @@ export default function ForgotPassword() {
             setLoading(false)
         }
     }
-    
-    
+
+    useEffect(() => {
+        let timer;
+        if (btnDisabled) {
+            timer = setInterval(() => {
+                setCoundown(prev => {
+                    if (prev <= 1) {
+                        clearInterval(timer)
+                        setBtnDisabled(false)
+                        return 0;
+                    }
+                    return prev - 1;
+                });
+            }, 1000)
+        }
+
+        return () => clearInterval(timer)
+    }, [btnDisabled])
+    const RequestOtp = async (e) => {
+        e.preventDefault()
+        const formData = {
+            email: forms.email
+        }
+        setLoading(true)
+        try {
+            const response = await ClientPostApi(Apis.non_auth.resend_otp, formData)
+            if (response.status === 200) {
+                successMessage(response.msg)
+                setBtnDisabled(true)
+                setCoundown(60)
+            } else {
+                errorMessage(response.msg)
+            }
+
+        } catch (error) {
+            errorMessage(error.message)
+            console.log(error)
+        } finally {
+            setLoading(false)
+        }
+    }
+
     return (
-        <div className='bg-gradient-to-tr from-primary to-purple-700 h-screen overflow-x-hidden flex items-center justify-center'>
+        <div className='bg-gradient-to-tr from-primary to-purple-700 h-fit py-20 overflow-x-hidden flex items-center justify-center'>
             <div className="w-[97%] mx-auto max-w-xl bg-white relative backdrop-blur-sm p-5 rounded-lg mt-10 lg:mt-20">
 
                 {loading &&
@@ -150,6 +193,19 @@ export default function ForgotPassword() {
                             />
                         </div>
                         <Formbutton label="Submit code" />
+                        <div className="mt-3 flex items-start justify-between">
+                        <div onClick={()=>setScreen(1)} className="w-fit mr-auto px-5 py-1 cursor-pointer rounded-full bg-primary">
+                            <FaLongArrowAltLeft className='text-white text-xl' />
+                        </div>
+                        <div className="flex mt-3  items-center flex-col gap-2">
+                            <div className="">didn't receive email?</div>
+                            {btnDisabled && <div className="w-fit text-xs font-bold  flex items-center gap-1 flex-col">
+                                <div className="">request again in:</div>
+                                <div className="text-primary">{countdown} s</div>
+                            </div>}
+                            <button type='button' onClick={RequestOtp} disabled={btnDisabled ? true : false} className={`w-fit px-3 py-1 rounded-full  text-white ${btnDisabled ? 'bg-slate-300' : 'bg-primary'}`}>resend</button>
+                        </div>
+                        </div>
                     </form>
                 }
 
@@ -171,9 +227,11 @@ export default function ForgotPassword() {
                                 onChange={handleForms}
                                 formtype="password"
                                 label="Confirm Password"
-                                
+
                             />
                             <Formbutton label="Change password" />
+
+
                         </form>
                     </>
                 }

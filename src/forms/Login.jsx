@@ -42,7 +42,6 @@ export default function Login() {
         try {
             const response = await PostApi(Apis.non_auth.login, formdata)
             if (response.status === 200) {
-                // console.log(response)
                 Cookies.set(CookieName, response.token,)
                 successMessage(response.msg)
                 const decoded = decodeToken(response.token)
