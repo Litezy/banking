@@ -11,7 +11,7 @@ import Loader from 'utils/Loader'
 
 export default function Login() {
 
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
     const [forms, setForms] = useState({
         email: '',
         password: ''
