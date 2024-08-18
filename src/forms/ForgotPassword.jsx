@@ -14,7 +14,7 @@ export default function ForgotPassword() {
 
     const [loading, setLoading] = useState(false)
     const [screen, setScreen] = useState(1)
-    const [pins, setPins] = React.useState(['', '', '', '']);
+    const [pins, setPins] = useState(['', '', '', '']);
     const [btnDisabled, setBtnDisabled] = useState(false)
     const [countdown, setCoundown] = useState(0)
     const [usermail, setUsermail] = useState('')
