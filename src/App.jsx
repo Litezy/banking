@@ -6,6 +6,7 @@ import AuthRoutes from 'services/AuthRoutes'
 import TopUpsavings from 'user/TopUpsavings'
 import AdminLayout from 'layouts/AdminLayout'
 import GeneralLayout from 'layouts/GeneralLayout'
+import ScrollToTop from 'general/ScrollToTop'
 
 export default function App() {
   const user = '/user/'
@@ -13,6 +14,7 @@ export default function App() {
   const admin ='/admin/'
   return (
     <BrowserRouter>
+    <ScrollToTop />
     <Routes>
       {FormRoutes.map((item, index) => (
         <Route key={index} path={`${general}${item.path}`} element={<item.component />} />
