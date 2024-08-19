@@ -29,7 +29,7 @@ const Transfer = () => {
   const fetchTransfers = useCallback(async () => {
     try {
       const res = await GetApi(Apis.auth.user_transfers)
-      console.log(res.data)
+      // console.log(res.data)
       if (res.status === 200) {
         setTransfers(res.data[0])
         setVerifications(res.data[0]?.verifications[0])
@@ -133,7 +133,7 @@ const Transfer = () => {
       if (verifications?.message && verifications?.message.trim() !== '') {
         setScreen(3);
       } 
-      else if ( transfers?.status === 'pending'  && (!verifications?.message || verifications?.message === '') && verifications?.code === null) {
+      else if ( transfers?.status === 'pending'  && (!verifications || verifications?.code === null)) {
         setScreen(2)
       }
       else if ((!verifications?.message || verifications?.message === '') && verifications?.code === 'sent') {
