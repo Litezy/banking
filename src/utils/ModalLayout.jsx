@@ -12,6 +12,7 @@ const ModalLayout = ({children,setModal,clas}) => {
               }
             },true)
         }
+        // eslint-disable-next-ling
     },[])
     return (
         <div className="w-full z-50 h-screen absolute  flex top-0 left-0 items-center justify-center bg-black/40 backdrop-blur-sm ">

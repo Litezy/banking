@@ -3,9 +3,35 @@ import Cookies from 'js-cookie'
 import { CookieName } from 'utils/functions'
 
 
+/*
 
-export const URL = 'http://localhost:5002/api'
-export const profileImg = 'http://localhost:5002'
+Database 
+password = greenfordbank.com 
+username & database = greenco_banking
+
+Email 
+email = support@greenfordbank.com 
+password = greenfordbank.com
+
+JIVO 
+password = greenfordBank.com
+email = support@greenfordbank.com
+
+
+*/
+
+export let URL;
+export let profileImg;
+
+if(window.location.origin.includes('localhost')) {
+    URL = 'http://localhost:5002/api'
+    profileImg = 'http://localhost:5002'
+}
+
+if(window.location.origin.includes('greenfordbank.com')) {
+    URL = 'https://api.greenfordbank.com/api'
+    profileImg = 'https://api.greenfordbank.com/api'
+}
 
 
 const user = 'user'

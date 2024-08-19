@@ -1,8 +1,6 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { ApiCountryFlags, PhoneCodes } from './CountryCodes'
 import Countries from './Countries'
-import Imaged from './Imaged'
 import { FaCaretDown } from 'react-icons/fa6'
 
 

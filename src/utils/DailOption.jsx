@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ApiCountryFlags, PhoneCodes } from './CountryCodes'
-import {SlArrowDown} from 'react-icons/sl'
 import Imaged from './Imaged'
 import { FaCaretDown } from 'react-icons/fa6'
 

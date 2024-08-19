@@ -32,7 +32,7 @@ const UserBanks = () => {
 
     useEffect(() => {
         fetchUserBanks()
-    }, [profile])
+    }, [fetchUserBanks])
 
     const [forms, setForms] = useState({
         bank_name: '',
