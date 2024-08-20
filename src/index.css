@@ -191,6 +191,18 @@ input[type=number] {
   background-size: cover;
   background-position: center;
 }
+.privacy {
+  background: url(./assets/privacy.jpg);
+  filter: brightness(50%);
+  background-size: cover;
+  background-position: center;
+}
+.terms {
+  background: url(./assets/terms.jpg);
+  filter: brightness(50%);
+  background-size: cover;
+  background-position: center;
+}
 
 .contacts {
   background: url(./assets/contact.jpg);

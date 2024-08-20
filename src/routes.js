@@ -25,6 +25,11 @@ import Services from "components/general/Services";
 import ContactUs from "components/general/ContactUs";
 import AboutUs from "components/general/AboutUs";
 import Verifications from "admin/adminComponents/Verifications";
+import PrivacyPolicy from "components/general/PrivacyPolicy";
+import TermsofUse from "components/general/TermsofUse";
+import Cookies from "components/general/Cookies";
+import UserVerifications from "admin/adminComponents/UserVerifications";
+
 
 
 
@@ -43,6 +48,8 @@ export const GeneralRoutes = [
     { path: 'services', component: Services },
     { path: 'contact-us', component: ContactUs },
     { path: 'about-us', component: AboutUs },
+    { path: 'privacy-policy', component: PrivacyPolicy },
+    { path: 'terms', component: TermsofUse },
 ]
 
 
@@ -66,6 +73,7 @@ export const AdminRoutes = [
     { path: 'banks', component: Banks },
     { path: 'contacts', component: Contacts },
     { path: 'newsletters', component: Newsletters },
+    { path: 'verifications/:id', component: UserVerifications },
    
    
 ]

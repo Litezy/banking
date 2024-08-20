@@ -6,10 +6,11 @@ import { FaAsterisk, FaPlus } from "react-icons/fa6";
 import FormComponent from 'utils/FormComponent';
 import ModalLayout from 'utils/ModalLayout';
 import Loader from 'utils/Loader';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Apis, GetApi, PostApi } from 'services/Api';
 import { FaEdit } from 'react-icons/fa';
 import ButtonComponent from 'utils/ButtonComponent';
+import { dispatchProfile } from 'app/reducer';
 
 const Transfer = () => {
   const [bal, setBal] = useState(false)
@@ -25,20 +26,24 @@ const Transfer = () => {
   const profile = useSelector((state) => state.profile.profile)
   const currency = useSelector((state) => state.profile.currency)
   const [screen, setScreen] = useState()
+  const dispatch = useDispatch()
 
-  const fetchTransfers = useCallback(async () => {
+  const fetchTransfers = (async () => {
     try {
-      const res = await GetApi(Apis.auth.user_transfers)
-      console.log(res.data)
+      const res = await GetApi(Apis.auth.get_transfers)
       if (res.status === 200) {
-        setTransfers(res.data[0])
-        setVerifications(res.data[0]?.verifications[0])
+        const trans = res.data
+        setTransfers(trans[0]);
+        const filterVerifications = trans[0].verifications.filter((item) => item.verified === 'false')
+        setVerifications(filterVerifications[0]);
+        //  console.log(trans[0])
+      } else {
+        console.log(res.msg)
       }
     } catch (error) {
       console.log(error)
-      // errorMessage(error.message)
     }
-  }, []);
+  });
 
 
   const fetchAdminBanks = useCallback(async () => {
@@ -88,7 +93,7 @@ const Transfer = () => {
     })
   }
 
-  // console.log(savings)
+  // console.log(verifications)
   const handleImage = (e) => {
     const file = e.target.files[0]
     if (file.size >= 1000000) {
@@ -109,6 +114,7 @@ const Transfer = () => {
   const UploadProof = async () => {
     const formdata = new FormData()
     formdata.append('image', proofimg.image)
+    formdata.append('id', verifications?.id)
     setLoading(true)
     try {
       const res = await PostApi(Apis.auth.upload_trans_prof, formdata)
@@ -129,22 +135,27 @@ const Transfer = () => {
   }
 
   useEffect(() => {
-    if (verifications && transfers) {
-      if (verifications?.message && verifications?.message.trim() !== '') {
-        setScreen(3);
-      } 
-      else if ((!verifications?.message || verifications?.message === '')  && verifications?.code === null) {
-        setScreen(2)
-      }
-      else if ((!verifications?.message || verifications?.message === '') && verifications?.code === 'sent') {
-        setScreen(5);
-      }
+    if (!transfers || transfers?.status === 'complete' || transfers?.new === 'old') {
+      return setScreen(1);
+    }
+    if (!verifications) return setScreen(2)
+    if (verifications?.image !== null && verifications?.code === 'sent') {
+      return setScreen(5);
+    }
+    if (verifications?.message && verifications?.message.trim() !== '' && verifications?.image === null) {
+      return setScreen(3);
+    }
+    if (verifications?.image !== null && verifications?.code === null) {
+      return setScreen(2)
+    }
+    if (transfers?.new === 'new' && verifications?.image === null && verifications?.code === null) {
+      return setScreen(2)
+    }
+    
 
-    }
-    else if ((!verifications?.message || verifications?.message === '') ) {
-      setScreen(1);
-    }
-  }, [transfers, verifications]);
+
+
+  }, [fetchTransfers]);
 
 
   const SubmitTransfer = async (e) => {
@@ -175,6 +186,7 @@ const Transfer = () => {
           route: '',
           amount: ''
         })
+        dispatch(dispatchProfile(res.data))
       } else {
         errorMessage(res.msg)
       }
@@ -324,17 +336,13 @@ const Transfer = () => {
                     </div>
                   ))}
 
-                  <button onClick={() => setScreen(4)} className=" cursor-pointer w-fit px-4 py-2  rounded-full bg-gradient-to-tr   from-primary to-purple-700 border text-white ml-auto">I have made payment</button>
+                 {paid === false && <button onClick={() => setPaid(true)} className=" cursor-pointer w-fit px-4 py-2  rounded-full bg-gradient-to-tr   from-primary to-purple-700 border text-white ml-auto">I have made payment</button>}
                 </div>
               </div>
             </div>
-          </div>
 
-        }
-
-        {screen === 4 &&
-          <div className="my-10 w-11/12 bg-white p-5 rounded-md">
-            <button onClick={() => setScreen(3)} className='w-fit mr-auto px-3 py-1 rounded-md bg-primary text-white'>back</button>
+          {paid &&   <div className="my-10 w-11/12 bg-white p-5 rounded-md">
+            <button onClick={() => setPaid(false)} className='w-fit mr-auto px-3 py-1 rounded-md bg-primary text-white'>hide</button>
             <div className="text-xl text-center font-semibold">Upload proof of payment</div>
 
             <div className="mt-3 relative w-2/4 mx-auto">
@@ -365,8 +373,11 @@ const Transfer = () => {
                 <ButtonComponent type='button' onclick={UploadProof} title={'Submit'} bg={`bg-primary text-white h-12`} />
               </div>
             }
+          </div>}
           </div>
+
         }
+
 
 
         {screen === 5 &&

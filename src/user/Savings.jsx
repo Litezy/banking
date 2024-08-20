@@ -12,12 +12,13 @@ import Formbutton from 'utils/Formbutton'
 import { IoIosMailUnread } from 'react-icons/io'
 import CardComponent from 'components/user/CardComponent'
 import { Apis, GetApi, PostApi } from 'services/Api'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import ModalLayout from 'utils/ModalLayout'
 import FormComponent from 'utils/FormComponent'
 import ButtonComponent from 'utils/ButtonComponent'
 import Loader from 'utils/Loader'
 import UserBanks from 'utils/UserBanks'
+import { dispatchProfile } from 'app/reducer'
 
 const Savings = () => {
 
@@ -34,9 +35,10 @@ const Savings = () => {
     const [topup, setTopup] = useState(false)
     const [adminBanks, setAdminBanks] = useState([])
     const [createsave, setCreateSave] = useState(false)
-
+    const [confirm,setConfirm] = useState(false)
     const profile = useSelector((state) => state.profile.profile)
     const currency = useSelector((state) => state.profile.currency)
+    const dispatch = useDispatch()
 
 
 
@@ -131,9 +133,9 @@ const Savings = () => {
         if (saveForms.current < 0 || saveForms.current === 0) return errorMessage(`Amount can not be negative or zero`)
         if (saveForms.current > profile?.balance) return errorMessage(`Insufficient balance`)
         const formdata = {
-            goal: saveForms.goal,
+            goal: saveForms.goal.toLocaleString(),
             name: saveForms.name,
-            current: saveForms.current
+            current: saveForms.current.toLocaleString()
         }
         setLoad3(true)
         try {
@@ -143,6 +145,7 @@ const Savings = () => {
                 setSaveForms({ ...saveForms, goal: '', name: '', current: '' })
                 setCreateSave(false)
                 fetchUserSavings()
+                dispatch(dispatchProfile(response.user))
             } else {
                 errorMessage(response.msg)
             }
@@ -259,6 +262,7 @@ const Savings = () => {
                 setForms({ ...forms, id: '', amount: '' })
                 fetchUserSavings()
                 fetchSavingsHistory()
+                dispatch(dispatchProfile(response.user))
             } else {
                 errorMessage(response.msg)
             }
@@ -271,17 +275,25 @@ const Savings = () => {
         }
     }
 
+    useEffect(()=>{
+        if(!closeview){
+            setConfirm(false)
+        }
+    },[closeview,setCloseView])
+
 
     const deletsavings = async (e) => {
         e.preventDefault()
         const formdata = {
             id: selectedItem.id
         }
+        setConfirm(false)
         setLoad2(true)
         try {
             const response = await PostApi(Apis.auth.delete_savings, formdata)
             if (response.status === 200) {
                 successMessage(response.msg)
+                dispatch(dispatchProfile(response.user))
                 setCloseView(false)
                 setForms({ ...forms, id: '', amount: '' })
                 fetchUserSavings()
@@ -312,7 +324,7 @@ const Savings = () => {
                                 <FormComponent name={'name'} value={saveForms.name} onchange={handleChange} />
                             </div>
                             <div className="flex w-full lg:items-center flex-col lg:flex-row justify-between">
-                                <div className="lg:w-[45%]">Goal</div>
+                                <div className="lg:w-[45%]">Goal Target</div>
                                 <FormComponent formtype='phone' name={'goal'} value={saveForms.goal} onchange={handleChange} />
                             </div>
                             <div className="flex w-full lg:items-center flex-col lg:flex-row justify-between">
@@ -405,13 +417,25 @@ const Savings = () => {
 
             {closeview &&
                 <ModalLayout setModal={setCloseView} clas={`lg:w-[60%] w-11/12 mx-auto`}>
-                    <div className="w-full bg-white h-fit p-10 rounded-lg ">
+                    <div className="w-full bg-white h-fit p-10 rounded-lg relative ">
 
 
                         {load2 &&
-                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2">
+                            <div className="absolute top-1/2 left-1/2 z-50 -translate-x-1/2">
                                 <Loader />
                             </div>
+                        }
+
+
+                        {confirm && 
+                        <div className="absolute top-1/4 left-1/2 bg-black/50 text-white p-10 h-fit w-2/4 rounded-md -translate-x-1/2">
+                                <div className="text-center text-lg">Are you sure you want to terminate?</div>
+                                <div className="mt-5 flex items-center justify-between w-full">
+                                    <button onClick={() => setConfirm(false)} className='w-fit px-4 py-1 rounded-md bg-red-500'>cancel</button>
+                                    <button disabled={load2 ? true:false} onClick={deletsavings} className='w-fit px-4 py-1 rounded-md bg-green-500'>proceed</button>
+                                </div>
+                        </div>
+                        
                         }
                         <div className="grid grid-cols-1 ">
                             <div className="flex gap-2 justify-center items-center">
@@ -427,11 +451,11 @@ const Savings = () => {
                                     <div className="border-b py-1 text-zinc-500 text-right">Savings name: <span className='text-xl font-bold text-primary capitalize'>{selectedItem.name}</span></div>
                                     <div className="border-b py-1">
                                         <div className=" text-right">Savings Goal</div>
-                                        <div className="font-bold text-right text-primary">{currency}{selectedItem.goal}</div>
+                                        <div className="font-bold text-right text-primary">{currency}{selectedItem.goal?.toLocaleString()}</div>
                                     </div>
                                     <div className="border-b py-1">
                                         <div className=" text-right">Current Saved</div>
-                                        <div className="font-bold text-right text-primary">{currency}{selectedItem.current}</div>
+                                        <div className="font-bold text-right text-primary">{currency}{selectedItem.current?.toLocaleString()}</div>
                                     </div>
                                     <div className="border-b py-1">
                                         <div className=" text-right">Last Saved</div>
@@ -451,11 +475,11 @@ const Savings = () => {
                                     <div className="">Available Balance <span>{currency}{profile?.balance}</span></div>
                                     <FormComponent name={`amount`} value={forms.amount} onchange={(e) => setForms({ ...forms, [e.target.name]: e.target.value })} formtype='phone' />
                                 </div>
-                                <ButtonComponent title={`Top Up`} bg={`bg-primary mt-2 text-white text-white h-10`} />
+                                <ButtonComponent disabled={load2 ? true:false} title={`Top Up`} bg={`bg-primary mt-2 text-white text-white h-10`} />
                             </div>}
                         </form>
                         {!topup && <div className="mt-3 w-11/12 mx-auto">
-                            <ButtonComponent onclick={deletsavings} type='button' title={`Terminate Savings`} bg={`bg-red-600   text-white h-10`} />
+                            <ButtonComponent onclick={() => setConfirm(true)}  type='button' title={`Terminate Savings`} bg={`bg-red-600   text-white h-10`} />
                             <div className="">* Once terminated, the amount saved will be transferred back to your balance.</div>
                         </div>}
                     </div>
@@ -466,7 +490,7 @@ const Savings = () => {
                 <div className="md:w-1/2 w-full h-full py-2 flex items-center justify-center flex-col px-3 rounded-lg bg-white cursor-pointer">
                     <div className="text-lg font-semibold">Three important steps to take and complete your deposit</div>
                     {steps.map((ele, i) => (
-                        <ul className='w-full self-center flex items-center  gap-2 py-2 '>
+                        <ul className='w-full self-center flex items-center  gap-2 py-2 ' key={i}>
                             <li className='text-2xl'>{ele.img}</li>
                             <li>{ele.step}</li>
 

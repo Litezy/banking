@@ -6,12 +6,15 @@ import { useSelector } from 'react-redux'
 import { Apis, GetApi } from 'services/Api'
 import { errorMessage, successMessage } from 'utils/functions'
 import { FaCopy } from "react-icons/fa";
+import Loader from 'utils/Loader'
 
 const Transactions = () => {
 
   const [transdata, setTransData] = useState([])
   const [selectedItem, setSelectedItem] = useState({})
+  const [loading, setLoading] = useState(false)
   const fetchTransHistory = useCallback(async () => {
+    setLoading(true)
     try {
       const response = await GetApi(Apis.auth.trans_history)
       if (response.status === 200) {
@@ -21,6 +24,8 @@ const Transactions = () => {
       }
     } catch (error) {
       errorMessage(error.message)
+    }finally{
+      setLoading(false)
     }
   }, [])
 
@@ -71,8 +76,15 @@ const Transactions = () => {
 
   return (
     <div className='w-full'>
-      <div className="w-11/12 mx-auto mt-10">
+      <div className="w-11/12 relative mx-auto mt-10">
         <div className="text-2xl font-semibold">Transaction History</div>
+
+        {loading &&
+          <div className="absolute  top-1/4 left-1/2  -translate-x-1/2 ">
+            <Loader/>
+          </div>
+
+        }
 
         <div className="mt-5 w-full">
           {records.map((item, index) => (

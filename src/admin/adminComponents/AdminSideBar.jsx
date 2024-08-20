@@ -17,6 +17,7 @@ const AdminLinks = [
     { path: 'banks', url: '/admin/banks' },
     { path: 'newsletters', url: '/admin/newsletters' },
     { path: 'contacts', url: '/admin/contacts' },
+    { path: 'single-page', url: '/admin/verifications/:id' },
 ]
 
 const AdminLinks2 = [
@@ -92,7 +93,7 @@ export default function AdminSideBar() {
 
                 </div>
                 {AdminLinks.map((item, index) => (
-                    <Link to={item.url} key={index} className={`text-sm rounded-lg hover:scale-105 text-slate-200 hover:bg-slate-100/20 ${item.url === location.pathname ? 'bg-slate-100/40' : ''} px-3 mb-1 py-2 font-extralight capitalize transition-all`}>
+                    <Link to={item.url} key={index} className={`text-sm last:hidden  rounded-lg hover:scale-105 text-slate-200 hover:bg-slate-100/20 ${item.url === location.pathname ? 'bg-slate-100/40' : ''} px-3 mb-1 py-2 font-extralight capitalize transition-all`}>
                         {item.path}
                     </Link>
                 ))}

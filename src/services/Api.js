@@ -42,6 +42,7 @@ export const non_auth_urls = {
     change_user_pass: user +'/change-pass',
     login: user + '/login',
     verify_email: user + '/verify-email',
+    verify_emailpass: user + '/verify-emailpass',
     resend_otp: user + '/resend-otp',
     change_img: user + '/upload-img',
     find_account: user + '/find-account',

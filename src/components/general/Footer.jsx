@@ -19,9 +19,8 @@ const QuickLinks = [
 ];
 
 const QuickLinks2 = [
-  { title: "terms of services", url: "" },
-  { title: "privacy policies", url: "" },
-  { title: "cookies notice", url: "" },
+  { title: "terms of services", url: "/terms" },
+  { title: "privacy policies", url: "/privacy-policy" },
 ];
 
 const SocialMediaLinks = [

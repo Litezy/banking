@@ -10,7 +10,7 @@ export default function OtpForm ({pins, setPins}) {
     newpins[index] = value;
 
     if (index < (pins.length - 1) && value !== '') {
-      inputRefs.current[index + 1].focus();
+      inputRefs.current[index + 1]?.focus();
     }
 
     setPins(newpins);
@@ -18,7 +18,7 @@ export default function OtpForm ({pins, setPins}) {
 
   const handleInputBackspace = (index, event) => {
     if (event.key === 'Backspace' && index > 0 && pins[index] === '') {
-      inputRefs.current[index - 1].focus();
+      inputRefs.current[index - 1]?.focus();
     }
   };
 
@@ -32,7 +32,7 @@ export default function OtpForm ({pins, setPins}) {
       if (newpins[i]) {
         inputRefs.current[i].value = newpins[i];
         if (i < (pins.length + 1)) {
-          inputRefs.current[i + 1].focus();
+          inputRefs.current[i + 1]?.focus();
         }
       }
     }
