@@ -336,7 +336,7 @@ const Savings = () => {
                             </div>
                         </div>
                         <div className="lg:w-1/2 mx-auto mt-8">
-                            <ButtonComponent title={`Create Savings`} bg={`text-white bg-primary h-14 `} />
+                            <ButtonComponent disabled={load3 ? true :false} title={`Create Savings`} bg={`text-white bg-primary h-14 `} />
                         </div>
                     </form>
                 </ModalLayout>
@@ -404,7 +404,7 @@ const Savings = () => {
                                 </div>
                                 {proofimg.img &&
                                     <div className="w-full mt-5">
-                                        <Formbutton label={'Submit'} loading={load && true} />
+                                        <Formbutton  label={'Submit'} loading={load && true} />
                                     </div>
 
                                 }

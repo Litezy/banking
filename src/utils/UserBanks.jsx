@@ -145,7 +145,7 @@ const UserBanks = () => {
                             </div>
                         </div>
                         <div className="lg:w-1/2 mx-auto mt-8">
-                            <ButtonComponent title={`Link Bank`} bg={`text-white bg-primary h-14 `} />
+                            <ButtonComponent disabled={loading ? true :false} title={`Link Bank`} bg={`text-white bg-primary h-14 `} />
                         </div>
                     </form>
                 </ModalLayout>
