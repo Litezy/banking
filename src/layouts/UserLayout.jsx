@@ -30,7 +30,7 @@ export default function UserLayout({ children }) {
 
     useEffect(()=>{
         fetchUserProfile()
-    },[])
+    },[fetchUserProfile])
 
     React.useEffect(() => {
         setTimeout(() => {

@@ -10,6 +10,17 @@ import Loader from 'utils/Loader'
 import UserVerifications from 'admin/adminComponents/UserVerifications'
 import { useNavigate } from 'react-router-dom'
 
+
+const TableHeaders = [
+    "User",
+    "Email",
+    "Amount",
+    "Status",
+    "Verification Attached",
+    "Explore",
+    "Date Created",
+]
+
 const Verifications = () => {
 
     const [data, setData] = useState([])
@@ -55,18 +66,11 @@ const Verifications = () => {
                 <table className="w-full text-sm text-left rtl:text-right">
                     <thead className=" bg-zinc-500 text-xl text-white">
                         <tr>
-                            <th scope="col" className="px-3 py-3">
-                                User
+                            {TableHeaders.map((item, index) => (
+                            <th scope="col" key={index} className="px-3 py-3 text-sm truncate">
+                                {item}
                             </th>
-                            <th scope="col" className="px-3 py-3">
-                                Email
-                            </th>
-                            <th scope="col" className="px-3 py-3">
-                                Amount
-                            </th>
-                            <th scope="col" className="px-3 py-3">
-                            
-                            </th>
+                            ))}
                         </tr>
                     </thead>
                     <tbody>
@@ -82,10 +86,19 @@ const Verifications = () => {
                                     {item.usertransfers?.currency}{item.amount}
                                 </td>
                                 <td className="px-3 py-3">
-                                    <button 
-                                    className='w-fit px-4 py-1 rounded-md bg-primary text-white text-base ' 
+                                    {item.status}
+                                </td>
+                                <td className="px-3 py-3">
+                                    {item.verifications?.length}
+                                </td>
+                                <td className="px-3 py-3">
+                                   {item.status !== 'complete' && <button 
+                                    className='w-fit px-4 py-1 rounded-md bg-primary text-white text-base truncate' 
                                     onMouseOver={()=> selectOne(item)} 
-                                    onClick={()=>navigate(`/admin/verifications/${encodeURIComponent(item?.id)}`)}>Explore Verifications</button>
+                                    onClick={()=>navigate(`/admin/verifications/${encodeURIComponent(item?.id)}`)}>Explore Verifications</button>}
+                                </td>
+                                <td className="px-3 py-3">
+                                    {moment(item.createdAt).format('DD-MM-YYYY hh:mm A')}
                                 </td>
                                 
                             </tr>
