@@ -28,6 +28,8 @@ import Verifications from "admin/adminComponents/Verifications";
 import PrivacyPolicy from "components/general/PrivacyPolicy";
 import TermsofUse from "components/general/TermsofUse";
 import Cookies from "components/general/Cookies";
+import UserVerifications from "admin/adminComponents/UserVerifications";
+
 
 
 
@@ -71,6 +73,7 @@ export const AdminRoutes = [
     { path: 'banks', component: Banks },
     { path: 'contacts', component: Contacts },
     { path: 'newsletters', component: Newsletters },
+    { path: 'verifications/:id', component: UserVerifications },
    
    
 ]

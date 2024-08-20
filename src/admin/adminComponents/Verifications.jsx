@@ -7,13 +7,15 @@ import ModalLayout from 'utils/ModalLayout'
 import FormComponent from 'utils/FormComponent'
 import ButtonComponent from 'utils/ButtonComponent'
 import Loader from 'utils/Loader'
-import UserVerifications from 'admin/utils/UserVerifications'
+import UserVerifications from 'admin/adminComponents/UserVerifications'
+import { useNavigate } from 'react-router-dom'
 
 const Verifications = () => {
 
     const [data, setData] = useState([])
     const [screen, setScreen] = useState(1)
     const [selectedItem, setSelectedItem] = useState({})
+    const navigate = useNavigate()
   
 
     const fetchVerifications = useCallback(async () => {
@@ -21,7 +23,7 @@ const Verifications = () => {
             const res = await GetApi(Apis.admin.all_transfers)
             if (res.status === 200) {
                 setData(res.data)
-                // console.log(res.data)
+                // console.log(res.data[0].id)
             } else {
                 console.log(res)
             }
@@ -44,7 +46,7 @@ const Verifications = () => {
         <div className='w-11/12  mx-auto'>
             <div className="w-full flex items-center justify-between">
                 <div className="w-2/4 mx-auto">
-                    <Summary color='bg-zinc-500 text-white' title={'Total Verifications'} data={data?.length} />
+                    <Summary color='bg-zinc-500 text-white' title={'Total Transfers'} data={data?.length} />
                 </div>
             </div>
 
@@ -83,7 +85,7 @@ const Verifications = () => {
                                     <button 
                                     className='w-fit px-4 py-1 rounded-md bg-primary text-white text-base ' 
                                     onMouseOver={()=> selectOne(item)} 
-                                    onClick={()=> setScreen(2)}>Explore Verifications</button>
+                                    onClick={()=>navigate(`/admin/verifications/${encodeURIComponent(data[0]?.id)}`)}>Explore Verifications</button>
                                 </td>
                                 
                             </tr>
@@ -97,9 +99,7 @@ const Verifications = () => {
                 </table>
            
             </div>}
-            {screen === 2 && 
-           <UserVerifications setScreen={setScreen} verifications={fetchVerifications} data={selectedItem}/>
-           }
+            
         </div>
     )
 }

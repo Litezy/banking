@@ -26,7 +26,7 @@ const AllTransactions = () => {
       const res = await GetApi(Apis.admin.all_trans)
       if (res.status === 200) {
         setTransHistory(res.data)
-        console.log(res.data)
+        // console.log(res.data)
       } else {
         errorMessage(res.msg)
       }
@@ -184,7 +184,9 @@ const AllTransactions = () => {
                 </td>
               </tr>
             )) :
-              <div className=" w-full text-lg font-semibold flex items-center justify-center">No transactions found</div>
+              <tr className=" w-full text-lg font-semibold flex items-center justify-center">
+                <td>No transactions found</td>
+              </tr>
             }
 
           </tbody>

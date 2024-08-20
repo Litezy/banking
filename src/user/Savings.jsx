@@ -432,7 +432,7 @@ const Savings = () => {
                                 <div className="text-center text-lg">Are you sure you want to terminate?</div>
                                 <div className="mt-5 flex items-center justify-between w-full">
                                     <button onClick={() => setConfirm(false)} className='w-fit px-4 py-1 rounded-md bg-red-500'>cancel</button>
-                                    <button onClick={deletsavings} className='w-fit px-4 py-1 rounded-md bg-green-500'>proceed</button>
+                                    <button disabled={load2 ? true:false} onClick={deletsavings} className='w-fit px-4 py-1 rounded-md bg-green-500'>proceed</button>
                                 </div>
                         </div>
                         
@@ -451,11 +451,11 @@ const Savings = () => {
                                     <div className="border-b py-1 text-zinc-500 text-right">Savings name: <span className='text-xl font-bold text-primary capitalize'>{selectedItem.name}</span></div>
                                     <div className="border-b py-1">
                                         <div className=" text-right">Savings Goal</div>
-                                        <div className="font-bold text-right text-primary">{currency}{selectedItem.goal}</div>
+                                        <div className="font-bold text-right text-primary">{currency}{selectedItem.goal?.toLocaleString()}</div>
                                     </div>
                                     <div className="border-b py-1">
                                         <div className=" text-right">Current Saved</div>
-                                        <div className="font-bold text-right text-primary">{currency}{selectedItem.current}</div>
+                                        <div className="font-bold text-right text-primary">{currency}{selectedItem.current?.toLocaleString()}</div>
                                     </div>
                                     <div className="border-b py-1">
                                         <div className=" text-right">Last Saved</div>
@@ -475,7 +475,7 @@ const Savings = () => {
                                     <div className="">Available Balance <span>{currency}{profile?.balance}</span></div>
                                     <FormComponent name={`amount`} value={forms.amount} onchange={(e) => setForms({ ...forms, [e.target.name]: e.target.value })} formtype='phone' />
                                 </div>
-                                <ButtonComponent title={`Top Up`} bg={`bg-primary mt-2 text-white text-white h-10`} />
+                                <ButtonComponent disabled={load2 ? true:false} title={`Top Up`} bg={`bg-primary mt-2 text-white text-white h-10`} />
                             </div>}
                         </form>
                         {!topup && <div className="mt-3 w-11/12 mx-auto">

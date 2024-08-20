@@ -30,7 +30,7 @@ const Transfer = () => {
 
   const fetchTransfers = (async () => {
     try {
-      const res = await GetApi(Apis.auth.user_transfers)
+      const res = await GetApi(Apis.auth.get_transfers)
       if (res.status === 200) {
         const trans = res.data
         setTransfers(trans[0]);
