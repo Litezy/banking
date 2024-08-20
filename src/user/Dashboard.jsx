@@ -259,7 +259,7 @@ export default function Dashboard() {
                         </div>
                         <div className="flex mt-5 items-start">
                             <div className="text-slate-200 lg:text-4xl text-2xl self-end font-bold">{currency}</div>
-                            <div className="font-bold text-4xl text-white">{profile?.balance}</div>
+                            <div className="font-bold text-4xl text-white">{profile?.balance?.toLocaleString()}</div>
                         </div>
                     </div>
                     <div className="">
@@ -302,11 +302,11 @@ export default function Dashboard() {
                                     <div className="border-b py-1 text-zinc-500 text-right"> Savings name: <span className='text-xl font-bold capitalize text-primary'>{item.name}</span> </div>
                                     <div className="border-b py-1">
                                         <div className=" text-right">Savings Goal</div>
-                                        <div className="font-bold text-right text-primary">{currency}{item.goal}</div>
+                                        <div className="font-bold text-right text-primary">{currency}{item.goal?.toLocaleString()}</div>
                                     </div>
                                     <div className="border-b py-1">
                                         <div className=" text-right">Current Saved</div>
-                                        <div className="font-bold text-right text-primary">{currency}{item.current}</div>
+                                        <div className="font-bold text-right text-primary">{currency}{item.current?.toLocaleString()}</div>
                                     </div>
                                     <div className="border-b py-1">
                                         <div className=" text-right">Last Saved</div>

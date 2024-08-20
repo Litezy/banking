@@ -155,7 +155,7 @@ export default function UserSidebar() {
                        </div>
                         <div className="flex items-center ">
                             <span>{currency}</span>
-                            <span>{hide ? '***':profile?.balance}</span>
+                            <span>{hide ? '***':profile?.balance?.toLocaleString()}</span>
                         </div>
                         <IoEyeOutline onClick={()=> setHide(prev => !prev)} className='text-sm self-center ml-2 cursor-pointer' />
                     </div>

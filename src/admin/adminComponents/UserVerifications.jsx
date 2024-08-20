@@ -11,8 +11,8 @@ import Summary from './Summary'
 const UserVerifications = ({ }) => {
 
     const { id } = useParams()
-    const [show, setShow] = useState(false)
-    const [viewimage, setViewImage] = useState(false)
+    const [show, setShow] = useState({ status: false, id: null })
+    const [viewimage, setViewImage] = useState({ status: false, image: null })
     const [selectedItem, setSelectedItem] = useState({})
     const [loading, setLoading] = useState(false)
     const [modal, setModal] = useState(false)
@@ -28,10 +28,8 @@ const UserVerifications = ({ }) => {
         setLoad(true)
         try {
             const res = await GetApi(`${Apis.admin.single_trans}/${decodedId}`)
-            console.log(res)
             if (res.status === 200) {
                 setData(res.data)
-                // console.log(res.data)
             } else {
                 console.log(res.msg)
             }
@@ -43,16 +41,15 @@ const UserVerifications = ({ }) => {
         }
     })
 
-  useEffect(()=>{
-    fetchVerifications()
-  },[])
-// console.log(`${Apis.admin.single_trans}/${decodedId}`)
+    useEffect(() => {
+        fetchVerifications()
+    }, [])
+    // console.log(`${Apis.admin.single_trans}/${decodedId}`)
     const [form, setForm] = useState({
         amount: '',
         message: ''
     })
 
-    console.log(decodedId)
     const handleChange = (e) => {
         setForm({
             ...form,
@@ -60,16 +57,12 @@ const UserVerifications = ({ }) => {
         })
     }
 
-    // console.log(data)
-    const selectOne = (item) => {
-        setSelectedItem(item)
-    }
-    const sendOtp = async () => {
+    const sendOtp = async (id) => {
         if (!data?.usertransfers?.email) return errorMessage(`Email is missing`)
-        if (!data?.verifications[0]?.id) return errorMessage(`Verification ID is missing`)
+        if (!id) return errorMessage(`Verification ID is missing`)
         const formdata = {
             email: data?.usertransfers?.email,
-            id: data?.verifications[0]?.id
+            id: id
         }
         setLoading(true)
         try {
@@ -130,31 +123,31 @@ const UserVerifications = ({ }) => {
 
 
     const completeTransfer = async () => {
-        if (!data?.id) return errorMessage(`ID is missing`)
+        if (!show.id) return errorMessage(`ID is missing`)
         const formdata = {
-            id: data?.id
+            id: show.id
         }
         setLoad3(true)
         try {
             const res = await PostApi(Apis.admin.confirm_trans, formdata)
-            if (res.status === 200) {
-                successMessage(res.msg)
-                setShow(false)
-                fetchVerifications()
-            } else {
-                errorMessage(res.msg)
-            }
+            if (res.status !== 200) return errorMessage(res.msg)
+            successMessage(res.msg)
+            CloseShow()
+            fetchVerifications()
         } catch (error) {
             errorMessage(error.message)
-            console.log(error)
         } finally {
             setLoad3(false)
         }
     }
+
+    const CloseShow = () => {
+        setShow({ status: false, id: null })
+    }
     return (
 
         <div className="w-11/12 mx-auto mt-10">
-            <div onClick={()=> navigate('/admin/verifications')} className="rounded-md w-fit mr-auto px-4 py-1 bg-primary text-white cursor-pointer">back</div>
+            <div onClick={() => navigate('/admin/verifications')} className="rounded-md w-fit mr-auto px-4 py-1 bg-primary text-white cursor-pointer">back</div>
             <div className="w-full flex items-center justify-between">
                 <div className="w-2/4 mx-auto">
                     <Summary color='bg-zinc-500 text-white' title={'Total Verifications'} data={data?.verifications?.length} />
@@ -175,7 +168,6 @@ const UserVerifications = ({ }) => {
                                 <Loader />
                             </div>
                         }
-                        <div className="text-xl font-bold text-center mb-3">{selectedItem?.times > 0 ? 'Update Verification Message' : 'Create Verification Message'}</div>
                         <div className="flex items-start flex-col gap-5 w-full">
                             <div className="flex items-center gap-5 lg:w-1/2 w-full">
                                 <div className="">Amount ({data?.usertransfers?.currency}):</div>
@@ -199,12 +191,12 @@ const UserVerifications = ({ }) => {
 
                 </ModalLayout>
             }
-            {viewimage &&
-                <ModalLayout setModal={setViewImage} clas={`w-11/12 mx-auto lg:w-[60%]`}>
+            {viewimage.status &&
+                <ModalLayout setModal={() => setViewImage({ status: false, image: null })} clas={`w-11/12 mx-auto lg:w-[60%]`}>
                     <div className="w-full bg-white p-10 rounded-md relative">
                         <div className="text-xl font-bold text-center mb-3">Payment Proof</div>
                         <div className="">
-                            <img src={`${profileImg}/transfers//${data?.verifications[0]?.image}`} alt="" />
+                            <img src={`${profileImg}/transfers/${viewimage.image}`} alt="" />
                         </div>
                     </div>
 
@@ -216,8 +208,8 @@ const UserVerifications = ({ }) => {
                     <Loader />
                 </div>
             }
-            {show &&
-                <ModalLayout setModal={setShow} clas={`w-11/12 mx-auto lg:w-[40%]`}>
+            {show.status &&
+                <ModalLayout setModal={CloseShow} clas={`w-11/12 mx-auto lg:w-[40%]`}>
                     <div className="w-full bg-white p-10 rounded-md relative">
 
                         {load3 &&
@@ -227,7 +219,7 @@ const UserVerifications = ({ }) => {
                         }
                         <div className="text-xl text-center mb-3">Are you sure you want to confirm?</div>
                         <div className="flex items-center justify-between">
-                            <button onClick={() => setShow(false)} className='px-3 w-fit py-2 rounded-md text-white bg-red-500'>cancel</button>
+                            <button onClick={CloseShow} className='px-3 w-fit py-2 rounded-md text-white bg-red-500'>cancel</button>
                             <button disabled={load3 ? true : false} onClick={completeTransfer} className='px-3 w-fit py-2 rounded-md text-white bg-green-500'>proceed</button>
                         </div>
 
@@ -273,18 +265,18 @@ const UserVerifications = ({ }) => {
                                     </td>
                                     <td className="px-3 py-3">
                                         {item?.image ?
-                                            <button onClick={() => setViewImage(true)} className="bg-zinc-600 text-white px-5 rounded-lg py-2">view</button>
+                                            <button onClick={() => setViewImage({ status: true, image: item?.image })} className="bg-zinc-600 text-white px-5 rounded-lg py-2">view</button>
                                             : 'no image uploaded'}
                                     </td>
                                     <td className="px-3 py-3">
                                         {item.verified}
                                     </td>
                                     <td className="px-3 py-3">
-                                        {item?.image && <button disabled={loading || item.verified === 'true' ? true : false} onClick={sendOtp} onMouseOver={() => selectOne(item)} className={`text-white ${item.verified === 'true' ? 'bg-slate-200' : "bg-yellow-500"} px-5 rounded-lg py-2`}>send</button>}
+                                        {item?.image && <button disabled={loading || item.verified === 'true' ? true : false} onClick={() => sendOtp(item?.id)} className={`text-white ${item.verified === 'true' ? 'bg-slate-200' : "bg-yellow-500"} px-5 rounded-lg py-2`}>send</button>}
                                     </td>
-                                    <td className="px-3 py-3">
-                                        <button onClick={() => setShow(true)} className="bg-green-500 text-white px-5 rounded-lg py-2">complete</button>
-                                    </td>
+                                    {item.verified === 'true' ? <td className="px-3 py-3">
+                                        <button onClick={() => setShow({ status: true, id: item.id })} className="bg-green-500 text-white px-5 rounded-lg py-2">complete</button>
+                                    </td> : '--'}
                                 </tr>
                             )) :
                                 <tr className=" w-full text-lg font-semibold flex items-center justify-center">

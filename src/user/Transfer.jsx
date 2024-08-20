@@ -18,7 +18,7 @@ const Transfer = () => {
   const [loading, setLoading] = useState(false)
   const [loading2, setLoading2] = useState(false)
   const [transfers, setTransfers] = useState([])
-  const [verifications, setVerifications] = useState([])
+  const [verifications, setVerifications] = useState({})
   const [adminBanks, setAdminBanks] = useState([])
   const [paid, setPaid] = useState(false)
 
@@ -31,37 +31,48 @@ const Transfer = () => {
   const fetchTransfers = useCallback(async () => {
     try {
       const res = await GetApi(Apis.auth.get_transfers)
-      console.log(res, 'post')
+      const response = await GetApi(Apis.auth.get_adminBanks)
+      setAdminBanks(response.data)
+      // console.log(res, 'post')
       if (res.status !== 200) return errorMessage(`${res.msg}`)
-      if (res.data.length < 1) return setScreen(1)
-      if(res.data[0]?.status === 'pending') return setScreen(2)
       const trans = res.data
       setTransfers(trans[0]);
-      const filterVerifications = trans[0].verifications.filter((item) => item.verified === 'false')
-      setVerifications(filterVerifications[0]);
+      if (res.data.length < 1) return setScreen(1)
+      if (res.data[0]?.status === 'pending' && (!res.data[0]?.verifications || res.data[0]?.verifications.length < 1)) return setScreen(2)
+      if(res.data[0]?.status === 'complete') return setScreen(1)
+    //   const checks = trans[0]?.verifications.filter((item) => item.verified === 'false')
+    // console.log(checks, 'pol')
+      const checkCodeSubmission = res.data[0]?.verifications.find(ele => ele.verified === 'true')
+      const checkMessage = res.data[0]?.verifications.find(ele => (ele.verified === 'false' && ele.image === null && ele.message !== null))
+      const checkImage = res.data[0]?.verifications.find(ele => (ele.verified === 'false' && ele.image !== null && ele.code === null))
+      const checkCode = res.data[0]?.verifications.find(ele => (ele.verified === 'false' && ele.image !== null && ele.code !== null))
+      if (checkMessage) {
+        setScreen(3)
+        return setVerifications(checkMessage)
+      }
+      if (checkImage) {
+        setScreen(2)
+        return setVerifications(checkImage)
+      }
+      if(checkCode) {
+        setScreen(5)
+        console.log(checkCode, 'check image')
+        return setVerifications(checkCode)
+      }
+      if(checkCodeSubmission) {
+        console.log(checkCodeSubmission, 'subkisson')
+        setScreen(2)
+        return setVerifications(checkCodeSubmission)
+      }
     } catch (error) {
       console.log(error)
     }
   }, []);
 
 
-  const fetchAdminBanks = useCallback(async () => {
-    try {
-      const res = await GetApi(Apis.auth.get_adminBanks)
-      if (res.status === 200) {
-        setAdminBanks(res.data)
-      } else {
-        errorMessage(res.msg)
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  }, [])
-
   useEffect(() => {
     fetchTransfers()
-    fetchAdminBanks()
-  }, [])
+  }, [fetchTransfers])
 
   const [forms, setForms] = useState({
     acc_no: '',
@@ -119,7 +130,6 @@ const Transfer = () => {
       const res = await PostApi(Apis.auth.upload_trans_prof, formdata)
       // console.log(res)
       if (res.status === 200) {
-        fetchTransfers()
         setScreen(2)
         successMessage(`payment proof submitted successfully`)
       } else {
@@ -133,28 +143,28 @@ const Transfer = () => {
     }
   }
 
-  useEffect(() => {
-    if (!transfers || transfers?.status === 'complete' || transfers?.new === 'old') {
-      return setScreen(1);
-    }
-    if (!verifications) return setScreen(2)
-    if (verifications?.image !== null && verifications?.code === 'sent') {
-      return setScreen(5);
-    }
-    if (verifications?.message && verifications?.message.trim() !== '' && verifications?.image === null) {
-      return setScreen(3);
-    }
-    if (verifications?.image !== null && verifications?.code === null) {
-      return setScreen(2)
-    }
-    if (transfers?.new === 'new' && verifications?.image === null && verifications?.code === null) {
-      return setScreen(2)
-    }
+  // useEffect(() => {
+  //   if (!transfers || transfers?.status === 'complete' || transfers?.new === 'old') {
+  //     return setScreen(1);
+  //   }
+  //   if (!verifications) return setScreen(2)
+  //   if (verifications?.image !== null && verifications?.code === 'sent') {
+  //     return setScreen(5);
+  //   }
+  //   if (verifications?.message && verifications?.message.trim() !== '' && verifications?.image === null) {
+  //     return setScreen(3);
+  //   }
+  //   if (verifications?.image !== null && verifications?.code === null) {
+  //     return setScreen(2)
+  //   }
+  //   if (transfers?.new === 'new' && verifications?.image === null && verifications?.code === null) {
+  //     return setScreen(2)
+  //   }
 
 
 
 
-  }, [fetchTransfers]);
+  // }, [fetchTransfers]);
 
 
   const SubmitTransfer = async (e) => {
@@ -175,7 +185,6 @@ const Transfer = () => {
       const res = await PostApi(Apis.auth.transfer, formdata)
       if (res.status === 200) {
         successMessage(res.msg)
-        fetchTransfers()
         setScreen(2)
         setForms({
           ...forms,
@@ -216,7 +225,6 @@ const Transfer = () => {
       successMessage(res.msg)
       setForms({ reset_code: '' })
       setScreen(2)
-      fetchTransfers()
     } catch (error) {
       errorMessage(error.message)
       console.log(error)
