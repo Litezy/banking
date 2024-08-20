@@ -3,11 +3,13 @@ import { CiUser } from "react-icons/ci";
 import ButtonComponent from 'utils/ButtonComponent';
 import FormComponent from 'utils/FormComponent';
 import { FaEdit } from "react-icons/fa";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Apis, ClientPostApi, GetApi, PostApi, profileImg } from 'services/Api';
 import { errorMessage, successMessage } from 'utils/functions';
 import { FaUserLarge } from 'react-icons/fa6';
 import { useNavigate } from 'react-router-dom';
+import { dispatchProfile } from 'app/reducer';
+import Loader from 'utils/Loader';
 
 const Profile = () => {
 
@@ -17,7 +19,6 @@ const Profile = () => {
             const response = await GetApi(Apis.auth.profile)
             if (response.status === 200) {
                 setProfile(response.data)
-                // console.log(response.data?.country)
             } else {
                 errorMessage(response.msg)
             }
@@ -28,18 +29,19 @@ const Profile = () => {
     )
     useEffect(() => {
         fetchUserProfile()
-        // console.log(profile)
     }, [])
+
+    const dispatch = useDispatch()
     const imageRef = useRef()
     const [edit, setEdit] = useState(false)
     const navigate = useNavigate()
     const [loading, setLoading] = useState(false)
     const [forms, setForms] = useState({
-        firstname: profile?.firstname,
+        firstname: profile?.firstname ,
         lastname: profile?.lastname,
         phone: profile?.phone,
-        country: profile?.country,
-        state: profile?.state
+        country:  profile?.country,
+        state:  profile?.state
     })
     const [userimg, setUserImg] = useState({
         img: '',
@@ -73,6 +75,12 @@ const Profile = () => {
         })
     }
 
+    const handleChange = (e) => {
+        setForms({
+            ...forms,
+            [e.target.name]: e.target.value
+        })
+    }
 
     const saveImage = async () => {
 
@@ -81,15 +89,20 @@ const Profile = () => {
         formdata.append('firstname', profile?.firstname)
         formdata.append('email', profile?.email)
         console.log(formdata)
+        setLoading(true)
         try {
             const response = await ClientPostApi(Apis.non_auth.change_img, formdata)
             if (response.status === 200) {
                 successMessage(response.msg)
+                changeImage()
+                dispatch(dispatchProfile(response.data))
             } else {
                 errorMessage(response.msg)
             }
         } catch (error) {
             errorMessage(error.message)
+        }finally{
+            setLoading(false)
         }
     }
 
@@ -99,21 +112,20 @@ const Profile = () => {
             setEdit(true)
         }
         else if (edit) {
-            setLoading(true)
+            // setLoading(true)
             const formdata = {
-                firstname: forms.firstname,
-                lastname: forms.lastname,
-                phone: forms.phone,
-                country: forms.country,
-                state: forms.state,
+                firstname: forms.firstname ? forms.firstname: profile?.firstname ,
+                lastname: forms.lastname ? forms.lastname : profile?.lastname,
                 email: profile?.email
             }
+
+            // return console.log(formdata)
             try {
                 const response = await PostApi(Apis.auth.edit_profile, formdata)
                 if (response.status === 200) {
                     successMessage(response.msg)
                     setEdit(false)
-                    fetchUserProfile()
+                    dispatch(dispatchProfile(response.data))
                 } else {
                     errorMessage(response.msg)
                 }
@@ -130,8 +142,16 @@ const Profile = () => {
             <div className="w-11/12 mx-auto">
                 <div className="text-2xl font-semibold">Personal Account</div>
 
-                <div className="my-10 flex items-start flex-col md:flex-row gap-10 ">
-                    <div className="md:w-1/2 w-full px-3 py-5 h-fit bg-white shadow-lg rounded-md">
+                <div className="my-10 flex items-start flex-col md:flex-row gap-10  ">
+
+
+
+                    <div className="md:w-1/2 w-full px-3 py-5 h-fit bg-white shadow-lg rounded-md relative">
+                        {loading &&
+                            <div className="absolute top-1/4 z-50 left-1/2 -translate-x-1/2  ">
+                                <Loader />
+                            </div>
+                        }
                         <form onSubmit={submitForm} className="w-full">
                             <div className="mb-2 text-xl font-light">Edit Account</div>
                             <div className="w-full flex items-center justify-between">
@@ -152,32 +172,16 @@ const Profile = () => {
                                 <div className="flex items-start w-full  justify-between gap-5">
                                     <div className="flex items-start flex-col gap-1 lg:w-1/2 w-full">
                                         <div className="">First Name</div>
-                                        <FormComponent name={`firstname`} value={edit ? forms.firstname : profile?.firstname} />
+                                        <FormComponent onchange={handleChange} name={`firstname`} value={edit ?forms.firstname :profile?.firstname } />
                                     </div>
                                     <div className="flex items-start flex-col gap-1 lg:w-1/2 w-full">
                                         <div className="">Last Name</div>
-                                        <FormComponent name={`lastname`} value={edit ? forms.lastname : profile?.lastname} />
+                                        <FormComponent onchange={handleChange} name={`lastname`} value={ edit ?forms.lastname: profile?.lastname } />
                                     </div>
                                 </div>
-                                <div className="flex items-start w-full justify-between gap-5">
-                                    <div className="flex items-start flex-col gap-1 lg:w-1/2 w-full">
-                                        <div className="">Phone Number</div>
-                                        <FormComponent name={`phone`} value={edit ? forms.phone : profile?.phone} />
-                                    </div>
-                                    <div className="flex items-start flex-col gap-1 lg:w-1/2 w-full">
-                                        <div className="">Country</div>
-                                        <FormComponent name={`country`} value={edit ? forms.country : profile?.country} />
-                                    </div>
-                                </div>
-                                <div className="flex items-start w-full justify-between gap-5">
-                                    <div className="flex items-start flex-col gap-1 lg:w-1/2 w-full">
-                                        <div className="">State</div>
-                                        <FormComponent name={`state`} value={edit ? forms.state : profile?.state} />
-                                    </div>
-
-                                </div>
+                                
                             </div>
-                            <ButtonComponent title={`${edit ? 'Save Details' : "Edit Details"}`} bg={`bg-primary h-12 text-white mt-5`} />
+                            <ButtonComponent title={`${edit ? 'Save Details' : "Click here to edit"}`} bg={` h-12 text-white mt-5 ${edit ? 'bg-primary':'bg-slate-400'}`} />
                         </form>
                     </div>
                     <div className="md:w-1/2 w-full h-fit pb-5  px-3 bg-white rounded-md">
@@ -192,34 +196,34 @@ const Profile = () => {
                             <div className="flex items-start flex-col w-full justify-between gap-5">
                                 <div className="flex items-start flex-col w-full ">
                                     <div className="">First Name</div>
-                                    <FormComponent value={profile?.firstname} />
+                                    <FormComponent mutate={false}  value={profile?.firstname} />
                                 </div>
                                 <div className="flex items-start flex-col w-full ">
                                     <div className="">Last Name</div>
-                                    <FormComponent value={profile?.lastname} />
+                                    <FormComponent mutate={false}  value={profile?.lastname} />
                                 </div>
                                 <div className="flex items-start flex-col w-full ">
                                     <div className="">Email Address</div>
-                                    <FormComponent value={profile?.email} />
+                                    <FormComponent mutate={false} value={profile?.email} />
                                 </div>
                                 <div className="flex items-start flex-col w-1/4 ">
                                     <div className="">Sex</div>
-                                    <FormComponent value={profile?.gender} formtype='sex' />
+                                    <FormComponent mutate={false} value={profile?.gender} formtype='sex' />
                                 </div>
                                 <div className="flex items-start flex-col w-full ">
                                     <div className="">Phone Number</div>
-                                    <FormComponent value={`${profile?.phone}`} />
+                                    <FormComponent mutate={false} value={`${profile?.phone}`} />
                                 </div>
 
                                 <div className="flex items-start flex-col w-full ">
                                     <div className="">Country</div>
-                                    <FormComponent value={profile?.country} />
+                                    <FormComponent mutate={false} value={profile?.country} />
                                 </div>
                                 <div className="flex items-start flex-col w-full ">
                                     <div className="">State</div>
-                                    <FormComponent value={profile?.state} />
+                                    <FormComponent mutate={false} value={profile?.state} />
                                 </div>
-                                
+
                             </div>
 
                         </div>

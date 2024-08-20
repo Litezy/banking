@@ -394,7 +394,7 @@ const Transfer = () => {
                 <FormComponent name={`reset_code`} value={forms.reset_code} onchange={handleChange} formtype='code' placeholder={`Enter 6 digit code`} />
               </div>
               <div className="mt-5 w-10/12 lg:w-2/4 mx-auto">
-                <ButtonComponent title={`Submit`} bg={`bg-primary text-white h-10`} />
+                <ButtonComponent disabled={loading2 ? true :false} title={`Submit`} bg={`bg-primary text-white h-10`} />
               </div>
             </form>
           </div>

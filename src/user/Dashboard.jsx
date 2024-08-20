@@ -94,22 +94,7 @@ export default function Dashboard() {
         fetchUserProfile();
     }, [fetchUserProfile]);
 
-    const fetchCurrency = useCallback(async () => {
-        if (!profile || !profile.country) return;
-        try {
-            const response = await axios.get(`https://restcountries.com/v3.1/name/${profile?.country}`);
-            if (response.data && response.data.length > 0) {
-                const countryData = response.data[0];
-                const currencySymbol = Object.values(countryData.currencies)[0].symbol;
-                setCurrency(currencySymbol);
-                dispatch(dispatchCurrency(currencySymbol));
-            } else {
-                console.error('Unexpected response format:', response);
-            }
-        } catch (error) {
-            console.error('Error fetching currency:', error);
-        }
-    }, [profile, dispatch]);
+
 
     const fetchUserSavings = useCallback(async () => {
         if (!profile) return;
@@ -125,12 +110,6 @@ export default function Dashboard() {
         }
     }, [profile])
 
-
-
-    useEffect(() => {
-        fetchCurrency();
-        fetchUserSavings()
-    }, [profile, fetchCurrency]);
 
     const deposit = 'Deposit'
     const withdraw = 'Withdraw'

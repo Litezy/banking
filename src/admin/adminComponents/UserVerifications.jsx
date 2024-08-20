@@ -204,7 +204,7 @@ const UserVerifications = ({ }) => {
                     <div className="w-full bg-white p-10 rounded-md relative">
                         <div className="text-xl font-bold text-center mb-3">Payment Proof</div>
                         <div className="">
-                            <img src={`${profileImg}/transfers//${data?.verifications[0]?.image}`} alt="" />
+                            <img src={`${profileImg}/transfers/${data?.verifications[0]?.image}`} alt="" />
                         </div>
                     </div>
 

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { FaChevronDown } from 'react-icons/fa6'
 import { VscEyeClosed ,VscEye} from "react-icons/vsc";
 
-const FormComponent = ({ formtype = 'text', placeholder,name,value,onchange,onKeyUp,onclick,outline=false }) => {
+const FormComponent = ({ formtype = 'text', placeholder,name,value,onchange,onKeyUp,onclick,outline=false,mutate=true }) => {
     const [open,setOpen] = useState(false)
     const Icon = open ? VscEyeClosed: VscEye
     return (
@@ -14,7 +14,8 @@ const FormComponent = ({ formtype = 'text', placeholder,name,value,onchange,onKe
             onChange={onchange} 
             onKeyUp={onKeyUp} 
             type="text" 
-            className={`w-full border-zinc-300 hover:border-zinc-600  h-12 border px-2 py-1 rounded-md ${!outline && 'outline-none'}`} placeholder={placeholder} />}
+            disabled={mutate? false:true}
+            className={`w-full border-zinc-300 ${mutate ?'hover:border-zinc-600':'bg-slate-200'}  h-12 border px-2 py-1 rounded-md ${!outline && 'outline-none'}`} placeholder={placeholder} />}
 
             {formtype === 'code' && 
             <input 
@@ -27,9 +28,10 @@ const FormComponent = ({ formtype = 'text', placeholder,name,value,onchange,onKe
 
             {formtype === 'sex' && 
             <input onClick={onclick} 
-            value={value}  
+            value={value} 
+            disabled={mutate? false:true} 
             type="text" 
-            className='w-full border border-zinc-300 hover:border-zinc-600  h-12 flex items-center justify-center rounded-lg outline-none pl-2' placeholder={placeholder} />}
+            className={`w-full border border-zinc-300 ${mutate ?'hover:border-zinc-600':'bg-slate-200'}  h-12 flex items-center justify-center rounded-lg outline-none pl-2`} placeholder={placeholder} />}
 
 
             {formtype === 'email' && 
