@@ -107,7 +107,8 @@ export const admin_urls = {
     subs:admin + '/subs',
     all_transfers: admin + '/all-transfers',
     confirm_trans: admin + '/confirm-trans',
-    otp: admin + '/otp'
+    otp: admin + '/otp',
+    single_trans: admin + '/single-trans'
 }
 export const Apis = {
     non_auth: non_auth_urls,
