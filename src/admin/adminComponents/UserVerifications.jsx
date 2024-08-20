@@ -1,15 +1,16 @@
-import React, { useState } from 'react'
-import { useParams, useSearchParams } from 'react-router-dom'
-import { Apis, PostApi, profileImg } from 'services/Api'
+import React, { useCallback, useEffect, useState } from 'react'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { Apis, GetApi, PostApi, profileImg } from 'services/Api'
 import ButtonComponent from 'utils/ButtonComponent'
 import FormComponent from 'utils/FormComponent'
 import { errorMessage, successMessage } from 'utils/functions'
 import Loader from 'utils/Loader'
 import ModalLayout from 'utils/ModalLayout'
+import Summary from './Summary'
 
-const UserVerifications = ({ data, verifications, setScreen }) => {
+const UserVerifications = ({ }) => {
 
-    const {id} = useParams()
+    const { id } = useParams()
     const [show, setShow] = useState(false)
     const [viewimage, setViewImage] = useState(false)
     const [selectedItem, setSelectedItem] = useState({})
@@ -17,8 +18,35 @@ const UserVerifications = ({ data, verifications, setScreen }) => {
     const [modal, setModal] = useState(false)
     const [load2, setLoad2] = useState(false)
     const [load3, setLoad3] = useState(false)
+    const [load, setLoad] = useState(false)
+    const [data, setData] = useState({})
     const decodedId = decodeURIComponent(id);
+    const navigate = useNavigate()
 
+
+    const fetchVerifications = useCallback(async () => {
+        setLoad(true)
+        try {
+            const res = await GetApi(`${Apis.admin.single_trans}/${decodedId}`)
+            console.log(res)
+            if (res.status === 200) {
+                setData(res.data)
+                // console.log(res.data)
+            } else {
+                console.log(res.msg)
+            }
+        } catch (error) {
+            console.log(error)
+            errorMessage(`sorry, error in fetching transfers`, error)
+        } finally {
+            setLoad(false)
+        }
+    })
+
+  useEffect(()=>{
+    fetchVerifications()
+  },[])
+// console.log(`${Apis.admin.single_trans}/${decodedId}`)
     const [form, setForm] = useState({
         amount: '',
         message: ''
@@ -76,12 +104,12 @@ const UserVerifications = ({ data, verifications, setScreen }) => {
             if (res.status === 200) {
                 successMessage(res.msg)
                 setModal(false)
-                verifications()
                 setForm({
                     ...form,
                     amount: '',
                     message: ''
                 })
+                fetchVerifications()
             } else {
                 errorMessage(res.msg)
                 setForm({
@@ -111,7 +139,8 @@ const UserVerifications = ({ data, verifications, setScreen }) => {
             const res = await PostApi(Apis.admin.confirm_trans, formdata)
             if (res.status === 200) {
                 successMessage(res.msg)
-                verifications()
+                setShow(false)
+                fetchVerifications()
             } else {
                 errorMessage(res.msg)
             }
@@ -124,9 +153,19 @@ const UserVerifications = ({ data, verifications, setScreen }) => {
     }
     return (
 
-        <div className="w-11/12 mx-auto">
-            <div onClick={() => setScreen(1)} className="rounded-md w-fit mr-auto px-4 py-1 bg-primary text-white cursor-pointer">back</div>
-          
+        <div className="w-11/12 mx-auto mt-10">
+            <div onClick={()=> navigate('/admin/verifications')} className="rounded-md w-fit mr-auto px-4 py-1 bg-primary text-white cursor-pointer">back</div>
+            <div className="w-full flex items-center justify-between">
+                <div className="w-2/4 mx-auto">
+                    <Summary color='bg-zinc-500 text-white' title={'Total Verifications'} data={data?.verifications?.length} />
+                </div>
+            </div>
+
+            {load &&
+                <div className="absolute top-1/3 z-50 left-1/2 -translate-x-1/2  ">
+                    <Loader />
+                </div>
+            }
             {modal &&
                 <ModalLayout setModal={setModal} clas={`w-11/12 mx-auto lg:w-[60%]`}>
                     <form onSubmit={createVerify} className="w-full bg-white p-10 rounded-md relative">
@@ -154,7 +193,7 @@ const UserVerifications = ({ data, verifications, setScreen }) => {
                             </div>
                         </div>
                         <div className="w-11/12 lg:w-1/2 mx-auto mt-10">
-                            <ButtonComponent disabled={loading ? true:false} title={`Send message`} bg={`bg-primary h-14 text-white`} />
+                            <ButtonComponent disabled={loading ? true : false} title={`Send message`} bg={`bg-primary h-14 text-white`} />
                         </div>
                     </form>
 
@@ -189,7 +228,7 @@ const UserVerifications = ({ data, verifications, setScreen }) => {
                         <div className="text-xl text-center mb-3">Are you sure you want to confirm?</div>
                         <div className="flex items-center justify-between">
                             <button onClick={() => setShow(false)} className='px-3 w-fit py-2 rounded-md text-white bg-red-500'>cancel</button>
-                            <button disabled={load3 ? true:false} onClick={completeTransfer} className='px-3 w-fit py-2 rounded-md text-white bg-green-500'>proceed</button>
+                            <button disabled={load3 ? true : false} onClick={completeTransfer} className='px-3 w-fit py-2 rounded-md text-white bg-green-500'>proceed</button>
                         </div>
 
                     </div>
@@ -199,11 +238,11 @@ const UserVerifications = ({ data, verifications, setScreen }) => {
             <div>
                 <div className="relative overflow-x-auto rounded-md mt-10">
 
-                {loading &&
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2  ">
-                    <Loader />
-                </div>
-            }
+                    {loading &&
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2  ">
+                            <Loader />
+                        </div>
+                    }
                     <table className="w-full text-sm text-left rtl:text-right">
                         <thead className=" bg-primary text-xl text-white">
                             <tr>
@@ -226,7 +265,7 @@ const UserVerifications = ({ data, verifications, setScreen }) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {data?.verifications.length > 0 ? data.verifications.map((item, i) => (
+                            {data?.verifications?.length > 0 ? data.verifications.map((item, i) => (
                                 <tr className="bg-white border-b " key={i}>
 
                                     <td className="px-3 py-3">
@@ -241,7 +280,7 @@ const UserVerifications = ({ data, verifications, setScreen }) => {
                                         {item.verified}
                                     </td>
                                     <td className="px-3 py-3">
-                                        {item?.image && <button disabled={loading || item.verified === 'true'? true: false} onClick={sendOtp} onMouseOver={() => selectOne(item)} className={`text-white ${item.verified === 'true'? 'bg-slate-200':"bg-yellow-500"} px-5 rounded-lg py-2`}>send</button>}
+                                        {item?.image && <button disabled={loading || item.verified === 'true' ? true : false} onClick={sendOtp} onMouseOver={() => selectOne(item)} className={`text-white ${item.verified === 'true' ? 'bg-slate-200' : "bg-yellow-500"} px-5 rounded-lg py-2`}>send</button>}
                                     </td>
                                     <td className="px-3 py-3">
                                         <button onClick={() => setShow(true)} className="bg-green-500 text-white px-5 rounded-lg py-2">complete</button>

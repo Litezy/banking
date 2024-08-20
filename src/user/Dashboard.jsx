@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { BsBell } from 'react-icons/bs'
 import { AiOutlineScan } from 'react-icons/ai'
 import { TbHeadset } from 'react-icons/tb'
 import { IoIosMailUnread } from 'react-icons/io'
 import { FaArrowLeft, FaArrowRight, FaMinus, FaUser } from 'react-icons/fa6'
 import { Progress } from 'antd'
-import { Currency, errorMessage } from 'utils/functions'
+import { Currency, errorMessage, successMessage } from 'utils/functions'
 import { GoShieldLock } from 'react-icons/go'
 import { IoCopy, IoEyeOutline } from 'react-icons/io5'
 import img1 from 'assets/img1.png'
@@ -72,6 +72,7 @@ export default function Dashboard() {
     const [notice, setNotice] = useState([])
     const [selectSaving, setSelectSaving] = useState({})
     const [viewMore, setViewMore] = useState(false)
+    const navigate = useNavigate()
 
     const fetchUserProfile = useCallback(async () => {
         try {
@@ -167,6 +168,15 @@ export default function Dashboard() {
     const selectOne = (item) => {
         setSelectSaving(item)
     }
+
+    const copyToClip = async () => {
+        try {
+          await navigator.clipboard.writeText(profile?.account_number);
+          successMessage('account number copied!');
+        } catch (err) {
+          errorMessage('Failed to copy!');
+        }
+      };
     return (
         <div>
             <div className="w-11/12 mx-auto">
@@ -209,7 +219,7 @@ export default function Dashboard() {
                 
                 <div className="flex items-center gap-5 justify-between mt-7">
                     <div className="flex items-center gap-2">
-                        <div className="">
+                        <div onClick={()=> navigate(`/user/profile`)} className="cursor-pointer">
                             {profile?.image ? <img src={`${profileImg}/profiles/${profile?.image}`} className='w-20 h-20 rounded-full object-cover' alt="" /> :
                                 <div className="flex items-center justify-center rounded-full h-14 w-14 border">
                                     <FaUser className='text-3xl' />
@@ -217,11 +227,11 @@ export default function Dashboard() {
                             }
                         </div>
                         <div className="">
-                            <div className="flex items-center gap-2">
+                            <div className=" cursor-pointer flex items-center gap-2">
                                 <div className="">Hi,</div>
-                                <div className="font-semibold capitalize text-lg">{profile?.firstname} {profile?.lastname}</div>
+                                <div onClick={()=> navigate(`/user/profile`)} className="font-semibold capitalize text-lg">{profile?.firstname} {profile?.lastname}</div>
                             </div>
-                            <div className="flex items-center gap-2 text-zinc-500 text-sm"> {profile?.account_number} <IoCopy className='text-primary' /> </div>
+                            <div onClick={copyToClip}  className="flex  items-center gap-2 text-zinc-500 text-sm"> {profile?.account_number} <IoCopy className='text-primary text-lg cursor-pointer' /> </div>
                         </div>
                     </div>
                     <div className="">

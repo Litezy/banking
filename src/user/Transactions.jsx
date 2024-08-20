@@ -24,7 +24,7 @@ const Transactions = () => {
       }
     } catch (error) {
       errorMessage(error.message)
-    }finally{
+    } finally {
       setLoading(false)
     }
   }, [])
@@ -81,7 +81,7 @@ const Transactions = () => {
 
         {loading &&
           <div className="absolute  top-1/4 left-1/2  -translate-x-1/2 ">
-            <Loader/>
+            <Loader />
           </div>
 
         }
@@ -124,21 +124,25 @@ const Transactions = () => {
           ))}
         </div>
 
-        <div className="w-fit ml-auto mr-5 mt-5">
+        <div className="w-fit   ml-auto mr-5 mt-10 mb-5">
           <div className="w-full flex flex-col items-center ">
-            <span className="text-sm text-gray-700 ">
-              Showing <span className="font-semibold text-black">{firstIndex}</span> to
-              <span className="font-semibold text-black"> {lastIndex > transdata.length ? transdata.length : lastIndex}</span> of
-              <span className="font-semibold text-black"> {transdata.length} </span>
-              Transactions
-            </span>
-
-            <div className=" flex items-center gap-4 mt-2 xs:mt-0">
+            <div className="flex items-center gap-3">
               <button onClick={prevPage} className="flex items-center justify-center px-4 h-10 text-base font-medium text-white bg-[#60a5fa] rounded-s hover:bg-[#4789da]
                       ">
                 Prev
               </button>
-
+              <span className="text-sm text-gray-700 ">
+                Showing <span className="font-semibold text-black">{records?.length === 0 ? '0' : firstIndex}</span> to
+                <span className="font-semibold text-black"> {lastIndex > transdata?.length ? transdata?.length : lastIndex}</span> of
+                <span className="font-semibold text-black"> {transdata?.length} </span>
+                Transactions
+              </span>
+              <button onClick={nextPage} className="flex items-center justify-center px-4 h-10 text-base font-medium
+                     text-white bg-[#60a5fa] rounded-s hover:bg-[#4789da] rounded-e   ">
+                Next
+              </button>
+            </div>
+            <div className=" flex items-center overflow-x-auto max-w-[90%] mt-3 gap-4">
               {numbers.map((n, i) => (
                 <div className={``} key={i}>
                   <a onClick={(e) => changeCurrentPage(n, e)} href="#" className={`flex items-center justify-center
@@ -146,10 +150,7 @@ const Transactions = () => {
                       ${currentPage === n ? 'bg-[#60a5fa] text-white' : 'bg-white hover:bg-gray-100'}`}>{n}</a>
                 </div>
               ))}
-              <button onClick={nextPage} className="flex items-center justify-center px-4 h-10 text-base font-medium
-                     text-white bg-[#60a5fa] rounded-s hover:bg-[#4789da] rounded-e   ">
-                Next
-              </button>
+
             </div>
           </div>
         </div>

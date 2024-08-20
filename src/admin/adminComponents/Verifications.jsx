@@ -85,7 +85,7 @@ const Verifications = () => {
                                     <button 
                                     className='w-fit px-4 py-1 rounded-md bg-primary text-white text-base ' 
                                     onMouseOver={()=> selectOne(item)} 
-                                    onClick={()=>navigate(`/admin/verifications/${encodeURIComponent(data[0]?.id)}`)}>Explore Verifications</button>
+                                    onClick={()=>navigate(`/admin/verifications/${encodeURIComponent(item?.id)}`)}>Explore Verifications</button>
                                 </td>
                                 
                             </tr>
