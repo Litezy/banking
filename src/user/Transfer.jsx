@@ -28,22 +28,21 @@ const Transfer = () => {
   const [screen, setScreen] = useState()
   const dispatch = useDispatch()
 
-  const fetchTransfers = (async () => {
+  const fetchTransfers = useCallback(async () => {
     try {
       const res = await GetApi(Apis.auth.get_transfers)
-      if (res.status === 200) {
-        const trans = res.data
-        setTransfers(trans[0]);
-        const filterVerifications = trans[0].verifications.filter((item) => item.verified === 'false')
-        setVerifications(filterVerifications[0]);
-        //  console.log(trans[0])
-      } else {
-        console.log(res.msg)
-      }
+      console.log(res, 'post')
+      if (res.status !== 200) return errorMessage(`${res.msg}`)
+      if (res.data.length < 1) return setScreen(1)
+      if(res.data[0]?.status === 'pending') return setScreen(2)
+      const trans = res.data
+      setTransfers(trans[0]);
+      const filterVerifications = trans[0].verifications.filter((item) => item.verified === 'false')
+      setVerifications(filterVerifications[0]);
     } catch (error) {
       console.log(error)
     }
-  });
+  }, []);
 
 
   const fetchAdminBanks = useCallback(async () => {
@@ -151,7 +150,7 @@ const Transfer = () => {
     if (transfers?.new === 'new' && verifications?.image === null && verifications?.code === null) {
       return setScreen(2)
     }
-    
+
 
 
 
@@ -213,14 +212,11 @@ const Transfer = () => {
     setLoading2(true)
     try {
       const res = await PostApi(Apis.auth.verify_otp, formdata)
-      if (res.status === 200) {
-        successMessage(res.msg)
-        setForms({ reset_code: '' })
-        setScreen(2)
-        fetchTransfers()
-      } else {
-        errorMessage(res.msg)
-      }
+      if (res.status !== 200) return errorMessage(res.msg)
+      successMessage(res.msg)
+      setForms({ reset_code: '' })
+      setScreen(2)
+      fetchTransfers()
     } catch (error) {
       errorMessage(error.message)
       console.log(error)
@@ -251,7 +247,7 @@ const Transfer = () => {
             }</div>
           </div>
         </div>
-
+        {/* ========================   transfer form ============ */}
         {screen === 1 &&
           <div className="my-10 w-full relative flex items-start shadow-lg flex-col py-5 px-10 bg-white rounded-lg h-fit">
 
@@ -287,6 +283,7 @@ const Transfer = () => {
             </div>
           </div>}
 
+        {/* ===============  loading ================== */}
         {screen === 2 &&
           <div className="w-full mt-5 h-96 relative flex items-center justify-center">
             <div className="md:w-[40%] w-10/12 mx-auto flex-col bg-white rounded-md p-5 h-fit flex items-center justify-center">
@@ -296,6 +293,7 @@ const Transfer = () => {
           </div>
 
         }
+        {/* =======================  upload image message =================== */}
         {screen === 3 &&
           <div className="w-full mt-5 h-fit p-5">
             <div className="w-full p-5 bg-white rounded-md">
@@ -336,50 +334,50 @@ const Transfer = () => {
                     </div>
                   ))}
 
-                 {paid === false && <button onClick={() => setPaid(true)} className=" cursor-pointer w-fit px-4 py-2  rounded-full bg-gradient-to-tr   from-primary to-purple-700 border text-white ml-auto">I have made payment</button>}
+                  {paid === false && <button onClick={() => setPaid(true)} className=" cursor-pointer w-fit px-4 py-2  rounded-full bg-gradient-to-tr   from-primary to-purple-700 border text-white ml-auto">I have made payment</button>}
                 </div>
               </div>
             </div>
 
-          {paid &&   <div className="my-10 w-11/12 bg-white p-5 rounded-md">
-            <button onClick={() => setPaid(false)} className='w-fit mr-auto px-3 py-1 rounded-md bg-primary text-white'>hide</button>
-            <div className="text-xl text-center font-semibold">Upload proof of payment</div>
+            {paid && <div className="my-10 w-11/12 bg-white p-5 rounded-md">
+              <button onClick={() => setPaid(false)} className='w-fit mr-auto px-3 py-1 rounded-md bg-primary text-white'>hide</button>
+              <div className="text-xl text-center font-semibold">Upload proof of payment</div>
 
-            <div className="mt-3 relative w-2/4 mx-auto">
+              <div className="mt-3 relative w-2/4 mx-auto">
 
-              {loading &&
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2">
-                  <Loader />
+                {loading &&
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2">
+                    <Loader />
+                  </div>
+                }
+                <label className={`${proofimg.img ? '' : 'border-2 border-black'} mt-5 w-full  h-full border-dashed flex cursor-pointer items-center justify-center `}>
+                  {proofimg.img ? <div className="">
+                    <div onChange={changeImage} className="absolute top-0 right-0 main font-bold ">
+                      <FaEdit className='text-2xl' />
+                    </div>
+                    <img src={proofimg.img} className='w-full h-48' />
+                  </div> :
+                    <div className="flex items-center gap-2 px-2">
+                      <FaPlus className='text-2xl' />
+                      <div className="">Upload proof of payment</div>
+                    </div>
+
+                  }
+                  <input type="file" onChange={handleImage} hidden ref={imgRef} />
+                </label>
+              </div>
+              {proofimg.img &&
+                <div className="w-1/4 mx-auto mt-5">
+                  <ButtonComponent type='button' onclick={UploadProof} title={'Submit'} bg={`bg-primary text-white h-12`} />
                 </div>
               }
-              <label className={`${proofimg.img ? '' : 'border-2 border-black'} mt-5 w-full  h-full border-dashed flex cursor-pointer items-center justify-center `}>
-                {proofimg.img ? <div className="">
-                  <div onChange={changeImage} className="absolute top-0 right-0 main font-bold ">
-                    <FaEdit className='text-2xl' />
-                  </div>
-                  <img src={proofimg.img} className='w-full h-48' />
-                </div> :
-                  <div className="flex items-center gap-2 px-2">
-                    <FaPlus className='text-2xl' />
-                    <div className="">Upload proof of payment</div>
-                  </div>
-
-                }
-                <input type="file" onChange={handleImage} hidden ref={imgRef} />
-              </label>
-            </div>
-            {proofimg.img &&
-              <div className="w-1/4 mx-auto mt-5">
-                <ButtonComponent type='button' onclick={UploadProof} title={'Submit'} bg={`bg-primary text-white h-12`} />
-              </div>
-            }
-          </div>}
+            </div>}
           </div>
 
         }
 
 
-
+        {/* =========================  otp code ================= */}
         {screen === 5 &&
           <div className="my-10 w-11/12 bg-white p-5 rounded-md">
             <div className="text-xl text-center font-semibold">Enter code sent</div>

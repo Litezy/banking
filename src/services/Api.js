@@ -23,15 +23,16 @@ email = support@greenfordbank.com
 export let URL;
 export let profileImg;
 
-if(window.location.origin.includes('localhost')) {
+if(!window.location.origin.includes('localhost')) {
     URL = 'http://localhost:5002/api'
     profileImg = 'http://localhost:5002'
 }
 
-if(window.location.origin.includes('greenfordbank.com')) {
+if(!window.location.origin.includes('greenfordbank.com')) {
     URL = 'https://api.greenfordbank.com/api'
     profileImg = 'https://api.greenfordbank.com/api'
 }
+
 
 
 const user = 'user'
