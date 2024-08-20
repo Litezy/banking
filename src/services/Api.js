@@ -7,7 +7,7 @@ import { CookieName } from 'utils/functions'
 
 Database 
 password = greenfordbank.com 
-username & database = greenco_banking
+username & database = greenfor_banking
 
 Email 
 email = support@greenfordbank.com 
