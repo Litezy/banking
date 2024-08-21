@@ -78,7 +78,8 @@ export const auth_urls = {
     user_transfers : user + '/user-transfers',
     all_savings : user + '/all-savings',
     verify_otp: user + '/verify-otp',
-    withdraw_savings : user + '/withdraw-savings'
+    withdraw_savings : user + '/withdraw-savings',
+    save_history: user + '/save-history'
 }
 
 export const admin_urls = {

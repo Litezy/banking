@@ -19,6 +19,7 @@ import ButtonComponent from 'utils/ButtonComponent'
 import Loader from 'utils/Loader'
 import UserBanks from 'utils/UserBanks'
 import { dispatchProfile } from 'app/reducer'
+import SaveHistory from 'utils/SaveHistory'
 
 const Savings = () => {
 
@@ -36,6 +37,7 @@ const Savings = () => {
     const [adminBanks, setAdminBanks] = useState([])
     const [createsave, setCreateSave] = useState(false)
     const [confirm,setConfirm] = useState(false)
+    const [viewall,setViewAll] = useState(false)
     const profile = useSelector((state) => state.profile.profile)
     const currency = useSelector((state) => state.profile.currency)
     const dispatch = useDispatch()
@@ -56,23 +58,19 @@ const Savings = () => {
         }
     }, [])
     const fetchUserSavings = useCallback(async () => {
-        if (!profile) return;
         try {
             const response = await GetApi(Apis.auth.user_savings)
-            if (response.status === 200) {
+            if (response.status !== 200) return ;
                 setSavings(response.data)
-            } else {
-                // console.log(response)
-            }
         } catch (error) {
             errorMessage(error.message)
         }
-    }, [profile])
+    }, [])
 
     useEffect(() => {
         fetchUserSavings()
         fetchAdminBanks()
-    }, [profile])
+    }, [])
 
 
     const fetchSavingsHistory = useCallback(async () => {
@@ -81,7 +79,7 @@ const Savings = () => {
             if (response.status === 200) {
                 setRecords(response.data)
             } else {
-                console.log(response.msg)
+                // console.log(response.msg)
             }
         } catch (error) {
             errorMessage(error.message)
@@ -523,7 +521,7 @@ const Savings = () => {
 
             <div className="mt-4 flex flex-col lg:flex-row items-start h-fit py-5 mb-10 gap-10 ">
                 <div className="md:w-1/2 w-full h-full py-2 flex items-center justify-center flex-col px-3 rounded-lg bg-white cursor-pointer">
-                    <div className="text-lg font-semibold">Three important steps to take and complete your deposit</div>
+                    <div className="text-lg font-semibold">Three important steps to take in order to complete your deposit</div>
                     {steps.map((ele, i) => (
                         <ul className='w-full self-center flex items-center  gap-2 py-2 ' key={i}>
                             <li className='text-2xl'>{ele.img}</li>
@@ -535,7 +533,7 @@ const Savings = () => {
                 <div onClick={() => setSupport(true)} className="w-fit cursor-pointer self-center text-white px-5 py-2 rounded-lg bg-primary">Contact Support</div>
             </div>
 
-            <div onClick={() => setCreateSave(true)} className=" mb-3 cursor-pointer w-fit ml-auto text-white bg-primary  px-5 py-2 rounded-md">Add New Goal</div>
+            <div onClick={() => setCreateSave(true)} className=" mb-3 cursor-pointer w-fit ml-auto text-white bg-primary  px-5 py-2 rounded-md">Add New Savings</div>
             <div className={`grid grid-cols-1 ${savings.length === 0 ? 'lg:grid-cols-1' : 'lg:grid-cols-2'} gap-5 lg:gap-10`}>
 
                 {savings.length > 0 ? savings.map((item, index) => (
@@ -582,7 +580,7 @@ const Savings = () => {
             </div>
 
             <div className="mt-5 text-xl font-semibold">Latest Savings Transactions</div>
-            <div className=" w-full bg-white shadow-lg ">
+            <div className=" w-full bg-white shadow-lg pb-3">
                 {Array.isArray(records) ? records.slice(0, 5).map((item, index) => (
                     <div className="rounded-xl border-b " key={index}>
                         {/* <div className="pl-2 pt-1"> {item.name}</div> */}
@@ -600,7 +598,7 @@ const Savings = () => {
                                         </div>
                                         <div className="flex items-center gap-3">
                                             <div className="text-sm">Amount</div>
-                                            <div className={`text-xl font-bold`}>{currency}{item.goal?.toLocaleString()} </div>
+                                            <div className={`text-xl font-bold`}>{profile?.currency}{item.goal?.toLocaleString()} </div>
                                         </div>
                                     </div>
                                     <div className="flex items-center flex-col">
@@ -614,7 +612,52 @@ const Savings = () => {
                 )) :
                     <div className="text-lg font-semibold text-center">No savings records found</div>
                 }
+                <div onClick={()=> setViewAll(true)} className="w-fit cursor-pointer ml-auto text-white px-4 py-1 my-5 rounded-md bg-primary mr-3">view all</div>
             </div>
+
+
+           {viewall &&  
+
+           <ModalLayout setModal={setViewAll} clas={`w-11/12 mx-auto lg:w-[70%]`}>
+            <div className=" w-full bg-white shadow-lg pb-3 rounded-md overflow-y-auto">
+                {Array.isArray(records) ? records.map((item, index) => (
+                    <div className="rounded-xl border-b " key={index}>
+                        {/* <div className="pl-2 pt-1"> {item.name}</div> */}
+                        <div className="flex flex-col">
+                            <div className="p-3 border-b last:border-none cursor-pointer">
+                                <div className="flex items-center w-full justify-between">
+                                    <div className="flex flex-col items-center gap-3">
+                                        <div className="flex items-center gap-3">
+                                            <div className="rounded-full p-1 bg-blue-300 text-blue-50">
+                                                <div className="bg-blue-400 rounded-full p-1">
+                                                    <IoIosMailUnread className='text-xl' />
+                                                </div>
+                                            </div>
+                                            <div className="text-sm font-bold capitalize">{item.name}</div>
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                            <div className="text-sm">Amount</div>
+                                            <div className={`text-xl font-bold`}>{profile?.currency}{item.goal?.toLocaleString()} </div>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center flex-col">
+                                        <div className="text-sm">last saved</div>
+                                        <div className="text-xs text-right">{item.lastsaved}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )) :
+                    <div className="text-lg font-semibold text-center">No savings records found</div>
+                }
+                <div onClick={()=> setViewAll(false)} className="w-fit cursor-pointer ml-auto text-white px-4 py-1 my-5 rounded-md bg-primary mr-3">close</div>
+            </div>
+           </ModalLayout>
+           }
+           <div className="my-5">
+            <SaveHistory/>
+           </div>
         </div>
     )
 }

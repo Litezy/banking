@@ -142,7 +142,7 @@ const Transactions = () => {
                 Next
               </button>
             </div>
-            <div className=" flex items-center overflow-x-auto max-w-[90%] mt-3 gap-4">
+            <div className=" flex items-center   max-w-[90%] p-5 overflow-x-auto mt-3 gap-4">
               {numbers.map((n, i) => (
                 <div className={``} key={i}>
                   <a onClick={(e) => changeCurrentPage(n, e)} href="#" className={`flex items-center justify-center

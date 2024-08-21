@@ -100,7 +100,7 @@ export default function Dashboard() {
     const fetchUserSavings = useCallback(async () => {
         try {
             const response = await GetApi(Apis.auth.user_savings)
-            if (response.status !== 200) return errorMessage(response.msg)
+            if (response.status !== 200) return console.log(response.msg)
             setUserSavings(response.data)
             dispatch(dispatchUserSavings(response.data))
         } catch (error) {

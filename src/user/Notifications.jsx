@@ -7,12 +7,14 @@ import moment from 'moment'
 import { dispatchNotifications } from 'app/reducer';
 import { errorMessage, successMessage } from 'utils/functions';
 import { Apis, GetApi, PostApi } from 'services/Api';
+import Loader from 'utils/Loader';
 
 const Notifications = () => {
 
   const [notifications,setNotifications]= useState([]) 
   const dispatch = useDispatch()
   const [selectedItem,setSelectedItem]= useState({})
+  const [loading,setLoading] = useState(false)
   const profile = useSelector((state)=> state.profile.profile)
   const fetchUserNotifications = useCallback(async()=>{
     try {
@@ -75,15 +77,33 @@ useEffect(()=>{
       errorMessage(error.message)
     }
   }
-
+ const MarkAll = async ()=>{
+  setLoading(true)
+  try {
+    const res = await PostApi(Apis.auth.mark_all)
+    if(res.status !== 200) return errorMessage(res.msg)
+      successMessage(res.msg)
+    fetchUserNotifications()
+  } catch (error) {
+    errorMessage(error.message)
+  }finally{
+    setLoading(false)
+  }
+ }
   return (
     <div className='w-full mt-5 lg:mt-10'>
       <div className="w-11/12 mx-auto lg:px-5 py-5 ">
         <div className="flex w-full items-center justify-between">
           <div className="text-2xl font-bold">Latest Notifications</div>
-          <button className='w-fit px-5 py-2 rounded-md bg-primary text-sm md:text-base text-white'>Mark all as read</button>
+          <button onClick={MarkAll} className='w-fit px-5 py-2 rounded-md bg-primary text-sm md:text-base text-white'>Mark all as read</button>
         </div>
-        <div className="mt-5 w-full">
+        <div className="mt-5 w-full relative">
+
+          {loading &&
+          <div className="absolute top-1/3 left-1/2 -translate-x-1/2">
+            <Loader/>
+          </div>
+          }
           {records.map((item, index) => (
             <div onClick={markAsRead} onMouseOver={()=> selectOne(item)} className="rounded-md mb-3 bg-white border shadow-md" key={index}>
               <div className="flex flex-col ">
