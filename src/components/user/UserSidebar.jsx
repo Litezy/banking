@@ -41,7 +41,7 @@ export default function UserSidebar() {
     const LogoutUser = async () => {
         try {
             const response = await PostApi(Apis.auth.logout)
-            console.log(response)
+            // console.log(response)
             if (response.status === 200) {
                 successMessage(response.msg)
                 Cookies.remove(CookieName)
@@ -85,27 +85,6 @@ export default function UserSidebar() {
         fetchUserProfile();
     }, [fetchUserProfile]);
 
-    const fetchCurrency = useCallback(async () => {
-        if (!profile || !profile.country) return;
-        try {
-            const response = await axios.get(`https://restcountries.com/v3.1/name/${profile?.country}`);
-            if (response.data && response.data.length > 0) {
-                const countryData = response.data[0];
-                const currencySymbol = Object.values(countryData.currencies)[0].symbol;
-                setCurrency(currencySymbol);
-                dispatch(dispatchCurrency(currencySymbol));
-            } else {
-                console.error('Unexpected response format:', response);
-            }
-        } catch (error) {
-            console.error('Error fetching currency:', error);
-        }
-    }, [profile, dispatch]);
-
-    useEffect(() => {
-        fetchCurrency()
-    }, [profile])
-
     const fetchUserNotifications = useCallback(async()=>{
         try {
             const response = await GetApi(Apis.auth.user_notifications)
@@ -122,7 +101,7 @@ export default function UserSidebar() {
 
     useEffect(()=>{
         fetchUserNotifications()
-    },[profile,dispatch])
+    },[])
 
 
 

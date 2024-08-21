@@ -77,7 +77,8 @@ export const auth_urls = {
     upload_trans_prof: user +'/upload-proof',
     user_transfers : user + '/user-transfers',
     all_savings : user + '/all-savings',
-    verify_otp: user + '/verify-otp'
+    verify_otp: user + '/verify-otp',
+    withdraw_savings : user + '/withdraw-savings'
 }
 
 export const admin_urls = {

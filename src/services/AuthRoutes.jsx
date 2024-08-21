@@ -22,12 +22,14 @@ const AuthRoutes = ({ children }) => {
                 const token = Cookies.get(CookieName)
                 if (!token) {
                     setLogin(false)
-                    navigate(`/login`)
+                    return navigate(`/login`)
                 }
                 const isValidToken = isExpired(token)
+                // console.log(isValidToken)
                 if (isValidToken) {
                     setLogin(false)
-                    navigate(`/login`)
+                    Cookies.remove(CookieName)
+                    return navigate(`/login`)
                 }
 
                 const response = await GetApi(Apis.auth.profile)
@@ -36,11 +38,14 @@ const AuthRoutes = ({ children }) => {
                     dispatch(dispatchProfile(response.data))
                 }
             } catch (error) {
-                return errorMessage(error.message)
+                errorMessage(error.message)
+                return navigate(`/login`)
+                 
+
             }
         }
         fetchProfile()
-    }, [])
+    }, [dispatch, navigate])
     if (login) return children
 }
 

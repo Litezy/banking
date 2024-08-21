@@ -236,7 +236,7 @@ const Savings = () => {
     const selectItem = (items) => {
         setSelectedItem(items)
     }
-
+    const goalReached = selectedItem.goal === selectedItem.current
     const [forms, setForms] = useState({
         id: selectedItem.id,
         amount: ''
@@ -298,7 +298,9 @@ const Savings = () => {
                 setForms({ ...forms, id: '', amount: '' })
                 fetchUserSavings()
             } else {
-                console.log(response)
+
+                errorMessage(response.msg)
+                console.log(response.msg)
             }
         } catch (error) {
             errorMessage(error.message)
@@ -306,6 +308,35 @@ const Savings = () => {
             setLoad2(false)
         }
     }
+    const withdrawsavings = async (e) => {
+        e.preventDefault()
+        const formdata = {
+            id: selectedItem.id
+        }
+        setConfirm(false)
+        setLoad2(true)
+        try {
+            const response = await PostApi(Apis.auth.withdraw_savings, formdata)
+            if (response.status !== 200) return errorMessage(response.msg)
+                successMessage(response.msg)
+                dispatch(dispatchProfile(response.user))
+                setCloseView(false)
+                setForms({ ...forms, id: '', amount: '' })
+                fetchUserSavings()
+        } catch (error) {
+            errorMessage(error.message)
+        } finally {
+            setLoad2(false)
+        }
+    }
+
+
+    const checkTopup = ()=>{
+      if(selectedItem.goal === selectedItem.current) return successMessage(`Savings goal reached already`)
+        setTopup(prev => !prev)
+    }
+
+   
     return (
         <div className={`w-11/12  mx-auto ${add && 'overflow-hidden'}`}>
 
@@ -428,11 +459,11 @@ const Savings = () => {
 
 
                         {confirm && 
-                        <div className="absolute top-1/4 left-1/2 bg-black/50 text-white p-10 h-fit w-2/4 rounded-md -translate-x-1/2">
-                                <div className="text-center text-lg">Are you sure you want to terminate?</div>
+                        <div className="absolute top-1/4 left-1/2 bg-black/70 text-white p-10 h-fit w-2/4 rounded-md -translate-x-1/2">
+                                <div className="text-center text-lg">{goalReached ? 'Confirm Withdrawal' :'Are you sure you want to terminate?'}</div>
                                 <div className="mt-5 flex items-center justify-between w-full">
                                     <button onClick={() => setConfirm(false)} className='w-fit px-4 py-1 rounded-md bg-red-500'>cancel</button>
-                                    <button disabled={load2 ? true:false} onClick={deletsavings} className='w-fit px-4 py-1 rounded-md bg-green-500'>proceed</button>
+                                    <button disabled={load2 ? true:false} onClick={goalReached ? withdrawsavings: deletsavings} className='w-fit px-4 py-1 rounded-md bg-green-500'>proceed</button>
                                 </div>
                         </div>
                         
@@ -454,7 +485,7 @@ const Savings = () => {
                                         <div className="font-bold text-right text-primary">{currency}{selectedItem.goal?.toLocaleString()}</div>
                                     </div>
                                     <div className="border-b py-1">
-                                        <div className=" text-right">Current Saved</div>
+                                        <div className=" text-right">Currently Saved</div>
                                         <div className="font-bold text-right text-primary">{currency}{selectedItem.current?.toLocaleString()}</div>
                                     </div>
                                     <div className="border-b py-1">
@@ -469,7 +500,7 @@ const Savings = () => {
                         </div>
 
                         <form onSubmit={topUpSavings} className="mt-5 w-full flex flex-col md:flex-row items-center gap-4 justify-between">
-                            <button type='button' onClick={() => setTopup(prev => !prev)} className='font-bold w-fit px-4 py-2 underline text-primary'>{topup ? 'Close' : 'TopUp Savings'}</button>
+                            <button type='button' onClick={checkTopup} className='font-bold w-fit px-4 py-2 underline text-primary'>{topup ? 'Close' : 'TopUp Savings'}</button>
                             {topup && <div className="flex items-center flex-col gap-1">
                                 <div className="flex flex-col items-start">
                                     <div className="">Available Balance <span>{currency}{profile?.balance?.toLocaleString()}</span></div>
@@ -479,7 +510,11 @@ const Savings = () => {
                             </div>}
                         </form>
                         {!topup && <div className="mt-3 w-11/12 mx-auto">
-                            <ButtonComponent onclick={() => setConfirm(true)}  type='button' title={`Terminate Savings`} bg={`bg-red-600   text-white h-10`} />
+                            <ButtonComponent 
+                                onclick={() => {setConfirm(true)}}  
+                                type='button' 
+                                title={`${goalReached ? 'Withdraw Savings' :'Terminate Savings'}`} 
+                                bg={`${goalReached ? 'bg-green-600' :'bg-red-600'}   text-white h-10`} />
                             <div className="">* Once terminated, the amount saved will be transferred back to your balance.</div>
                         </div>}
                     </div>
@@ -520,7 +555,7 @@ const Savings = () => {
                                 <div className="font-bold text-right text-primary">{currency}{item.goal?.toLocaleString()}</div>
                             </div>
                             <div className="border-b py-1">
-                                <div className=" text-right">Current Saved</div>
+                                <div className=" text-right">Currently Saved</div>
                                 <div className="font-bold text-right text-primary">{currency}{item.current?.toLocaleString()}</div>
                             </div>
                             <div className="border-b py-1">
