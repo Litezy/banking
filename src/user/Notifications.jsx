@@ -95,7 +95,7 @@ useEffect(()=>{
       <div className="w-11/12 mx-auto lg:px-5 py-5 ">
         <div className="flex w-full items-center justify-between">
           <div className="text-2xl font-bold">Latest Notifications</div>
-          <button onClick={MarkAll} className='w-fit px-5 py-2 rounded-md bg-primary text-sm md:text-base text-white'>Mark all as read</button>
+          <button onClick={MarkAll} className='w-fit px-5 py-2 rounded-md bg-gradient-to-tr from-primary to-purple-700  text-sm md:text-base text-white'>Mark all as read</button>
         </div>
         <div className="mt-5 w-full relative">
 
@@ -137,20 +137,20 @@ useEffect(()=>{
             </span>
 
             <div className=" flex items-center gap-4 mt-2 xs:mt-0">
-              <button onClick={prevPage} className="flex items-center justify-center px-4 h-10 text-base font-medium text-white bg-[#60a5fa] rounded-s hover:bg-[#4789da]
+              <button onClick={prevPage} className="flex items-center justify-center px-4 h-10 text-base font-medium text-white bg-gradient-to-tr from-primary to-purple-700 rounded-md
                       ">
                 Prev
               </button>
 
-              {numbers.map((n, i) => (
+              {/* {numbers.map((n, i) => (
                 <div className={``} key={i}>
                   <a onClick={(e) => changeCurrentPage(n, e)} href="#" className={`flex items-center justify-center
                     px-3 h-8 leading-tight   border border-gray-300 rounded-md
                       ${currentPage === n ? 'bg-[#60a5fa] text-white' : 'bg-white hover:bg-gray-100'}`}>{n}</a>
                 </div>
-              ))}
+              ))} */}
               <button onClick={nextPage} className="flex items-center justify-center px-4 h-10 text-base font-medium
-                     text-white bg-[#60a5fa] rounded-s hover:bg-[#4789da] rounded-e   ">
+                     text-white bg-gradient-to-tr from-primary to-purple-700  rounded-md  rounded-e   ">
                 Next
               </button>
             </div>

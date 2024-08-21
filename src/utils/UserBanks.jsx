@@ -145,7 +145,7 @@ const UserBanks = () => {
                             </div>
                         </div>
                         <div className="lg:w-1/2 mx-auto mt-8">
-                            <ButtonComponent disabled={loading ? true :false} title={`Link Bank`} bg={`text-white bg-primary h-14 `} />
+                            <ButtonComponent disabled={loading ? true :false} title={`Link Bank`} bg={`text-white bg-gradient-to-tr from-primary to-purple-700  h-14 `} />
                         </div>
                     </form>
                 </ModalLayout>
@@ -157,7 +157,7 @@ const UserBanks = () => {
                             <form className="h-fit w-full relative bg-white rounded-lg mb-3 p-10" key={i}>
 
                                 <div className="w-full flex items-start gap-5 flex-col ">
-                                    <div className="self-center text-2xl text-primary font-semibold">{item.bank_name} Bank Details</div>
+                                    <div className="self-center text-2xl text-primary capitalize font-semibold">{item.bank_name} Bank Details</div>
                                     <div className="flex w-full lg:items-center flex-col lg:flex-row justify-between">
                                         <div className="lg:w-[45%]">Holder's Fullname:</div>
                                         <FormComponent  value={item.fullname}/>
@@ -201,13 +201,13 @@ const UserBanks = () => {
                     <div className="text-xl font-semibold">Linked Bank Accounts</div>
                     <div className="text-xs font-semibold">max of two banks</div>
                 </div>
-                {banksArr.length >=2 ?'':<button onClick={() => setModal(true)} className='text-white bg-primary w-fit px-3 py-1 rounded-md'>Add bank</button>}
+                {banksArr.length >=2 ?'':<button onClick={() => setModal(true)} className='text-white bg-gradient-to-tr from-primary to-purple-700  w-fit px-3 py-1 rounded-md'>Add bank</button>}
             </div>
             <div className="mt-3 bg-white w-full h-fit p-5 rounded-md shadow-md">
                 {banksArr.length > 0 ? 
                     <>
                   <div className="text-center text-xl font-semibold" >{banksArr.length === 1 ? `${banksArr.length}  bank linked to your account` : `${banksArr.length}  banks linked to your account`} </div>
-                        <div onClick={() => setViewDetails(true)} className="w-fit ml-auto px-3 py-1 cursor-pointer rounded-md bg-primary text-white">view details</div>
+                        <div onClick={() => setViewDetails(true)} className="w-fit ml-auto px-3 py-1 cursor-pointer rounded-md bg-gradient-to-tr from-primary to-purple-700  text-white">view details</div>
                     </> :
                     <>
                         <div className="text-center text-xl font-semibold">No linked banks</div>

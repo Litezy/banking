@@ -38,7 +38,7 @@ const AuthRoutes = ({ children }) => {
                     dispatch(dispatchProfile(response.data))
                 }
             } catch (error) {
-                errorMessage(error.message)
+                errorMessage(`session expired`)
                 return navigate(`/login`)
                  
 

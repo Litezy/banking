@@ -252,6 +252,7 @@ const Savings = () => {
         }
         // return  console.log(formdata)
         setLoad2(true)
+        setTopup(false)
         try {
             const response = await PostApi(Apis.auth.topup, formdata)
             if (response.status === 200) {
@@ -365,7 +366,7 @@ const Savings = () => {
                             </div>
                         </div>
                         <div className="lg:w-1/2 mx-auto mt-8">
-                            <ButtonComponent disabled={load3 ? true :false} title={`Create Savings`} bg={`text-white bg-primary h-14 `} />
+                            <ButtonComponent disabled={load3 ? true :false} title={`Create Savings`} bg={`text-white bg-gradient-to-tr from-primary to-purple-700 h-14 `} />
                         </div>
                     </form>
                 </ModalLayout>
@@ -504,7 +505,7 @@ const Savings = () => {
                                     <div className="">Available Balance <span>{currency}{profile?.balance?.toLocaleString()}</span></div>
                                     <FormComponent name={`amount`} value={forms.amount} onchange={(e) => setForms({ ...forms, [e.target.name]: e.target.value })} formtype='phone' />
                                 </div>
-                                <ButtonComponent disabled={load2 ? true:false} title={`Top Up`} bg={`bg-primary mt-2 text-white text-white h-10`} />
+                                <ButtonComponent disabled={load2 ? true:false} title={`Top Up`} bg={`bg-gradient-to-tr from-primary to-purple-700  mt-2 text-white text-white h-10`} />
                             </div>}
                         </form>
                         {!topup && <div className="mt-3 w-11/12 mx-auto">
@@ -530,10 +531,10 @@ const Savings = () => {
                         </ul>
                     ))}
                 </div>
-                <div onClick={() => setSupport(true)} className="w-fit cursor-pointer self-center text-white px-5 py-2 rounded-lg bg-primary">Contact Support</div>
+                <div onClick={() => setSupport(true)} className="w-fit cursor-pointer self-center text-white px-5 py-2 rounded-lg bg-gradient-to-tr from-primary to-purple-700 ">Contact Support</div>
             </div>
 
-            <div onClick={() => setCreateSave(true)} className=" mb-3 cursor-pointer w-fit ml-auto text-white bg-primary  px-5 py-2 rounded-md">Add New Savings</div>
+            <div onClick={() => setCreateSave(true)} className=" mb-3 cursor-pointer w-fit ml-auto text-white bg-gradient-to-tr from-primary to-purple-700   px-5 py-2 rounded-md">Add New Savings</div>
             <div className={`grid grid-cols-1 ${savings.length === 0 ? 'lg:grid-cols-1' : 'lg:grid-cols-2'} gap-5 lg:gap-10`}>
 
                 {savings.length > 0 ? savings.map((item, index) => (
@@ -612,7 +613,7 @@ const Savings = () => {
                 )) :
                     <div className="text-lg font-semibold text-center">No savings records found</div>
                 }
-                <div onClick={()=> setViewAll(true)} className="w-fit cursor-pointer ml-auto text-white px-4 py-1 my-5 rounded-md bg-primary mr-3">view all</div>
+                <div onClick={()=> setViewAll(true)} className="w-fit cursor-pointer ml-auto text-white px-4 py-1 my-5 rounded-md bg-gradient-to-tr from-primary to-purple-700 mr-3">view all</div>
             </div>
 
 

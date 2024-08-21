@@ -41,7 +41,7 @@ const SaveHistory = () => {
             <div className="text-xl font-bold mb-1">Savings History</div>
             <div className="relative overflow-x-auto rounded-md ">
                 <table className="w-full text-sm text-left rtl:text-right relative">
-                    <thead className=" bg-primary text-xl text-white">
+                    <thead className=" bg-gradient-to-tr from-primary to-purple-700 text-xl text-white">
                         <tr>
                             {TableHeaders.map((item, index) => (
                                 <th scope="col" key={index} className="px-3 py-3 text-sm truncate">
