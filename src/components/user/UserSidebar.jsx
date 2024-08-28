@@ -5,7 +5,7 @@ import { Apis, GetApi, PostApi } from 'services/Api'
 import { CookieName, errorMessage, successMessage } from 'utils/functions'
 import ModalLayout from 'utils/ModalLayout'
 import Cookies from 'js-cookie'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { dispatchCurrency, dispatchNotifications, dispatchProfile } from 'app/reducer'
 import axios from 'axios'
 import { FiRefreshCcw } from "react-icons/fi";
@@ -13,11 +13,12 @@ import { FiRefreshCcw } from "react-icons/fi";
 const SideLinks = [
     { path: 'dashboard', url: '/user' },
     { path: 'savings', url: '/user/savings' },
-    { path: 'transfer', url: '/user/transfer' },
+    { path: 'external transfer', url: '/user/external-transfer' },
+    { path: 'internal transfer', url: '/user/internal-transfer' },
     { path: 'transactions', url: '/user/transactions' },
     { path: 'notifications', url: '/user/notifications' },
     { path: 'profile', url: '/user/profile' },
-   
+
 ]
 
 const SideLinks2 = [
@@ -29,8 +30,8 @@ export default function UserSidebar() {
     const location = useLocation()
     const dispatch = useDispatch()
     const [logout, setLogout] = useState(false)
-    const [hide,setHide] = useState(false)
-    const [isRotating,setIsRotating]= useState(false)
+    const [hide, setHide] = useState(false)
+    const [isRotating, setIsRotating] = useState(false)
     const navigate = useNavigate()
     const logOut = (item) => {
         if (item.path === 'logout') {
@@ -41,7 +42,7 @@ export default function UserSidebar() {
     const LogoutUser = async () => {
         try {
             const response = await PostApi(Apis.auth.logout)
-            console.log(response)
+            // console.log(response)
             if (response.status === 200) {
                 successMessage(response.msg)
                 Cookies.remove(CookieName)
@@ -54,13 +55,13 @@ export default function UserSidebar() {
         }
     }
 
-    
+
     const [profile, setProfile] = useState({})
-    const [currency, setCurrency] = useState(null)
-    const [notifications,setNotifications] = useState([])
+    const [notifications, setNotifications] = useState([])
+    const currency = useSelector((state) => state.profile.currency)
 
 
-    
+
 
     const fetchUserProfile = useCallback(async () => {
         setIsRotating(true)
@@ -74,7 +75,7 @@ export default function UserSidebar() {
             }
         } catch (error) {
             errorMessage(error.message);
-        }finally{
+        } finally {
             setIsRotating(false)
         }
     }, [dispatch]);
@@ -85,44 +86,23 @@ export default function UserSidebar() {
         fetchUserProfile();
     }, [fetchUserProfile]);
 
-    const fetchCurrency = useCallback(async () => {
-        if (!profile || !profile.country) return;
-        try {
-            const response = await axios.get(`https://restcountries.com/v3.1/name/${profile?.country}`);
-            if (response.data && response.data.length > 0) {
-                const countryData = response.data[0];
-                const currencySymbol = Object.values(countryData.currencies)[0].symbol;
-                setCurrency(currencySymbol);
-                dispatch(dispatchCurrency(currencySymbol));
-            } else {
-                console.error('Unexpected response format:', response);
-            }
-        } catch (error) {
-            console.error('Error fetching currency:', error);
-        }
-    }, [profile, dispatch]);
-
-    useEffect(() => {
-        fetchCurrency()
-    }, [profile])
-
-    const fetchUserNotifications = useCallback(async()=>{
+    const fetchUserNotifications = useCallback(async () => {
         try {
             const response = await GetApi(Apis.auth.user_notifications)
-            if(response.status === 200){
+            if (response.status === 200) {
                 setNotifications(response.data)
                 dispatch(dispatchNotifications(response.data))
-            }else{
+            } else {
                 console.log(response)
             }
         } catch (error) {
             console.error('Error fetching currency:', error);
         }
-    },[])
+    }, [])
 
-    useEffect(()=>{
+    useEffect(() => {
         fetchUserNotifications()
-    },[profile,dispatch])
+    }, [])
 
 
 
@@ -131,7 +111,7 @@ export default function UserSidebar() {
 
     let firstChar = profile?.firstname?.substring(0, 1)
     let lastChar = profile?.lastname?.substring(0, 1)
-    
+
     return (
         <div>
             <div className="flex flex-col px-3 h-[80dvh]">
@@ -150,25 +130,29 @@ export default function UserSidebar() {
                     <div className="py-3 px-3.5 rounded-full text-white bg-gradient-to-tr from-primary to-purple-700 w-fit h-fit uppercase">{firstChar}{lastChar}</div>
                     <div className="text-white text-center capitalize text-sm">{profile?.firstname} {profile?.lastname}</div>
                     <div className="text-white items-center gap-2 font-bold text-xl flex justify-center">
-                       <div onClick={fetchUserProfile} className="">
-                       <FiRefreshCcw className={`text-sm cursor-pointer ${isRotating ?'rotating':''}`} />
-                       </div>
+                        <div onClick={fetchUserProfile} className="">
+                            <FiRefreshCcw className={`text-sm cursor-pointer ${isRotating ? 'rotating' : ''}`} />
+                        </div>
                         <div className="flex items-center ">
                             <span>{currency}</span>
-                            <span>{hide ? '***':profile?.balance?.toLocaleString()}</span>
+                            <span>{hide ? '***' : profile?.balance?.toLocaleString()}</span>
                         </div>
-                        <IoEyeOutline onClick={()=> setHide(prev => !prev)} className='text-sm self-center ml-2 cursor-pointer' />
+                        <IoEyeOutline onClick={() => setHide(prev => !prev)} className='text-sm self-center ml-2 cursor-pointer' />
                     </div>
                 </div>
+                <div className="h-96 w-full overflow-y-auto overflow-x-hidden flex items-start flex-col">
                 {SideLinks.map((item, index) => (
-                    <Link to={item.url} key={index} className={`text-sm rounded-lg hover:scale-105 text-slate-200 hover:bg-slate-100/20 ${item.url === location.pathname ? 'bg-slate-100/40' : ''} px-3 mb py-2 font-extralight capitalize transition-all`}>
+                    <Link to={item.url} key={index} 
+                    className={`text-sm rounded-lg w-full hover:scale-105 text-slate-200 hover:bg-slate-100/20 ${item.url === location.pathname ? 'bg-slate-100/40' : ''} px-3 mb py-2 font-extralight capitalize transition-all`}>
                         {item.path}
                     </Link>
                 ))}
+                </div>
             </div>
             <div className="flex flex-col px-3 mt-2">
                 {SideLinks2.map((item, index) => (
-                    <Link to={item.url} onClick={() => logOut(item)} key={index} className="text-sm rounded-lg hover:scale-105 text-slate-200 hover:bg-slate-100/20 px-3 py-2 font-extralight capitalize transition-all">
+                    <Link to={item.url} onClick={() => logOut(item)} key={index}
+                        className="text-sm rounded-lg  hover:scale-105 text-slate-200 hover:bg-slate-100/20 px-3 py-2 font-extralight capitalize transition-all">
                         {item.path}
                     </Link>
                 ))}

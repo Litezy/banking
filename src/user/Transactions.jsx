@@ -54,7 +54,8 @@ const Transactions = () => {
     }
   }
   const deposit = 'Deposit'
-  const withdraw = 'Withdraw'
+  const transferin = 'Internal Transfer In'
+  const transferout = 'Internal Transfer Out'
   const changeCurrentPage = (id, e) => {
     e.preventDefault();
     setCurrentPage(id);
@@ -105,8 +106,14 @@ const Transactions = () => {
                     </div>
                     <div className="">
                       <div className={`text-base font-bold text-right 
-                        ${item.type === deposit && item.status === 'pending' ? 'text-yellow-500' : item.type === deposit && item.status === 'success' ? 'text-green-600' : "text-red-600"}`}>
-                        {item.type === deposit && item.status === 'success' ? '+' : item.type === deposit && item.status === 'pending' ? '' : '-'}{currency}{parseInt(item.amount).toLocaleString()}</div>
+                        ${item.type === deposit && item.status === 'pending' ? 'text-yellow-500' : 
+                        item.type === deposit && item.status === 'success' ? 'text-green-600' : 
+                        item.type === transferin && item.status === 'success'? 'text-green-600':"text-red-600"
+                        }`}>
+
+                        {item.type === deposit && item.status === 'success' ? '+' : 
+                        item.type === deposit && item.status === 'pending' ? '' : 
+                        item.type === transferin && item.status === 'success' ? '+': '-'}{currency}{parseInt(item.amount).toLocaleString()}</div>
                       <div className="text-xs text-right">{item.date}</div>
                     </div>
                   </div>
@@ -126,32 +133,25 @@ const Transactions = () => {
 
         <div className="w-fit   ml-auto mr-5 mt-10 mb-5">
           <div className="w-full flex flex-col items-center ">
-            <div className="flex items-center gap-3">
-              <button onClick={prevPage} className="flex items-center justify-center px-4 h-10 text-base font-medium text-white bg-[#60a5fa] rounded-s hover:bg-[#4789da]
+
+            <span className="text-sm text-gray-700 ">
+              Showing <span className="font-semibold text-black">{records?.length === 0 ? '0' : firstIndex}</span> to
+              <span className="font-semibold text-black"> {lastIndex > transdata?.length ? transdata?.length : lastIndex}</span> of
+              <span className="font-semibold text-black"> {transdata?.length} </span>
+              Transactions
+            </span>
+
+            <div className="flex items-center gap-3 mt-2">
+              <button onClick={prevPage} className="flex items-center justify-center px-4 h-10 text-base font-medium text-white bg-gradient-to-tr from-primary to-purple-700  rounded-md 
                       ">
                 Prev
               </button>
-              <span className="text-sm text-gray-700 ">
-                Showing <span className="font-semibold text-black">{records?.length === 0 ? '0' : firstIndex}</span> to
-                <span className="font-semibold text-black"> {lastIndex > transdata?.length ? transdata?.length : lastIndex}</span> of
-                <span className="font-semibold text-black"> {transdata?.length} </span>
-                Transactions
-              </span>
               <button onClick={nextPage} className="flex items-center justify-center px-4 h-10 text-base font-medium
-                     text-white bg-[#60a5fa] rounded-s hover:bg-[#4789da] rounded-e   ">
+                     text-white bg-gradient-to-tr from-primary to-purple-700  rounded-md  rounded-e   ">
                 Next
               </button>
             </div>
-            <div className=" flex items-center overflow-x-auto max-w-[90%] mt-3 gap-4">
-              {numbers.map((n, i) => (
-                <div className={``} key={i}>
-                  <a onClick={(e) => changeCurrentPage(n, e)} href="#" className={`flex items-center justify-center
-                    px-3 h-8 leading-tight   border border-gray-300 rounded-md
-                      ${currentPage === n ? 'bg-[#60a5fa] text-white' : 'bg-white hover:bg-gray-100'}`}>{n}</a>
-                </div>
-              ))}
 
-            </div>
           </div>
         </div>
       </div>

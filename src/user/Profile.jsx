@@ -112,7 +112,7 @@ const Profile = () => {
             setEdit(true)
         }
         else if (edit) {
-            // setLoading(true)
+            setLoading(true)
             const formdata = {
                 firstname: forms.firstname ? forms.firstname: profile?.firstname ,
                 lastname: forms.lastname ? forms.lastname : profile?.lastname,
@@ -126,6 +126,9 @@ const Profile = () => {
                     successMessage(response.msg)
                     setEdit(false)
                     dispatch(dispatchProfile(response.data))
+                    setTimeout(()=>{
+                        fetchUserProfile()
+                    },3000)
                 } else {
                     errorMessage(response.msg)
                 }

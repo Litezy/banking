@@ -160,7 +160,7 @@ const CardComponent = ({ setAdd, add }) => {
                                     </div>
                                 </div>
                             </div>
-                            <button onClick={addCardsArr} className=' h-12 w-full bg-primary text-white rounded-lg'>Add Card</button>
+                            <button disabled={loading ? true :false} onClick={addCardsArr} className=' h-12 w-full bg-gradient-to-tr from-primary to-purple-700  text-white rounded-lg'>Add Card</button>
                         </div>
                     </ModalLayout>
                 </>

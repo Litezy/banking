@@ -66,7 +66,7 @@ export default function Dashboard() {
 
     const dispatch = useDispatch();
     const [profile, setProfile] = useState(null);
-    const [currency, setCurrency] = useState();
+    const currency = useSelector((state) => state.profile.currency)
     const [userSavings, setUserSavings] = useState([])
     const [records, setRecords] = useState([])
     const [notice, setNotice] = useState([])
@@ -77,6 +77,7 @@ export default function Dashboard() {
     const fetchUserProfile = useCallback(async () => {
         try {
             const response = await GetApi(Apis.auth.profile);
+            // console.log(response)
             if (response.status === 200) {
                 setProfile(response.data);
                 dispatch(dispatchProfile(response.data));
@@ -97,19 +98,19 @@ export default function Dashboard() {
 
 
     const fetchUserSavings = useCallback(async () => {
-        if (!profile) return;
         try {
             const response = await GetApi(Apis.auth.user_savings)
-            if (response.status === 200) {
-                setUserSavings(response.data)
-                dispatch(dispatchUserSavings(response.data))
-                //    console.log(response.data)
-            }
+            if (response.status !== 200) return;
+            setUserSavings(response.data)
+            dispatch(dispatchUserSavings(response.data))
         } catch (error) {
             errorMessage(error.message)
         }
-    }, [profile])
+    }, [])
 
+    useEffect(() => {
+        fetchUserSavings()
+    }, [])
 
     const deposit = 'Deposit'
     const withdraw = 'Withdraw'
@@ -150,12 +151,12 @@ export default function Dashboard() {
 
     const copyToClip = async () => {
         try {
-          await navigator.clipboard.writeText(profile?.account_number);
-          successMessage('account number copied!');
+            await navigator.clipboard.writeText(profile?.account_number);
+            successMessage('account number copied!');
         } catch (err) {
-          errorMessage('Failed to copy!');
+            errorMessage('Failed to copy!');
         }
-      };
+    };
     return (
         <div>
             <div className="w-11/12 mx-auto">
@@ -176,11 +177,11 @@ export default function Dashboard() {
                                         <div className="border-b py-1 text-zinc-500 text-right">Savings name: <span className='text-xl font-bold text-primary capitalize'>{selectSaving.name}</span></div>
                                         <div className="border-b py-1">
                                             <div className=" text-right">Savings Goal</div>
-                                            <div className="font-bold text-right text-primary">{currency}{selectSaving.goal}</div>
+                                            <div className="font-bold text-right text-primary">{currency}{selectSaving.goal.toLocaleString()}</div>
                                         </div>
                                         <div className="border-b py-1">
-                                            <div className=" text-right">Current Saved</div>
-                                            <div className="font-bold text-right text-primary">{currency}{selectSaving.current}</div>
+                                            <div className=" text-right">Currently Saved</div>
+                                            <div className="font-bold text-right text-primary">{currency}{selectSaving.current.toLocaleString()}</div>
                                         </div>
                                         <div className="border-b py-1">
                                             <div className=" text-right">Last Saved</div>
@@ -195,10 +196,10 @@ export default function Dashboard() {
                         </div>
                     </ModalLayout>
                 }
-                
+
                 <div className="flex items-center gap-5 justify-between mt-7">
-                    <div className="flex items-center gap-2">
-                        <div onClick={()=> navigate(`/user/profile`)} className="cursor-pointer">
+                    <div className="flex items-start gap-5">
+                        <div onClick={() => navigate(`/user/profile`)} className="cursor-pointer">
                             {profile?.image ? <img src={`${profileImg}/profiles/${profile?.image}`} className='w-20 h-20 rounded-full object-cover' alt="" /> :
                                 <div className="flex items-center justify-center rounded-full h-14 w-14 border">
                                     <FaUser className='text-3xl' />
@@ -208,9 +209,20 @@ export default function Dashboard() {
                         <div className="">
                             <div className=" cursor-pointer flex items-center gap-2">
                                 <div className="">Hi,</div>
-                                <div onClick={()=> navigate(`/user/profile`)} className="font-semibold capitalize text-lg">{profile?.firstname} {profile?.lastname}</div>
+                                <div className="">Welcome back</div>
                             </div>
-                            <div onClick={copyToClip}  className="flex  items-center gap-2 text-zinc-500 text-sm"> {profile?.account_number} <IoCopy className='text-primary text-lg cursor-pointer' /> </div>
+                            <div onClick={() => navigate(`/user/profile`)} className="flex items-center gap-10 my-3">
+                                <div className="flex items-start flex-col">
+                                    <div className="text-zinc-500 text-sm">Account Name:</div>
+                                    <div  className="font-semibold capitalize text-lg">{profile?.firstname} {profile?.lastname}</div>
+                                </div>
+                                <div className="flex items-start flex-col">
+                                    <div className="text-zinc-500 text-sm">Account Number:</div>
+                                    <div onClick={copyToClip} className="flex  items-center font-semibold gap-2  text-lg"> {profile?.account_number} <IoCopy className='text-primary text-lg cursor-pointer' /> </div>
+                                </div>
+                            </div>
+
+                           
                         </div>
                     </div>
                     <div className="">
@@ -284,7 +296,7 @@ export default function Dashboard() {
                                         <div className="font-bold text-right text-primary">{currency}{item.goal?.toLocaleString()}</div>
                                     </div>
                                     <div className="border-b py-1">
-                                        <div className=" text-right">Current Saved</div>
+                                        <div className=" text-right">Currently Saved</div>
                                         <div className="font-bold text-right text-primary">{currency}{item.current?.toLocaleString()}</div>
                                     </div>
                                     <div className="border-b py-1">

@@ -29,6 +29,7 @@ import PrivacyPolicy from "components/general/PrivacyPolicy";
 import TermsofUse from "components/general/TermsofUse";
 import Cookies from "components/general/Cookies";
 import UserVerifications from "admin/adminComponents/UserVerifications";
+import InternalTransfer from "user/InternalTransfer";
 
 
 
@@ -56,7 +57,8 @@ export const GeneralRoutes = [
 export const UserRoutes = [
     { path: '', component: Dashboard },
     { path: 'savings', component: Savings },
-    { path: 'transfer', component: Transfer },
+    { path: 'external-transfer', component: Transfer },
+    { path: 'internal-transfer', component: InternalTransfer },
     { path: 'transactions', component: Transactions },
     { path: 'notifications', component: Notifications },
     { path: 'settings', component: Settings },

@@ -7,12 +7,14 @@ import moment from 'moment'
 import { dispatchNotifications } from 'app/reducer';
 import { errorMessage, successMessage } from 'utils/functions';
 import { Apis, GetApi, PostApi } from 'services/Api';
+import Loader from 'utils/Loader';
 
 const Notifications = () => {
 
   const [notifications,setNotifications]= useState([]) 
   const dispatch = useDispatch()
   const [selectedItem,setSelectedItem]= useState({})
+  const [loading,setLoading] = useState(false)
   const profile = useSelector((state)=> state.profile.profile)
   const fetchUserNotifications = useCallback(async()=>{
     try {
@@ -75,15 +77,33 @@ useEffect(()=>{
       errorMessage(error.message)
     }
   }
-
+ const MarkAll = async ()=>{
+  setLoading(true)
+  try {
+    const res = await PostApi(Apis.auth.mark_all)
+    if(res.status !== 200) return errorMessage(res.msg)
+      successMessage(res.msg)
+    fetchUserNotifications()
+  } catch (error) {
+    errorMessage(error.message)
+  }finally{
+    setLoading(false)
+  }
+ }
   return (
     <div className='w-full mt-5 lg:mt-10'>
       <div className="w-11/12 mx-auto lg:px-5 py-5 ">
         <div className="flex w-full items-center justify-between">
           <div className="text-2xl font-bold">Latest Notifications</div>
-          <button className='w-fit px-5 py-2 rounded-md bg-primary text-sm md:text-base text-white'>Mark all as read</button>
+          <button onClick={MarkAll} className='w-fit px-5 py-2 rounded-md bg-gradient-to-tr from-primary to-purple-700  text-sm md:text-base text-white'>Mark all as read</button>
         </div>
-        <div className="mt-5 w-full">
+        <div className="mt-5 w-full relative">
+
+          {loading &&
+          <div className="absolute top-1/3 left-1/2 -translate-x-1/2">
+            <Loader/>
+          </div>
+          }
           {records.map((item, index) => (
             <div onClick={markAsRead} onMouseOver={()=> selectOne(item)} className="rounded-md mb-3 bg-white border shadow-md" key={index}>
               <div className="flex flex-col ">
@@ -117,20 +137,20 @@ useEffect(()=>{
             </span>
 
             <div className=" flex items-center gap-4 mt-2 xs:mt-0">
-              <button onClick={prevPage} className="flex items-center justify-center px-4 h-10 text-base font-medium text-white bg-[#60a5fa] rounded-s hover:bg-[#4789da]
+              <button onClick={prevPage} className="flex items-center justify-center px-4 h-10 text-base font-medium text-white bg-gradient-to-tr from-primary to-purple-700 rounded-md
                       ">
                 Prev
               </button>
 
-              {numbers.map((n, i) => (
+              {/* {numbers.map((n, i) => (
                 <div className={``} key={i}>
                   <a onClick={(e) => changeCurrentPage(n, e)} href="#" className={`flex items-center justify-center
                     px-3 h-8 leading-tight   border border-gray-300 rounded-md
                       ${currentPage === n ? 'bg-[#60a5fa] text-white' : 'bg-white hover:bg-gray-100'}`}>{n}</a>
                 </div>
-              ))}
+              ))} */}
               <button onClick={nextPage} className="flex items-center justify-center px-4 h-10 text-base font-medium
-                     text-white bg-[#60a5fa] rounded-s hover:bg-[#4789da] rounded-e   ">
+                     text-white bg-gradient-to-tr from-primary to-purple-700  rounded-md  rounded-e   ">
                 Next
               </button>
             </div>

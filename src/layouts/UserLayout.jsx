@@ -1,5 +1,5 @@
 import { Box, LinearProgress } from '@mui/material';
-import { dispatchProfile } from 'app/reducer';
+import { dispatchCurrency, dispatchProfile } from 'app/reducer';
 import UserSidebar from 'components/user/UserSidebar';
 import Userfooter from 'components/user/Userfooter';
 import VerifyEmailAccount from 'forms/VerifyEmail';
@@ -19,6 +19,7 @@ export default function UserLayout({ children }) {
             if (response.status === 200) {
                 setProfile(response.data);
                 dispatch(dispatchProfile(response.data));
+                dispatch(dispatchCurrency(response.data?.currency));
             } else {
                 errorMessage(response.msg);
             }
