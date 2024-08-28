@@ -126,6 +126,9 @@ const Profile = () => {
                     successMessage(response.msg)
                     setEdit(false)
                     dispatch(dispatchProfile(response.data))
+                    setTimeout(()=>{
+                        fetchUserProfile()
+                    },3000)
                 } else {
                     errorMessage(response.msg)
                 }

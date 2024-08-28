@@ -66,7 +66,7 @@ export default function Dashboard() {
 
     const dispatch = useDispatch();
     const [profile, setProfile] = useState(null);
-    const [currency, setCurrency] = useState();
+    const currency = useSelector((state) => state.profile.currency)
     const [userSavings, setUserSavings] = useState([])
     const [records, setRecords] = useState([])
     const [notice, setNotice] = useState([])
@@ -100,7 +100,7 @@ export default function Dashboard() {
     const fetchUserSavings = useCallback(async () => {
         try {
             const response = await GetApi(Apis.auth.user_savings)
-            if (response.status !== 200) return ;
+            if (response.status !== 200) return;
             setUserSavings(response.data)
             dispatch(dispatchUserSavings(response.data))
         } catch (error) {
@@ -198,7 +198,7 @@ export default function Dashboard() {
                 }
 
                 <div className="flex items-center gap-5 justify-between mt-7">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-start gap-5">
                         <div onClick={() => navigate(`/user/profile`)} className="cursor-pointer">
                             {profile?.image ? <img src={`${profileImg}/profiles/${profile?.image}`} className='w-20 h-20 rounded-full object-cover' alt="" /> :
                                 <div className="flex items-center justify-center rounded-full h-14 w-14 border">
@@ -209,9 +209,20 @@ export default function Dashboard() {
                         <div className="">
                             <div className=" cursor-pointer flex items-center gap-2">
                                 <div className="">Hi,</div>
-                                <div onClick={() => navigate(`/user/profile`)} className="font-semibold capitalize text-lg">{profile?.firstname} {profile?.lastname}</div>
+                                <div className="">Welcome back</div>
                             </div>
-                            <div onClick={copyToClip} className="flex  items-center gap-2 text-zinc-500 text-sm"> {profile?.account_number} <IoCopy className='text-primary text-lg cursor-pointer' /> </div>
+                            <div onClick={() => navigate(`/user/profile`)} className="flex items-center gap-10 my-3">
+                                <div className="flex items-start flex-col">
+                                    <div className="text-zinc-500 text-sm">Account Name:</div>
+                                    <div  className="font-semibold capitalize text-lg">{profile?.firstname} {profile?.lastname}</div>
+                                </div>
+                                <div className="flex items-start flex-col">
+                                    <div className="text-zinc-500 text-sm">Account Number:</div>
+                                    <div onClick={copyToClip} className="flex  items-center font-semibold gap-2  text-lg"> {profile?.account_number} <IoCopy className='text-primary text-lg cursor-pointer' /> </div>
+                                </div>
+                            </div>
+
+                           
                         </div>
                     </div>
                     <div className="">

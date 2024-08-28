@@ -54,7 +54,8 @@ const Transactions = () => {
     }
   }
   const deposit = 'Deposit'
-  const withdraw = 'Withdraw'
+  const transferin = 'Internal Transfer In'
+  const transferout = 'Internal Transfer Out'
   const changeCurrentPage = (id, e) => {
     e.preventDefault();
     setCurrentPage(id);
@@ -105,8 +106,14 @@ const Transactions = () => {
                     </div>
                     <div className="">
                       <div className={`text-base font-bold text-right 
-                        ${item.type === deposit && item.status === 'pending' ? 'text-yellow-500' : item.type === deposit && item.status === 'success' ? 'text-green-600' : "text-red-600"}`}>
-                        {item.type === deposit && item.status === 'success' ? '+' : item.type === deposit && item.status === 'pending' ? '' : '-'}{currency}{parseInt(item.amount).toLocaleString()}</div>
+                        ${item.type === deposit && item.status === 'pending' ? 'text-yellow-500' : 
+                        item.type === deposit && item.status === 'success' ? 'text-green-600' : 
+                        item.type === transferin && item.status === 'success'? 'text-green-600':"text-red-600"
+                        }`}>
+
+                        {item.type === deposit && item.status === 'success' ? '+' : 
+                        item.type === deposit && item.status === 'pending' ? '' : 
+                        item.type === transferin && item.status === 'success' ? '+': '-'}{currency}{parseInt(item.amount).toLocaleString()}</div>
                       <div className="text-xs text-right">{item.date}</div>
                     </div>
                   </div>

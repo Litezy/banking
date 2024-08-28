@@ -79,7 +79,9 @@ export const auth_urls = {
     all_savings : user + '/all-savings',
     verify_otp: user + '/verify-otp',
     withdraw_savings : user + '/withdraw-savings',
-    save_history: user + '/save-history'
+    save_history: user + '/save-history',
+    fetch_p2p:user +'/find-p2p',
+    internal_transfer: user + '/credit-p2p'
 }
 
 export const admin_urls = {
