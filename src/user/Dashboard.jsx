@@ -19,6 +19,7 @@ import { dispatchCurrency, dispatchProfile, dispatchUserSavings } from 'app/redu
 import axios from 'axios'
 import ModalLayout from 'utils/ModalLayout'
 import VerifyEmailAccount from 'forms/VerifyEmail'
+import CardComponent from 'components/user/CardComponent'
 
 const TransData = [
     {
@@ -206,15 +207,13 @@ export default function Dashboard() {
                                 </div>
                             }
                         </div>
-                        <div className="">
-                            <div className=" cursor-pointer flex items-center gap-2">
-                                <div className="">Hi,</div>
-                                <div className="">Welcome back</div>
-                            </div>
+                        <div className="">                      
+                                <div className="font-light">Hi, Welcome back</div>
+                              
                             <div onClick={() => navigate(`/user/profile`)} className="flex items-center gap-10 my-3">
                                 <div className="flex items-start flex-col">
                                     <div className="text-zinc-500 text-sm">Account Name:</div>
-                                    <div  className="font-semibold capitalize text-lg">{profile?.firstname} {profile?.lastname}</div>
+                                    <div className="font-semibold capitalize text-lg">{profile?.firstname} {profile?.lastname}</div>
                                 </div>
                                 <div className="flex items-start flex-col">
                                     <div className="text-zinc-500 text-sm">Account Number:</div>
@@ -222,12 +221,12 @@ export default function Dashboard() {
                                 </div>
                             </div>
 
-                           
+
                         </div>
                     </div>
                     <div className="">
                         <div className="text-2xl flex items-center justify-end gap-5">
-                            <Link to="">
+                            <Link to={`/user/tickets?status=active`}>
                                 <TbHeadset />
                             </Link>
                             <Link to="">
@@ -254,13 +253,13 @@ export default function Dashboard() {
                         </div>
                     </div>
                     <div className="">
-                        <div className="bg-white p-4 rounded-lg shadow-lg">
+                        <div className="bg-white py-10 rounded-lg shadow-lg">
                             <div className="grid grid-cols-2">
                                 {DashboardOptions.map((item, index) => (
                                     <Link to={item.url} key={index}>
                                         <div className="flex items-center gap-4 flex-col">
                                             <Imaged src={item.img} alt="" className={
-                                                index === 1 ? 'w-12 h-12 scale-125' : 'w-9 h-9'
+                                                index === 1 ? 'w-12 h-12 scale-122' : 'w-9 h-12'
                                             } />
                                             <div className="font-extralight text-xs lg:text-sm">{item.title}</div>
                                         </div>
@@ -270,15 +269,18 @@ export default function Dashboard() {
                         </div>
                     </div>
                 </div>
+                <div className="my-5 ">
+                    <CardComponent/>
+                </div>
 
-                <div className="bg-white rounded-xl p-3 mt-7 border">
+                <div className="bg-white rounded-xl p-3 mt-7  w-full">
                     <div className="flex items-center justify-between my-6">
                         <div className="font-semibold text-2xl lg:text-3xl">Latest Savings Goal</div>
                         <div className="">
                             <Link to="/user/savings" className='text-blue-600'>View all</Link>
                         </div>
                     </div>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 lg:gap-10">
+                    <div className={`grid grid-cols-1 ${userSavings.length === 0 ? 'lg:grid-cols-1' : 'lg:grid-cols-2'} gap-5 lg:gap-10`}>
                         {userSavings.length > 0 ? userSavings.map((item, index) => (
                             <div key={index} className="flex gap-2 justify-center items-center">
                                 <Progress
@@ -309,7 +311,38 @@ export default function Dashboard() {
                                 </div>
                             </div>
                         )) :
-                            <div className="text-xl ">No savings</div>
+                        <div className="flex items-center gap-10 w-full">
+                        {new Array(2).fill(0).map((ite, i) => (
+                            <div className="flex gap-2 justify-center items-center w-full">
+                                <Progress
+                                    type="dashboard"
+                                    steps={5}
+                                    percent={0}
+                                    strokeColor="#003087"
+                                    trailColor="rgba(0, 0, 0, 0.06)"
+                                    strokeWidth={20} />
+                                <div className=" bg-white p-3 rounded-xl w-full text-sm">
+                                    {/* <div className="border border-zinc-300 bg-white p-3 rounded-xl w-full text-sm"> */}
+                                    <div className="border-b py-1 text-zinc-500 text-right"> Savings name: <span className='text-xl font-bold capitalize text-primary'>Nil</span> </div>
+                                    <div className="border-b py-1">
+                                        <div className=" text-right">Savings Goal</div>
+                                        <div className="font-bold text-right text-primary">Nil</div>
+                                    </div>
+                                    <div className="border-b py-1">
+                                        <div className=" text-right">Currently Saved</div>
+                                        <div className="font-bold text-right text-primary">Nil</div>
+                                    </div>
+                                    <div className="border-b py-1">
+                                        <div className=" text-right">Last Saved</div>
+                                        <div className="font-bold text-right text-primary">Nil </div>
+                                    </div>
+                                    {/* <Link className="py-1 flex justify-end cursor-pointer">
+                        <div className='flex text-blue-600 items-center justify-end gap-2'>More <FaArrowRight /> </div>
+                    </Link> */}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
 
                         }
                     </div>

@@ -30,6 +30,8 @@ import TermsofUse from "components/general/TermsofUse";
 import Cookies from "components/general/Cookies";
 import UserVerifications from "admin/adminComponents/UserVerifications";
 import InternalTransfer from "user/InternalTransfer";
+import Tickets from "user/Tickets";
+import TicketsStatus from "user/TicketsStatus";
 
 
 
@@ -64,6 +66,9 @@ export const UserRoutes = [
     { path: 'settings', component: Settings },
     { path: 'profile', component: Profile },
     { path: 'loans', component: Loans },
+    // { path: 'tickets', component: Tickets },
+    { path: 'tickets', component: TicketsStatus },
+   
    
 ]
 export const AdminRoutes = [

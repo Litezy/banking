@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 import { Apis, GetApi } from 'services/Api';
 import { errorMessage } from 'utils/functions';
 
+
 export default function UserLayout({ children }) {
     const [loading, setLoading] = useState(true)
     const [profile,setProfile] = useState({})
@@ -91,7 +92,7 @@ export default function UserLayout({ children }) {
                 <VerifyEmailAccount />
             }
            {profile?.verified === 'true'  && <div className="flex items-center h-screen overflow-hidden bg-white">
-                <div className="h-screen hidden lg:block w-[20%] bg-gradient-to-tr from-primary to-purple-700 text-white">
+                <div className="h-screen hidden lg:block w-[25%] bg-gradient-to-tr from-primary to-purple-700 text-white">
                     <UserSidebar />
                 </div>
                 <div className="bg-slate-50 h-screen w-full overflow-y-auto overflow-x-hidden">

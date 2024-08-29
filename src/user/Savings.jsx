@@ -559,7 +559,38 @@ const Savings = () => {
                     </div>
                 )) :
 
-                    <div className="mt-5 text-left text-2xl font-bold">No savings found...</div>
+                    <div className="w-full flex items-center justify-between gap-5">
+                        {new Array(2).fill(0).map((ite, i) => (
+                            <div className="flex gap-2 justify-center items-center w-full">
+                                <Progress
+                                    type="dashboard"
+                                    steps={5}
+                                    percent={0}
+                                    strokeColor="#003087"
+                                    trailColor="rgba(0, 0, 0, 0.06)"
+                                    strokeWidth={20} />
+                                <div className=" bg-white p-3 rounded-xl w-full text-sm">
+                                    {/* <div className="border border-zinc-300 bg-white p-3 rounded-xl w-full text-sm"> */}
+                                    <div className="border-b py-1 text-zinc-500 text-right"> Savings name: <span className='text-xl font-bold capitalize text-primary'>Nil</span> </div>
+                                    <div className="border-b py-1">
+                                        <div className=" text-right">Savings Goal</div>
+                                        <div className="font-bold text-right text-primary">Nil</div>
+                                    </div>
+                                    <div className="border-b py-1">
+                                        <div className=" text-right">Currently Saved</div>
+                                        <div className="font-bold text-right text-primary">Nil</div>
+                                    </div>
+                                    <div className="border-b py-1">
+                                        <div className=" text-right">Last Saved</div>
+                                        <div className="font-bold text-right text-primary">Nil </div>
+                                    </div>
+                                    {/* <Link className="py-1 flex justify-end cursor-pointer">
+                        <div className='flex text-blue-600 items-center justify-end gap-2'>More <FaArrowRight /> </div>
+                    </Link> */}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
 
                 }
             </div>
