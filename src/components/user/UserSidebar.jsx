@@ -56,8 +56,7 @@ export default function UserSidebar() {
     }
 
 
-    const [profile, setProfile] = useState({})
-    const [notifications, setNotifications] = useState([])
+    const profile = useSelector((state) =>state.profile.profile)
     const currency = useSelector((state) => state.profile.currency)
 
 
@@ -68,7 +67,6 @@ export default function UserSidebar() {
         try {
             const response = await GetApi(Apis.auth.profile);
             if (response.status === 200) {
-                setProfile(response.data);
                 dispatch(dispatchProfile(response.data));
             } else {
                 errorMessage(response.msg);
@@ -85,28 +83,6 @@ export default function UserSidebar() {
     useEffect(() => {
         fetchUserProfile();
     }, [fetchUserProfile]);
-
-    const fetchUserNotifications = useCallback(async () => {
-        try {
-            const response = await GetApi(Apis.auth.user_notifications)
-            if (response.status === 200) {
-                setNotifications(response.data)
-                dispatch(dispatchNotifications(response.data))
-            } else {
-                console.log(response)
-            }
-        } catch (error) {
-            console.error('Error fetching currency:', error);
-        }
-    }, [])
-
-    useEffect(() => {
-        fetchUserNotifications()
-    }, [])
-
-
-
-
 
 
     let firstChar = profile?.firstname?.substring(0, 1)

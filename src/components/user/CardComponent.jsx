@@ -32,9 +32,8 @@ const CardComponent = ({ setAdd, add }) => {
     const fetchUserCards = useCallback(async () => {
         try {
             const response = await GetApi(Apis.auth.all_cards)
-            if (response.status === 200) {
-                setAllcards(response?.user?.usercards)
-            }
+            if (response.status !== 200) return;
+            setAllcards(response?.user?.usercards)
         } catch (error) {
             errorMessage(error.message)
         }
@@ -94,8 +93,8 @@ const CardComponent = ({ setAdd, add }) => {
                 setCards({ card_name: '', card_no: '', cvv: '', exp: '', type: '' })
                 successMessage(response.msg)
                 fetchUserCards()
-                setAdd(false)   
-            }else{
+                setAdd(false)
+            } else {
                 errorMessage(response.msg)
             }
         } catch (error) {
@@ -150,7 +149,7 @@ const CardComponent = ({ setAdd, add }) => {
                                     <div className="text-lg ">Card CVV:</div>
 
                                     <div className="w-1/4">
-                                        <FormComponent  formtype={'cvv'} name={`cvv`} value={cards.cvv} onchange={handleChange} />
+                                        <FormComponent formtype={'cvv'} name={`cvv`} value={cards.cvv} onchange={handleChange} />
                                     </div>
                                 </div>
                                 <div className="flex items-center justify-between w-full">
@@ -160,7 +159,7 @@ const CardComponent = ({ setAdd, add }) => {
                                     </div>
                                 </div>
                             </div>
-                            <button disabled={loading ? true :false} onClick={addCardsArr} className=' h-12 w-full bg-gradient-to-tr from-primary to-purple-700  text-white rounded-lg'>Add Card</button>
+                            <button disabled={loading ? true : false} onClick={addCardsArr} className=' h-12 w-full bg-gradient-to-tr from-primary to-purple-700  text-white rounded-lg'>Add Card</button>
                         </div>
                     </ModalLayout>
                 </>

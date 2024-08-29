@@ -1,5 +1,5 @@
 import { Box, LinearProgress } from '@mui/material';
-import { dispatchCurrency, dispatchProfile } from 'app/reducer';
+import { dispatchCurrency, dispatchNotifications, dispatchProfile } from 'app/reducer';
 import UserSidebar from 'components/user/UserSidebar';
 import Userfooter from 'components/user/Userfooter';
 import VerifyEmailAccount from 'forms/VerifyEmail';
@@ -12,7 +12,7 @@ export default function UserLayout({ children }) {
     const [loading, setLoading] = useState(true)
     const [profile,setProfile] = useState({})
     const dispatch = useDispatch()
-
+    const [notifications, setNotifications] = useState([])
     const fetchUserProfile = useCallback(async () => {
         try {
             const response = await GetApi(Apis.auth.profile);
@@ -32,6 +32,24 @@ export default function UserLayout({ children }) {
     useEffect(()=>{
         fetchUserProfile()
     },[fetchUserProfile])
+
+    const fetchUserNotifications = useCallback(async () => {
+        try {
+            const response = await GetApi(Apis.auth.user_notifications)
+            if (response.status === 200) {
+                setNotifications(response.data)
+                dispatch(dispatchNotifications(response.data))
+            } else {
+                console.log(response)
+            }
+        } catch (error) {
+            console.error('Error fetching currency:', error);
+        }
+    }, [])
+
+    useEffect(() => {
+        fetchUserNotifications()
+    }, [])
 
     React.useEffect(() => {
         setTimeout(() => {
