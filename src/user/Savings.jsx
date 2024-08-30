@@ -36,8 +36,8 @@ const Savings = () => {
     const [topup, setTopup] = useState(false)
     const [adminBanks, setAdminBanks] = useState([])
     const [createsave, setCreateSave] = useState(false)
-    const [confirm,setConfirm] = useState(false)
-    const [viewall,setViewAll] = useState(false)
+    const [confirm, setConfirm] = useState(false)
+    const [viewall, setViewAll] = useState(false)
     const profile = useSelector((state) => state.profile.profile)
     const currency = useSelector((state) => state.profile.currency)
     const dispatch = useDispatch()
@@ -47,11 +47,8 @@ const Savings = () => {
     const fetchAdminBanks = useCallback(async () => {
         try {
             const res = await GetApi(Apis.auth.get_adminBanks)
-            if (res.status === 200) {
-                setAdminBanks(res.data)
-            } else {
-                errorMessage(res.msg)
-            }
+            if (res.status !== 200) return;
+            setAdminBanks(res.data)
         } catch (error) {
             errorMessage(error.message)
             console.log(error)
@@ -60,8 +57,8 @@ const Savings = () => {
     const fetchUserSavings = useCallback(async () => {
         try {
             const response = await GetApi(Apis.auth.user_savings)
-            if (response.status !== 200) return ;
-                setSavings(response.data)
+            if (response.status !== 200) return;
+            setSavings(response.data)
         } catch (error) {
             errorMessage(error.message)
         }
@@ -79,7 +76,7 @@ const Savings = () => {
             if (response.status === 200) {
                 setRecords(response.data)
             } else {
-                // console.log(response.msg)
+                console.log(response.msg)
             }
         } catch (error) {
             errorMessage(error.message)
@@ -89,7 +86,7 @@ const Savings = () => {
 
     useEffect(() => {
         fetchSavingsHistory()
-    }, [ fetchSavingsHistory])
+    }, [fetchSavingsHistory])
 
     const steps = [
         {
@@ -145,7 +142,7 @@ const Savings = () => {
                 fetchUserSavings()
                 dispatch(dispatchProfile(response.user))
             } else {
-                errorMessage(response.msg)
+                console.log(response.msg)
             }
         } catch (error) {
             errorMessage(error.message)
@@ -229,7 +226,7 @@ const Savings = () => {
 
     }
 
-  
+
 
     const selectItem = (items) => {
         setSelectedItem(items)
@@ -262,8 +259,6 @@ const Savings = () => {
                 fetchUserSavings()
                 fetchSavingsHistory()
                 dispatch(dispatchProfile(response.user))
-            } else {
-                errorMessage(response.msg)
             }
         } catch (error) {
             console.log(error)
@@ -274,11 +269,11 @@ const Savings = () => {
         }
     }
 
-    useEffect(()=>{
-        if(!closeview){
+    useEffect(() => {
+        if (!closeview) {
             setConfirm(false)
         }
-    },[closeview,setCloseView])
+    }, [closeview, setCloseView])
 
 
     const deletsavings = async (e) => {
@@ -296,10 +291,6 @@ const Savings = () => {
                 setCloseView(false)
                 setForms({ ...forms, id: '', amount: '' })
                 fetchUserSavings()
-            } else {
-
-                errorMessage(response.msg)
-                console.log(response.msg)
             }
         } catch (error) {
             errorMessage(error.message)
@@ -316,12 +307,12 @@ const Savings = () => {
         setLoad2(true)
         try {
             const response = await PostApi(Apis.auth.withdraw_savings, formdata)
-            if (response.status !== 200) return errorMessage(response.msg)
-                successMessage(response.msg)
-                dispatch(dispatchProfile(response.user))
-                setCloseView(false)
-                setForms({ ...forms, id: '', amount: '' })
-                fetchUserSavings()
+            if (response.status !== 200) return;
+            successMessage(response.msg)
+            dispatch(dispatchProfile(response.user))
+            setCloseView(false)
+            setForms({ ...forms, id: '', amount: '' })
+            fetchUserSavings()
         } catch (error) {
             errorMessage(error.message)
         } finally {
@@ -330,12 +321,12 @@ const Savings = () => {
     }
 
 
-    const checkTopup = ()=>{
-      if(selectedItem.goal === selectedItem.current) return successMessage(`Savings goal reached already`)
+    const checkTopup = () => {
+        if (selectedItem.goal === selectedItem.current) return successMessage(`Savings goal reached already`)
         setTopup(prev => !prev)
     }
 
-   
+
     return (
         <div className={`w-11/12  mx-auto ${add && 'overflow-hidden'}`}>
 
@@ -366,7 +357,7 @@ const Savings = () => {
                             </div>
                         </div>
                         <div className="lg:w-1/2 mx-auto mt-8">
-                            <ButtonComponent disabled={load3 ? true :false} title={`Create Savings`} bg={`text-white bg-gradient-to-tr from-primary to-purple-700 h-14 `} />
+                            <ButtonComponent disabled={load3 ? true : false} title={`Create Savings`} bg={`text-white bg-gradient-to-tr from-primary to-purple-700 h-14 `} />
                         </div>
                     </form>
                 </ModalLayout>
@@ -434,7 +425,7 @@ const Savings = () => {
                                 </div>
                                 {proofimg.img &&
                                     <div className="w-full mt-5">
-                                        <Formbutton  label={'Submit'} loading={load && true} />
+                                        <Formbutton label={'Submit'} loading={load && true} />
                                     </div>
 
                                 }
@@ -457,15 +448,15 @@ const Savings = () => {
                         }
 
 
-                        {confirm && 
-                        <div className="absolute top-1/4 left-1/2 bg-black/70 text-white p-10 h-fit w-2/4 rounded-md -translate-x-1/2">
-                                <div className="text-center text-lg">{goalReached ? 'Confirm Withdrawal' :'Are you sure you want to terminate?'}</div>
+                        {confirm &&
+                            <div className="absolute top-1/4 left-1/2 bg-black/70 text-white p-10 h-fit w-2/4 rounded-md -translate-x-1/2">
+                                <div className="text-center text-lg">{goalReached ? 'Confirm Withdrawal' : 'Are you sure you want to terminate?'}</div>
                                 <div className="mt-5 flex items-center justify-between w-full">
                                     <button onClick={() => setConfirm(false)} className='w-fit px-4 py-1 rounded-md bg-red-500'>cancel</button>
-                                    <button disabled={load2 ? true:false} onClick={goalReached ? withdrawsavings: deletsavings} className='w-fit px-4 py-1 rounded-md bg-green-500'>proceed</button>
+                                    <button disabled={load2 ? true : false} onClick={goalReached ? withdrawsavings : deletsavings} className='w-fit px-4 py-1 rounded-md bg-green-500'>proceed</button>
                                 </div>
-                        </div>
-                        
+                            </div>
+
                         }
                         <div className="grid grid-cols-1 ">
                             <div className="flex gap-2 justify-center items-center">
@@ -505,15 +496,15 @@ const Savings = () => {
                                     <div className="">Available Balance <span>{currency}{profile?.balance?.toLocaleString()}</span></div>
                                     <FormComponent name={`amount`} value={forms.amount} onchange={(e) => setForms({ ...forms, [e.target.name]: e.target.value })} formtype='phone' />
                                 </div>
-                                <ButtonComponent disabled={load2 ? true:false} title={`Top Up`} bg={`bg-gradient-to-tr from-primary to-purple-700  mt-2 text-white text-white h-10`} />
+                                <ButtonComponent disabled={load2 ? true : false} title={`Top Up`} bg={`bg-gradient-to-tr from-primary to-purple-700  mt-2 text-white text-white h-10`} />
                             </div>}
                         </form>
                         {!topup && <div className="mt-3 w-11/12 mx-auto">
-                            <ButtonComponent 
-                                onclick={() => {setConfirm(true)}}  
-                                type='button' 
-                                title={`${goalReached ? 'Withdraw Savings' :'Terminate Savings'}`} 
-                                bg={`${goalReached ? 'bg-green-600' :'bg-red-600'}   text-white h-10`} />
+                            <ButtonComponent
+                                onclick={() => { setConfirm(true) }}
+                                type='button'
+                                title={`${goalReached ? 'Withdraw Savings' : 'Terminate Savings'}`}
+                                bg={`${goalReached ? 'bg-green-600' : 'bg-red-600'}   text-white h-10`} />
                             <div className="">* Once terminated, the amount saved will be transferred back to your balance.</div>
                         </div>}
                     </div>
@@ -568,7 +559,38 @@ const Savings = () => {
                     </div>
                 )) :
 
-                    <div className="mt-5 text-left text-2xl font-bold">No savings found...</div>
+                    <div className="w-full flex flex-col lg:flex-row items-center justify-between gap-5">
+                        {new Array(2).fill(0).map((ite, i) => (
+                            <div className="flex gap-2 justify-center items-center w-full" key={i}>
+                                <Progress
+                                    type="dashboard"
+                                    steps={5}
+                                    percent={0}
+                                    strokeColor="#003087"
+                                    trailColor="rgba(0, 0, 0, 0.06)"
+                                    strokeWidth={20} />
+                                <div className=" bg-white p-3 rounded-xl w-full text-sm">
+                                    {/* <div className="border border-zinc-300 bg-white p-3 rounded-xl w-full text-sm"> */}
+                                    <div className="border-b py-1 text-zinc-500 text-right"> Savings name: <span className='text-xl font-bold capitalize text-primary'>Nil</span> </div>
+                                    <div className="border-b py-1">
+                                        <div className=" text-right">Savings Goal</div>
+                                        <div className="font-bold text-right text-primary">Nil</div>
+                                    </div>
+                                    <div className="border-b py-1">
+                                        <div className=" text-right">Currently Saved</div>
+                                        <div className="font-bold text-right text-primary">Nil</div>
+                                    </div>
+                                    <div className="border-b py-1">
+                                        <div className=" text-right">Last Saved</div>
+                                        <div className="font-bold text-right text-primary">Nil </div>
+                                    </div>
+                                    {/* <Link className="py-1 flex justify-end cursor-pointer">
+                        <div className='flex text-blue-600 items-center justify-end gap-2'>More <FaArrowRight /> </div>
+                    </Link> */}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
 
                 }
             </div>
@@ -613,52 +635,52 @@ const Savings = () => {
                 )) :
                     <div className="text-lg font-semibold text-center">No savings records found</div>
                 }
-                <div onClick={()=> setViewAll(true)} className="w-fit cursor-pointer ml-auto text-white px-4 py-1 my-5 rounded-md bg-gradient-to-tr from-primary to-purple-700 mr-3">view all</div>
+                <div onClick={() => setViewAll(true)} className="w-fit cursor-pointer ml-auto text-white px-4 py-1 my-5 rounded-md bg-gradient-to-tr from-primary to-purple-700 mr-3">view all</div>
             </div>
 
 
-           {viewall &&  
+            {viewall &&
 
-           <ModalLayout setModal={setViewAll} clas={`w-11/12 mx-auto lg:w-[70%]`}>
-            <div className=" w-full bg-white shadow-lg pb-3 rounded-md overflow-y-auto">
-                {Array.isArray(records) ? records.map((item, index) => (
-                    <div className="rounded-xl border-b " key={index}>
-                        {/* <div className="pl-2 pt-1"> {item.name}</div> */}
-                        <div className="flex flex-col">
-                            <div className="p-3 border-b last:border-none cursor-pointer">
-                                <div className="flex items-center w-full justify-between">
-                                    <div className="flex flex-col items-center gap-3">
-                                        <div className="flex items-center gap-3">
-                                            <div className="rounded-full p-1 bg-blue-300 text-blue-50">
-                                                <div className="bg-blue-400 rounded-full p-1">
-                                                    <IoIosMailUnread className='text-xl' />
+                <ModalLayout setModal={setViewAll} clas={`w-11/12 mx-auto lg:w-[70%]`}>
+                    <div className=" w-full bg-white shadow-lg pb-3 rounded-md overflow-y-auto">
+                        {Array.isArray(records) ? records.map((item, index) => (
+                            <div className="rounded-xl border-b " key={index}>
+                                {/* <div className="pl-2 pt-1"> {item.name}</div> */}
+                                <div className="flex flex-col">
+                                    <div className="p-3 border-b last:border-none cursor-pointer">
+                                        <div className="flex items-center w-full justify-between">
+                                            <div className="flex flex-col items-center gap-3">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="rounded-full p-1 bg-blue-300 text-blue-50">
+                                                        <div className="bg-blue-400 rounded-full p-1">
+                                                            <IoIosMailUnread className='text-xl' />
+                                                        </div>
+                                                    </div>
+                                                    <div className="text-sm font-bold capitalize">{item.name}</div>
+                                                </div>
+                                                <div className="flex items-center gap-3">
+                                                    <div className="text-sm">Amount</div>
+                                                    <div className={`text-xl font-bold`}>{profile?.currency}{item.goal?.toLocaleString()} </div>
                                                 </div>
                                             </div>
-                                            <div className="text-sm font-bold capitalize">{item.name}</div>
+                                            <div className="flex items-center flex-col">
+                                                <div className="text-sm">last saved</div>
+                                                <div className="text-xs text-right">{item.lastsaved}</div>
+                                            </div>
                                         </div>
-                                        <div className="flex items-center gap-3">
-                                            <div className="text-sm">Amount</div>
-                                            <div className={`text-xl font-bold`}>{profile?.currency}{item.goal?.toLocaleString()} </div>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center flex-col">
-                                        <div className="text-sm">last saved</div>
-                                        <div className="text-xs text-right">{item.lastsaved}</div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        )) :
+                            <div className="text-lg font-semibold text-center">No savings records found</div>
+                        }
+                        <div onClick={() => setViewAll(false)} className="w-fit cursor-pointer ml-auto text-white px-4 py-1 my-5 rounded-md bg-primary mr-3">close</div>
                     </div>
-                )) :
-                    <div className="text-lg font-semibold text-center">No savings records found</div>
-                }
-                <div onClick={()=> setViewAll(false)} className="w-fit cursor-pointer ml-auto text-white px-4 py-1 my-5 rounded-md bg-primary mr-3">close</div>
+                </ModalLayout>
+            }
+            <div className="my-5">
+                <SaveHistory />
             </div>
-           </ModalLayout>
-           }
-           <div className="my-5">
-            <SaveHistory/>
-           </div>
         </div>
     )
 }

@@ -6,14 +6,17 @@ import { MenuItem } from '@mui/material'
 import { IoChevronDown } from "react-icons/io5";
 import FormComponent from 'utils/FormComponent'
 import { errorMessage, successMessage } from 'utils/functions'
+import { FaAsterisk } from "react-icons/fa";
 import Loader from 'utils/Loader'
 import ModalLayout from 'utils/ModalLayout'
 import { Apis, GetApi, PostApi } from 'services/Api'
 
-const CardComponent = ({ setAdd, add }) => {
+const CardComponent = ({ }) => {
 
     const refdiv = useRef(null)
     const [loading, setLoading] = useState(false)
+    const [add,setAdd] = useState(false)
+
     const [cards, setCards] = useState(
         {
             type: '',
@@ -32,9 +35,8 @@ const CardComponent = ({ setAdd, add }) => {
     const fetchUserCards = useCallback(async () => {
         try {
             const response = await GetApi(Apis.auth.all_cards)
-            if (response.status === 200) {
-                setAllcards(response?.user?.usercards)
-            }
+            if (response.status !== 200) return;
+            setAllcards(response?.user?.usercards)
         } catch (error) {
             errorMessage(error.message)
         }
@@ -94,8 +96,8 @@ const CardComponent = ({ setAdd, add }) => {
                 setCards({ card_name: '', card_no: '', cvv: '', exp: '', type: '' })
                 successMessage(response.msg)
                 fetchUserCards()
-                setAdd(false)   
-            }else{
+                setAdd(false)
+            } else {
                 errorMessage(response.msg)
             }
         } catch (error) {
@@ -150,7 +152,7 @@ const CardComponent = ({ setAdd, add }) => {
                                     <div className="text-lg ">Card CVV:</div>
 
                                     <div className="w-1/4">
-                                        <FormComponent  formtype={'cvv'} name={`cvv`} value={cards.cvv} onchange={handleChange} />
+                                        <FormComponent formtype={'cvv'} name={`cvv`} value={cards.cvv} onchange={handleChange} />
                                     </div>
                                 </div>
                                 <div className="flex items-center justify-between w-full">
@@ -160,26 +162,26 @@ const CardComponent = ({ setAdd, add }) => {
                                     </div>
                                 </div>
                             </div>
-                            <button disabled={loading ? true :false} onClick={addCardsArr} className=' h-12 w-full bg-gradient-to-tr from-primary to-purple-700  text-white rounded-lg'>Add Card</button>
+                            <button disabled={loading ? true : false} onClick={addCardsArr} className=' h-12 w-full bg-gradient-to-tr from-primary to-purple-700  text-white rounded-lg'>Add Card</button>
                         </div>
                     </ModalLayout>
                 </>
             }
 
-            <div className="flex w-full items-center justify-between">
-                <div className="mb-2 text-xl font-semibold">My Cards</div>
+            <div className="flex mb-2 w-full items-center justify-between">
+                <div className=" text-xl font-semibold">My Cards</div>
                 {allcards.length < 2 &&
                     <button onClick={() => setAdd(true)} className='w-fit px-5 py-2 rounded-lg bg-primary text-white'>Add New Card</button>
                 }
             </div>
-            {Array.isArray(allcards) && allcards.length > 0 ? <div className=" mx-auto grid grid-cols-1 md:grid-cols-2 gap-5">
+            {Array.isArray(allcards) && !allcards.length > 0 ? <div className=" mx-auto grid grid-cols-1 md:grid-cols-2 gap-5">
                 {allcards.map((item, i) => {
                     return (
                         <div key={i} className={`h-[17rem] w-full bg-gradient-to-tr from-[#1d253f] via-[#152878] to-[#0b2cc9]  rounded-lg py-6 px-5`}>
                             <div className="flex flex-col text-white h-full justify-between">
                                 <div className="flex items-center  justify-between">
                                     <div className="font-semibold text-xl">Credit</div>
-                                    <img src={item.type === 'visa' ? visacardimg : mastercardimg} className={`w-24 ${item.type === 'visa' ? 'h-24' : 'h-fit'} `} alt="" />
+                                    <img src={item.type === 'visa' ? visacardimg : mastercardimg} className={`w-24 ${item.type === 'visa' ? 'h-20' : 'h-fit'} `} alt="" />
                                 </div>
                                 <div className="mb-2 flex  items-center justify-between  text-white text-base">
                                     <div className="flex-col flex items-start">
@@ -206,9 +208,68 @@ const CardComponent = ({ setAdd, add }) => {
                     )
                 })}
             </div> :
-                <div className="">No cards added by you</div>
+                <div className="flex items-center flex-col lg:flex-row justify-between gap-5 lg:gap-10">
+                    {new Array(2).fill(0).map((item, i) => {
+                        return (
+                            <div key={i} className={`h-[17rem] w-full bg-gradient-to-tr from-[#1d253f] via-[#152878] to-[#0b2cc9]  rounded-lg py-6 px-5`}>
+                                <div className="flex flex-col text-white h-full justify-between">
+                                    <div className="flex items-center  justify-between">
+                                        <div className="flex items-center gap-1">
+                                            {new Array(4).fill(0).map((ite, i) => (
+                                                <div key={i} className=""><FaAsterisk /></div>
+                                            ))}
+                                        </div>
+                                        <div className="flex items-center gap-1">
+                                            {new Array(5).fill(0).map((ite, i) => (
+                                                <div key={i} className=""><FaAsterisk /></div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    <div className="mb-2 flex  items-center justify-between  text-white text-base">
+                                        <div className="flex-col flex items-start">
+                                            <div className="text-sm uppercase">Card No.</div>
+                                            <div className="flex items-center gap-1">
+                                                {new Array(10).fill(0).map((ite, i) => (
+                                                    <div key={i} className=""><FaAsterisk /></div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center mr-3 flex-col">
+                                            <div className=" uppercase">cvv</div>
+                                            <div className="flex items-center gap-1">
+                                                {new Array(3).fill(0).map((ite, i) => (
+                                                    <div key={i} className=""><FaAsterisk /></div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-start flex-col">
+                                            <div className="text-sm uppercase">Card holder</div>
+                                            <div className="flex items-center gap-1">
+                                                {new Array(6).fill(0).map((ite, i) => (
+                                                    <div key={i}
+                                                     className=""><FaAsterisk /></div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center flex-col">
+                                            <div className="text-sm uppercase">exp</div>
+                                            <div className="flex items-center gap-1">
+                                                {new Array(3).fill(0).map((ite, i) => (
+                                                    <div key={i} className=""><FaAsterisk /></div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )
+                    })}
+                </div>
 
             }
+            <div className="font-bold mt-1">* max of two credit/debit cards</div>
         </div>
     )
 }
