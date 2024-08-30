@@ -559,9 +559,9 @@ const Savings = () => {
                     </div>
                 )) :
 
-                    <div className="w-full flex items-center justify-between gap-5">
+                    <div className="w-full flex flex-col lg:flex-row items-center justify-between gap-5">
                         {new Array(2).fill(0).map((ite, i) => (
-                            <div className="flex gap-2 justify-center items-center w-full">
+                            <div className="flex gap-2 justify-center items-center w-full" key={i}>
                                 <Progress
                                     type="dashboard"
                                     steps={5}

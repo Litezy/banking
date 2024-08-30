@@ -69,11 +69,11 @@ export default function Dashboard() {
     const [profile, setProfile] = useState(null);
     const currency = useSelector((state) => state.profile.currency)
     const [userSavings, setUserSavings] = useState([])
+    const navigate = useNavigate()
     const [records, setRecords] = useState([])
-    const [notice, setNotice] = useState([])
     const [selectSaving, setSelectSaving] = useState({})
     const [viewMore, setViewMore] = useState(false)
-    const navigate = useNavigate()
+
 
     const fetchUserProfile = useCallback(async () => {
         try {
@@ -109,25 +109,9 @@ export default function Dashboard() {
         }
     }, [])
 
-    useEffect(() => {
-        fetchUserSavings()
-    }, [])
-
     const deposit = 'Deposit'
     const withdraw = 'Withdraw'
-    const fetchUserNotifications = useCallback(async () => {
-        try {
-            const response = await GetApi(Apis.auth.user_notifications)
-            if (response.status === 200) {
-                const filter = response.data.filter((item) => item.status === 'unread')
-                setNotice(filter)
-            } else {
-                console.log(response)
-            }
-        } catch (error) {
-            console.error('Error fetching currency:', error);
-        }
-    }, [])
+
     const fetchTransHistory = useCallback(async () => {
         try {
             const response = await GetApi(Apis.auth.trans_history)
@@ -141,7 +125,6 @@ export default function Dashboard() {
         }
     }, [])
     useEffect(() => {
-        fetchUserNotifications()
         fetchTransHistory()
     }, [profile, dispatch])
 
@@ -158,6 +141,7 @@ export default function Dashboard() {
             errorMessage('Failed to copy!');
         }
     };
+
     return (
         <div>
             <div className="w-11/12 mx-auto">
@@ -198,61 +182,33 @@ export default function Dashboard() {
                     </ModalLayout>
                 }
 
-                <div className="flex items-center gap-5 justify-between mt-7">
-                    <div className="flex items-start gap-5">
-                        <div onClick={() => navigate(`/user/profile`)} className="cursor-pointer">
-                            {profile?.image ? <img src={`${profileImg}/profiles/${profile?.image}`} className='w-20 h-20 rounded-full object-cover' alt="" /> :
-                                <div className="flex items-center justify-center rounded-full h-14 w-14 border">
-                                    <FaUser className='text-3xl' />
-                                </div>
-                            }
-                        </div>
-                        <div className="">                      
-                                <div className="font-light">Hi, Welcome back</div>
-                              
-                            <div onClick={() => navigate(`/user/profile`)} className="flex items-center gap-10 my-3">
-                                <div className="flex items-start flex-col">
-                                    <div className="text-zinc-500 text-sm">Account Name:</div>
-                                    <div className="font-semibold capitalize text-lg">{profile?.firstname} {profile?.lastname}</div>
-                                </div>
-                                <div className="flex items-start flex-col">
-                                    <div className="text-zinc-500 text-sm">Account Number:</div>
-                                    <div onClick={copyToClip} className="flex  items-center font-semibold gap-2  text-lg"> {profile?.account_number} <IoCopy className='text-primary text-lg cursor-pointer' /> </div>
-                                </div>
+
+
+                <div className="flex flex-col lg:flex-row w-full gap-10 mt-8 items-center">
+                    <div className="bg-gradient-to-tr lg:w-[65%] w-full from-primary to-purple-700 px-6 lg:py-10 py-5 lg:justify-between justify-evenly rounded-lg flex items-center">
+                        <div className="">
+                            <div className="flex items-center gap-2 text-white text-sm font-extralight">
+                                <GoShieldLock className='text-green-400 text-base' />
+                                <div className="">Available Balance</div>
+                                <IoEyeOutline />
                             </div>
-
-
+                            <div className="flex mt-5 items-start">
+                                <div className="text-slate-200 lg:text-4xl text-2xl self-end font-bold">{currency}</div>
+                                <div className="font-bold text-4xl text-white">{profile?.balance?.toLocaleString()}</div>
+                            </div>
+                        </div>
+                        <div onClick={() => navigate(`/user/profile`)} className="flex flex-col lg:flex-row items-start  gap-5 text-white my-3">
+                            <div className="flex items-start flex-col">
+                                <div className=" text-sm">Account Name:</div>
+                                <div className="font-semibold capitalize text-lg">{profile?.firstname} {profile?.lastname}</div>
+                            </div>
+                            <div className="flex items-start flex-col">
+                                <div className=" text-sm">Account Number:</div>
+                                <div onClick={copyToClip} className="flex  items-center font-semibold gap-2  text-lg"> {profile?.account_number} <IoCopy className='text-sky-200 text-lg cursor-pointer' /> </div>
+                            </div>
                         </div>
                     </div>
-                    <div className="">
-                        <div className="text-2xl flex items-center justify-end gap-5">
-                            <Link to={`/user/tickets?status=active`}>
-                                <TbHeadset />
-                            </Link>
-                            <Link to="">
-                                <AiOutlineScan />
-                            </Link>
-                            <Link to="/user/notifications" className='relative'>
-                                {notice && <div className="w-3 h-3 bg-red-600 rounded-full border-2 border-white absolute top-0 right-0 shadow-lg"></div>}
-                                <BsBell />
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mt-7 items-center">
-                    <div className="bg-gradient-to-tr from-primary to-purple-700 px-6 py-10 rounded-lg">
-                        <div className="flex items-center gap-2 text-white text-sm font-extralight">
-                            <GoShieldLock className='text-green-400 text-base' />
-                            <div className="">Available Balance</div>
-                            <IoEyeOutline />
-                        </div>
-                        <div className="flex mt-5 items-start">
-                            <div className="text-slate-200 lg:text-4xl text-2xl self-end font-bold">{currency}</div>
-                            <div className="font-bold text-4xl text-white">{profile?.balance?.toLocaleString()}</div>
-                        </div>
-                    </div>
-                    <div className="">
+                    <div className="lg:w-[35%] w-full">
                         <div className="bg-white py-10 rounded-lg shadow-lg">
                             <div className="grid grid-cols-2">
                                 {DashboardOptions.map((item, index) => (
@@ -270,7 +226,7 @@ export default function Dashboard() {
                     </div>
                 </div>
                 <div className="my-5 ">
-                    <CardComponent/>
+                    <CardComponent />
                 </div>
 
                 <div className="bg-white rounded-xl p-3 mt-7  w-full">
@@ -311,38 +267,38 @@ export default function Dashboard() {
                                 </div>
                             </div>
                         )) :
-                        <div className="flex items-center gap-10 w-full">
-                        {new Array(2).fill(0).map((ite, i) => (
-                            <div className="flex gap-2 justify-center items-center w-full">
-                                <Progress
-                                    type="dashboard"
-                                    steps={5}
-                                    percent={0}
-                                    strokeColor="#003087"
-                                    trailColor="rgba(0, 0, 0, 0.06)"
-                                    strokeWidth={20} />
-                                <div className=" bg-white p-3 rounded-xl w-full text-sm">
-                                    {/* <div className="border border-zinc-300 bg-white p-3 rounded-xl w-full text-sm"> */}
-                                    <div className="border-b py-1 text-zinc-500 text-right"> Savings name: <span className='text-xl font-bold capitalize text-primary'>Nil</span> </div>
-                                    <div className="border-b py-1">
-                                        <div className=" text-right">Savings Goal</div>
-                                        <div className="font-bold text-right text-primary">Nil</div>
-                                    </div>
-                                    <div className="border-b py-1">
-                                        <div className=" text-right">Currently Saved</div>
-                                        <div className="font-bold text-right text-primary">Nil</div>
-                                    </div>
-                                    <div className="border-b py-1">
-                                        <div className=" text-right">Last Saved</div>
-                                        <div className="font-bold text-right text-primary">Nil </div>
-                                    </div>
-                                    {/* <Link className="py-1 flex justify-end cursor-pointer">
+                            <div className="flex items-center gap-10 w-full">
+                                {new Array(2).fill(0).map((ite, i) => (
+                                    <div className="flex gap-2 justify-center items-center w-full">
+                                        <Progress
+                                            type="dashboard"
+                                            steps={5}
+                                            percent={0}
+                                            strokeColor="#003087"
+                                            trailColor="rgba(0, 0, 0, 0.06)"
+                                            strokeWidth={20} />
+                                        <div className=" bg-white p-3 rounded-xl w-full text-sm">
+                                            {/* <div className="border border-zinc-300 bg-white p-3 rounded-xl w-full text-sm"> */}
+                                            <div className="border-b py-1 text-zinc-500 text-right"> Savings name: <span className='text-xl font-bold capitalize text-primary'>Nil</span> </div>
+                                            <div className="border-b py-1">
+                                                <div className=" text-right">Savings Goal</div>
+                                                <div className="font-bold text-right text-primary">Nil</div>
+                                            </div>
+                                            <div className="border-b py-1">
+                                                <div className=" text-right">Currently Saved</div>
+                                                <div className="font-bold text-right text-primary">Nil</div>
+                                            </div>
+                                            <div className="border-b py-1">
+                                                <div className=" text-right">Last Saved</div>
+                                                <div className="font-bold text-right text-primary">Nil </div>
+                                            </div>
+                                            {/* <Link className="py-1 flex justify-end cursor-pointer">
                         <div className='flex text-blue-600 items-center justify-end gap-2'>More <FaArrowRight /> </div>
                     </Link> */}
-                                </div>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
-                        ))}
-                    </div>
 
                         }
                     </div>

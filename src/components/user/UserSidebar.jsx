@@ -39,7 +39,7 @@ const SideLinks2 = [
     { path: 'logout', url: '' },
 ]
 
-export default function UserSidebar() {
+export default function UserSidebar({setOpenSide}) {
     const location = useLocation()
     const dispatch = useDispatch()
     const [viewall, setViewAll] = useState(false)
@@ -52,6 +52,7 @@ export default function UserSidebar() {
             setLogout(true)
         }else{
             setViewAll(false)
+            setOpenSide(false)
         }
     }
 
@@ -120,6 +121,11 @@ export default function UserSidebar() {
             containerRef.current.scrollTop = containerRef.current.scrollHeight
         }
     }, [viewall])
+
+    const closeDiv = () =>{
+        setViewAll(false)
+        setOpenSide(false)
+    }
     return (
         <div>
             <div className="flex flex-col px-3 h-[90dvh]">
@@ -152,7 +158,7 @@ export default function UserSidebar() {
                     {SideLinks.map((item, index) => (
                         <Link to={item.url}
                             key={index}
-                            onClick={() => setViewAll(false)}
+                            onClick={closeDiv}
                             className={`text-sm rounded-lg w-full hover:scale-10 text-slate-200 hover:text-orange-200 ${item.url === location.pathname ? 'bg-slate-100/40' : ''} hover:translate-x-2 px-3 mb-3 py-2 font-extralight capitalize transition-all`}>
                             {item.path}
                         </Link>
@@ -170,6 +176,7 @@ export default function UserSidebar() {
                     {viewall && ticketsArr.map((item, index) => (
                         <Link
                             to={`/user/tickets?status=${encodeURIComponent(item.url)}`}
+                            onClick={()=> setOpenSide(false)}
                             key={index}
                             className={`text-sm rounded-lg  first:mt-2 w-full hover:scale-10 text-slate-200 hover:text-orange-200 ${item.url === status ? 'bg-slate-100/40' : ''} hover:translate-x-2 px-3 mb-3 py-2 font-extralight capitalize transition-all`}>
                             {item.path}

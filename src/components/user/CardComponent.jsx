@@ -208,7 +208,7 @@ const CardComponent = ({ }) => {
                     )
                 })}
             </div> :
-                <div className="flex items-center justify-between gap-10">
+                <div className="flex items-center flex-col lg:flex-row justify-between gap-5 lg:gap-10">
                     {new Array(2).fill(0).map((item, i) => {
                         return (
                             <div key={i} className={`h-[17rem] w-full bg-gradient-to-tr from-[#1d253f] via-[#152878] to-[#0b2cc9]  rounded-lg py-6 px-5`}>
