@@ -1,16 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { FaPlus, FaRegPaperPlane, FaRegSmile } from 'react-icons/fa'
-import { MdOutlineAttachment } from "react-icons/md";
+import { IoSend } from "react-icons/io5";
 import { errorMessage, MoveToBottom } from './functions';
 import { Apis, PostApi } from 'services/Api';
+import { useSelector } from 'react-redux';
 
 
-const ChatForm = ({ roomid, sendmessage }) => {
+const ChatForm = ({ ticketid, sendmessage, fetchMsgs }) => {
 
     const textRef = useRef(null)
     const refDiv = useRef(null)
     const [text, setText] = useState('')
     const [icon, setIcon] = useState(false)
+    const profile = useSelector((state) => state.profile.profile)
 
 
 
@@ -29,43 +31,41 @@ const ChatForm = ({ roomid, sendmessage }) => {
 
     // const roomid = useSelector((state) => state.data.roomid)
     const SubmitContent = async () => {
-        const formdata = {
-            roomid: roomid,
-            content: text
-        }
-        try {
-            const response = await PostApi(Apis)
-            if (response.status === 200) {
-                sendmessage()
-                setText('')
-                MoveToBottom()
+        if (text.length > 0) {
+            const formdata = {
+                message: text,
+                id: ticketid
             }
-        } catch (error) {
-            errorMessage(error.message)
+            // return console.log(formdata)
+            try {
+                const res = await PostApi(Apis.auth.send_msg,formdata)
+                if (res.status !== 200) return errorMessage(res.msg)
+                setText('')
+                setTimeout(() => {
+                    fetchMsgs()
+                    MoveToBottom()
+                }, 100)
+            } catch (error) {
+                errorMessage(`error in sending message`,error.message)
+            }
         }
 
     }
     return (
-        <div className='text-black relative flex h-[13dvh] '>
-            <div className="flex items-center w-11/12 gap- pt-1 mx-auto">
-                <button>
-                    <label>
-                        <MdOutlineAttachment className="md:text-2xl text-xl text-blue-400" />
-                        <input type="file" hidden />
-                    </label>
-                </button>
+        <div className='text-black relative flex h-[8dvh] my-2 '>
+            <div className="flex items-center w-[95%]   pt-1 mx-auto">
                 <textarea
                     ref={textRef}
                     value={text}
                     onChange={(e) => setText(e.target.value)}
-                    className='scroll md:h-16 min-h-[15px] h-14 mx-auto pt-3 md:pt-5 border-2 rounded-md w-11/12 outline-none pl-2  resize-none' placeholder='Message'>
+                    className='scroll md:h-16 min-h-[15px] h-14 ml-auto pt-3 md:pt-5 border-2 rounded-md w-10/12 outline-none pl-2  resize-none' placeholder='Message'>
 
                 </textarea>
-                {text.length > 0 && <button
+                <button
                     onClick={SubmitContent}
-                    className="text-2xl">
-                    <FaRegPaperPlane className='text-primary' />
-                </button>}
+                    className={`text-2xl  w-fit px-3 py-2 rounded-md bg-gradient-to-tr from-primary to-purple-700 text-white`}>
+                    <IoSend />
+                </button>
             </div>
 
         </div>

@@ -2,12 +2,14 @@ import React, { useCallback, useEffect, useState } from 'react'
 import moment from 'moment'
 import { useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
+import { Apis, GetApi } from 'services/Api'
 
 const ActiveComponent = ({actives}) => {
 
 
     const profile = useSelector((state) => state.profile.profile)
     const navigate = useNavigate()
+    const [selected,setSelected] = useState({})
     const [loading, setLoading] = useState(false)
     const TableHeaders = [
         "Ticket ID",
@@ -16,6 +18,8 @@ const ActiveComponent = ({actives}) => {
         "Date Created",
         "messages"
     ]
+
+   
 
     return (
         <div className='w-full'>
@@ -32,7 +36,7 @@ const ActiveComponent = ({actives}) => {
                     </thead>
                     <tbody>
                         {actives.length > 0 ? actives.map((item, i) => (
-                             <tr className="bg-white border-b " key={i}>
+                             <tr className="bg-white border-b last:border-none " key={i}>
                              <td className="px-3 py-3">
                                  {item.id}
                              </td>

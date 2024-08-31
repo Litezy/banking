@@ -29,7 +29,6 @@ const TicketFolder = [
 ]
 const ticketsArr = [
     { path: 'create tickets', url: 'create' },
-    { path: 'pending tickets', url: 'pending' },
     { path: 'active tickets', url: 'active' },
     { path: 'closed tickets', url: 'closed' },
 ]

@@ -23,15 +23,15 @@ email = support@greenfordbank.com
 export let URL;
 export let profileImg;
 
-// if(window.location.origin.includes('localhost')) {
-//     URL = 'http://localhost:5002'
-//     profileImg = 'http://localhost:5002'
-// }
+if(window.location.origin.includes('localhost')) {
+    URL = 'http://localhost:5002'
+    profileImg = 'http://localhost:5002'
+}
 
-// if(window.location.origin.includes('greenfordbank.com')) {
+ if(window.location.origin.includes('greenfordbank.com')) {
     URL = 'https://api.greenfordbank.com'
     profileImg = 'https://api.greenfordbank.com'
-// }
+ }
 
 
 
@@ -82,13 +82,15 @@ export const auth_urls = {
     save_history: user + '/save-history',
     fetch_p2p:user +'/find-p2p',
     internal_transfer: user + '/credit-p2p',
+    submit_kyc: user + '/submit-kyc',
     
     //tickets
     create_ticket: user + '/create-ticket',
     one_ticket_msgs: user + '/one-ticket-msgs',
-    pending_tickets: user + '/pending-tickets',
     active_tickets: user + '/active-tickets',
-    closed_tickets: user + '/closed-tickets'
+    closed_tickets: user + '/closed-tickets',
+    send_msg: user + '/send-msg',
+    find_admin: user + '/find-admin'
 }
 
 export const admin_urls = {

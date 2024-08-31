@@ -1,16 +1,18 @@
 import React, { useState } from 'react'
-import { CiMail } from "react-icons/ci";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { IoMailUnreadSharp } from "react-icons/io5";
 import ModalLayout from 'utils/ModalLayout';
 import EmailandPassModal from 'utils/EmailandPassModal';
-import { FaUserCog } from "react-icons/fa";
+import { FaIdCard } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
+
 
 
 const Settings = () => {
  
     const [passscreen,setPassScreen] = useState(false)
     const [emailscreen,setEmailScreen] = useState(false)
+    const navigate = useNavigate()
    
   return (
     <div className='mt-10'>
@@ -26,6 +28,12 @@ const Settings = () => {
             <div onClick={()=> setEmailScreen(true)} className="w-11/12 mx-auto flex items-center justify-center gap-5  h-full">
               <IoMailUnreadSharp  className='text-5xl text-primary'/>
               <h1 className='text-sm md:text-lg'>Change Account Email</h1>
+            </div>
+          </div>
+          <div  className="bg-white h-48 mt-5 md:mt-0 w-full mx-auto rounded-md border shadow-lg cursor-pointer ">
+            <div  onClick={()=>navigate(`/user/kyc`)} className="w-11/12 mx-auto flex items-center justify-center gap-5  h-full">
+              <FaIdCard  className='text-5xl text-primary'/>
+              <h1 className='text-sm md:text-lg'>Submit KYC</h1>
             </div>
           </div>
         </div>

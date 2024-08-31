@@ -6,7 +6,6 @@ import ClosedComponent from 'utils/ClosedComponent'
 import FormComponent from 'utils/FormComponent'
 import { errorMessage, successMessage } from 'utils/functions'
 import { MdDelete } from "react-icons/md";
-import PendingComponent from 'utils/PendingComponent'
 import { Apis, GetApi, PostApi } from 'services/Api'
 import Loader from 'utils/Loader'
 
@@ -22,9 +21,8 @@ const TicketsStatus = () => {
     const [fileName, setFileName] = useState('');
     useEffect(() => {
         if (status === 'create') return setScreen(1)
-        if (status === 'pending') return setScreen(2)
-        if (status === 'active') return setScreen(3)
-        if (status === 'closed') return setScreen(4)
+        if (status === 'active') return setScreen(2)
+        if (status === 'closed') return setScreen(3)
     }, [status])
 
     const [forms, setForms] = useState({
@@ -78,15 +76,7 @@ const TicketsStatus = () => {
         e.preventDefault()
         imageRef.current.click()
     }
-    const fetchPendingTickets = useCallback(async () => {
-        try {
-            const res = await GetApi(Apis.auth.pending_tickets)
-            if (res.status !== 200) return errorMessage(res.msg)
-            setPendings(res.data)
-        } catch (error) {
-            errorMessage(`something went wrong in fetching pending tickets data`, error.message)
-        }
-    }, [])
+ 
     const fetchActiveTickets = useCallback(async () => {
         try {
             const res = await GetApi(Apis.auth.active_tickets)
@@ -107,9 +97,6 @@ const TicketsStatus = () => {
     }, [])
 
     useEffect(()=>{
-        if(status === 'pending'){
-            fetchPendingTickets()
-        }
         if(status === 'active'){
             fetchActiveTickets()
         }
@@ -194,20 +181,10 @@ const TicketsStatus = () => {
 
 
 
+
+
+
             {screen === 2 && <div className='w-11/12 flex items-center justify-center mx-auto h-fit py-5'>
-
-                <div className=" w-full bg-white rounded-md shadow-md h-fit p-5">
-                    <div className=" text-xl font-bold">Pending Tickets</div>
-                    <hr className='my-2' />
-                    <div className="my-5">You have {pendings && pendings.length > 0 ? `${pendings.length} active ticket(s), see them below.`:'0 active tickets.'}</div>
-                    <PendingComponent pending={pendings} />
-                </div>
-            </div>}
-
-
-
-
-            {screen === 3 && <div className='w-11/12 flex items-center justify-center mx-auto h-fit py-5'>
 
                 <div className=" w-full bg-white rounded-md shadow-md h-fit p-5">
                     <div className=" text-xl font-bold">Active Tickets</div>
@@ -219,7 +196,7 @@ const TicketsStatus = () => {
 
 
 
-            {screen === 4 && <div className='w-11/12 flex items-center justify-center mx-auto h-fit py-5'>
+            {screen === 3 && <div className='w-11/12 flex items-center justify-center mx-auto h-fit py-5'>
 
                 <div className=" w-full bg-white rounded-md shadow-md h-fit p-5">
                     <div className=" text-xl font-bold">Closed Tickets</div>

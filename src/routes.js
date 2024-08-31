@@ -32,6 +32,7 @@ import UserVerifications from "admin/adminComponents/UserVerifications";
 import InternalTransfer from "user/InternalTransfer";
 import TicketsStatus from "user/TicketsStatus";
 import Messages from "user/Messages";
+import UserKYC from "utils/UserKYC";
 
 
 
@@ -68,6 +69,7 @@ export const UserRoutes = [
     { path: 'loans', component: Loans },
     { path: 'tickets/status/active_chats/:id', component: Messages },
     { path: 'tickets', component: TicketsStatus },
+    { path: 'kyc', component: UserKYC}
 
 
 ]
