@@ -81,7 +81,14 @@ export const auth_urls = {
     withdraw_savings : user + '/withdraw-savings',
     save_history: user + '/save-history',
     fetch_p2p:user +'/find-p2p',
-    internal_transfer: user + '/credit-p2p'
+    internal_transfer: user + '/credit-p2p',
+    
+    //tickets
+    create_ticket: user + '/create-ticket',
+    one_ticket_msgs: user + '/one-ticket-msgs',
+    pending_tickets: user + '/pending-tickets',
+    active_tickets: user + '/active-tickets',
+    closed_tickets: user + '/closed-tickets'
 }
 
 export const admin_urls = {
