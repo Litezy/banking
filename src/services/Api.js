@@ -121,7 +121,15 @@ export const admin_urls = {
     all_transfers: admin + '/all-transfers',
     confirm_trans: admin + '/confirm-trans',
     otp: admin + '/otp',
-    single_trans: admin + '/single-trans'
+    single_trans: admin + '/single-trans',
+
+    //tickets
+    all_active_tickets: admin + '/all-active-tickets',
+    all_closed_tickets: admin + '/all-closed-tickets',
+    admin_response: admin + '/admin-response',
+    get_one_msg: admin + '/one-ticket-msgs',
+    all_kycs: admin + '/all-kycs',
+    close_ticket: admin +'/close-ticket'
 }
 export const Apis = {
     non_auth: non_auth_urls,

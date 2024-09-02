@@ -6,7 +6,7 @@ import { Apis, PostApi } from 'services/Api';
 import { useSelector } from 'react-redux';
 
 
-const ChatForm = ({ ticketid, sendmessage, fetchMsgs }) => {
+const ChatForm = ({ ticketid, admin_res = false, fetchMsgs,fetchActives,setJoined }) => {
 
     const textRef = useRef(null)
     const refDiv = useRef(null)
@@ -31,14 +31,14 @@ const ChatForm = ({ ticketid, sendmessage, fetchMsgs }) => {
 
     // const roomid = useSelector((state) => state.data.roomid)
     const SubmitContent = async () => {
-        if (text.length > 0) {
+        if (text.length > 0 && !admin_res) {
             const formdata = {
                 message: text,
                 id: ticketid
             }
             // return console.log(formdata)
             try {
-                const res = await PostApi(Apis.auth.send_msg,formdata)
+                const res = await PostApi(Apis.auth.send_msg, formdata)
                 if (res.status !== 200) return errorMessage(res.msg)
                 setText('')
                 setTimeout(() => {
@@ -46,11 +46,33 @@ const ChatForm = ({ ticketid, sendmessage, fetchMsgs }) => {
                     MoveToBottom()
                 }, 100)
             } catch (error) {
-                errorMessage(`error in sending message`,error.message)
+                errorMessage(`error in sending message`, error.message)
             }
         }
+        else if (text.length > 0 && admin_res) {
+            const formdata = {
+                message: text,
+                id: ticketid
+            }
+            //   return console.log(formdata)
+            try {
+                const res = await PostApi(Apis.admin.admin_response, formdata)
+                if (res.status !== 200) return errorMessage(res.msg)
+                setText('')
+                setTimeout(() => {
+                    fetchActives()
+                    setJoined(false)
+                }, 100)
+            } catch (error) {
+                errorMessage(error.message)
+            }
 
+        }
     }
+
+
+
+
     return (
         <div className='text-black relative flex h-[8dvh] my-2 '>
             <div className="flex items-center w-[95%]   pt-1 mx-auto">

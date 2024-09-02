@@ -30,9 +30,9 @@ const ChatMessages = ({ }) => {
                             <>
                                 <div key={i}
                                     className={`${item.message.length <= 90 ? 'w-fit' : 'w-[55%]'} relative text-sm  border px-4 
-              ${isFirstFromSender ? 'outgoing' : 'outgoing2'}
+              ${isFirstFromSender ? 'outgoing py-3' : 'outgoing2'}
               mt-3 ml-auto bg-gradient-to-tr from-primary
-               to-purple-700 text-white  py-2  rounded-md mr-2`}>
+               to-purple-700 text-white py-2   rounded-md mr-2`}>
                                     <div className="">{item.message}</div>
                                 </div>
                                 <div className="w-fit ml-auto mr-3 text-xs ">{moment(item.createdAt).format(`hh:mm A`)}</div>

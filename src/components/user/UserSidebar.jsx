@@ -159,7 +159,7 @@ export default function UserSidebar({ setOpenSide, smallView = false }) {
                         <Link to={item.url}
                             key={index}
                             onClick={closeDiv}
-                            className={`text-sm rounded-lg w-full hover:scale-10 text-slate-200 hover:text-orange-200 ${item.url === location.pathname ? 'bg-slate-100/40' : ''} hover:translate-x-2 px-3 mb-3 py-2 font-extralight capitalize transition-all`}>
+                            className={`text-sm rounded-lg w-full hover:scale-10 text-slate-200 hover:text-orange-200 ${item.url === location.pathname ? 'bg-slate-100/40' : ''} hover:translate-x-2 px-3 mb-3 py-2 font-semibold capitalize transition-all`}>
                             {item.path}
                         </Link>
                     ))}
@@ -167,7 +167,7 @@ export default function UserSidebar({ setOpenSide, smallView = false }) {
                     {TicketFolder.map((item, index) => (
                         <div key={index}
                             onClick={() => setViewAll(prev => !prev)}
-                            className={`text-sm mb-2 cursor-pointer  w-full hover:scale-10 flex items-center justify-between text-slate-200 hover:text-orange-200 ${viewall ? 'border-b-white border-b' : ''} px-3 mb py-2 font-extralight capitalize transition-all`}>
+                            className={`text-sm mb-2 cursor-pointer  w-full hover:scale-10 flex items-center justify-between text-slate-200 hover:text-orange-200 ${viewall ? 'bg-slate-100/40 rounded-md' : ''} px-3  py-2 font-semibold capitalize transition-all`}>
                             <div className="">{item.name}</div>
                             <div className="animate-bounce"> {item.icon} </div>
 
@@ -178,7 +178,7 @@ export default function UserSidebar({ setOpenSide, smallView = false }) {
                             to={`/user/tickets?status=${encodeURIComponent(item.url)}`}
                             onClick={closeUp}
                             key={index}
-                            className={`text-sm rounded-lg  first:mt-2 w-full hover:scale-10 text-slate-200 hover:text-orange-200 ${item.url === status ? 'bg-slate-100/40' : ''} hover:translate-x-2 px-3 mb-3 py-2 font-extralight capitalize transition-all`}>
+                            className={`text-sm rounded-lg  first:mt-2 w-full hover:scale-10 text-slate-200 hover:text-orange-200 ${item.url === status ? 'bg-slate-100/40' : ''} hover:translate-x-2 px-3 mb-3 py-2 font-semibold capitalize transition-all`}>
                             {item.path}
                         </Link>
                     ))}
@@ -186,7 +186,7 @@ export default function UserSidebar({ setOpenSide, smallView = false }) {
                     <div className="flex flex-col w-full mt- mb-3">
                         {SideLinks2.map((item, index) => (
                             <Link to={item.url} onClick={() => logOut(item)} key={index}
-                                className={`text-sm rounded-lg flex items-center justify-between  hover:scale-10 text-slate-200 ${item.url === location.pathname ? 'bg-slate-100/40' : ''} hover:text-orange-200 px-3 mb-2 py-2 hover:translate-x-2 font-extralight capitalize transition-all`}>
+                                className={`text-sm rounded-lg flex items-center justify-between  hover:scale-10 text-slate-200 ${item.url === location.pathname ? 'bg-slate-100/40' : ''} hover:text-orange-200 px-3 mb-2 py-2 hover:translate-x-2 font-semibold capitalize transition-all`}>
                                 <div className="">{item.path}</div>
                                 <div className=""></div>
                             </Link>

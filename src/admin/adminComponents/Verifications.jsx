@@ -56,7 +56,7 @@ const Verifications = () => {
     return (
         <div className='w-11/12  mx-auto'>
             <div className="w-full flex items-center justify-between">
-                <div className="w-2/4 mx-auto">
+                <div className="lg:w-2/4 w-3/4 mx-auto">
                     <Summary color='bg-zinc-500 text-white' title={'Total Transfers'} data={data?.length} />
                 </div>
             </div>
@@ -103,9 +103,9 @@ const Verifications = () => {
                                 
                             </tr>
                         )) :
-                        <tr className=" w-full text-lg font-semibold flex items-center justify-center">
-                        <td>No transfers found</td>
-                    </tr>
+                        <tr className=" w-full text-lg truncate font-semibold flex items-center justify-center">
+                                    No transfers found
+                                </tr>
                         }
 
                     </tbody>

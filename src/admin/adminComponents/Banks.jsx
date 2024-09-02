@@ -175,7 +175,7 @@ const Banks = () => {
           </form>
         </ModalLayout>
       }
-      <div className="w-2/4 mx-auto">
+      <div className="lg:w-2/4 w-3/4 mx-auto">
         <Summary color='bg-orange-500 text-white' title={'Total Admin Banks'} data={banks.length} />
       </div>
       <div className="relative overflow-x-auto rounded-md mt-10 ">
@@ -186,8 +186,9 @@ const Banks = () => {
         }
         <div onClick={() => setAdd(true)} className=" cursor-pointer my-4 w-fit ml-auto px-5 py-1 rounded-md bg-primary text-white">Add Bank</div>
 
+        <div className="relative overflow-x-auto rounded-md">
         <table className="w-full text-sm text-left rtl:text-right rounded-md">
-          <thead className=" bg-orange-500 text-base text-white">
+          <thead className=" bg-orange-500 text-base truncate text-white">
             <tr>
               <th scope="col" className="px-3 py-3">
                 Bank Name
@@ -221,13 +222,13 @@ const Banks = () => {
           <tbody>
             {banks.length > 0 ? banks.map((item, i) => (
               <tr className="bg-white border-b " key={i}>
-                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
+                <td scope="row" className="px-6 py-4 font-medium truncate text-gray-900 whitespace-nowrap ">
                   {item.bank_name}
-                </th>
-                <td className="px-3 py-3">
+                </td>
+                <td className="px-3 truncate py-3">
                   {item.fullname}
                 </td>
-                <td className="px-3 py-3">
+                <td className="px-3 py-3 truncate">
                   {item.bank_address}
                 </td>
                 <td className="px-3 py-3">
@@ -255,6 +256,7 @@ const Banks = () => {
 
           </tbody>
         </table>
+        </div>
 
 
       </div>

@@ -6,38 +6,29 @@ import { Apis, GetApi, profileImg } from 'services/Api'
 import ChatForm from 'utils/ChatForm'
 import ChatMessages from 'utils/ChatMessages'
 import { errorMessage, MoveToBottom } from 'utils/functions'
-import { MdSupportAgent } from "react-icons/md";
+import { FaLongArrowAltLeft } from "react-icons/fa";
 import Loader from 'utils/Loader'
+import { FaUser } from 'react-icons/fa6'
 
-const Messages = () => {
+const AdminMessages = () => {
 
   const [messages, setMessages] = useState([])
   const [loading, setLoading] = useState(false)
   const [tickets, setTickets] = useState({})
   const [admin, setAdmin] = useState({})
   const { id } = useParams()
+  // console.log(id)
   const dispatch = useDispatch()
 
   const fecthticketMessages = useCallback(async () => {
     setLoading(true)
     try {
-      const res = await GetApi(`${Apis.auth.one_ticket_msgs}/${id}`)
+      const res = await GetApi(`${Apis.admin.get_one_msg}/${id}`)
+      // console.log(res.data)
       if (res.status !== 200) errorMessage(res.msg)
       setMessages(res.data?.ticketmessages)
       setTickets(res.data)
       dispatch(dispatchMessages(res.data?.ticketmessages))
-      if (res.data?.adminid !== null) {
-        const id = res.data?.adminid
-        try {
-          const res = await GetApi(`${Apis.auth.find_admin}/${id}`)
-          if (res.status !== 200) return errorMessage(res.msg)
-          setAdmin(res.data)
-        console.log(res.data)
-          MoveToBottom()
-        } catch (error) {
-          errorMessage(`error in fetch support admin`, error.message)
-        }
-      }
       MoveToBottom()
     } catch (error) {
       errorMessage(`something went wrong in fetching messages.`, error.message)
@@ -49,13 +40,12 @@ const Messages = () => {
   useEffect(() => {
     fecthticketMessages()
     MoveToBottom()
-    // console.log(admin)
   }, [])
 
 
   return (
-    <div className='-mt-5 w-full mx-auto'>
-      <div className="mb-5 w-full mx-auto md:w-11/12 bg-white h-[90dvh] relative flex-col rounded-lg flex items-start justify-between">
+    <div className=' w-full mx-auto lg:h-screen h-[100dvh] flex items-center justify-center'>
+      <div className="mb-5 w-full mx-auto md:w-11/12 bg-white lg:h-[90dvh] h-[90dvh] relative flex-col rounded-lg flex items-start justify-between">
 
         {loading &&
           <div className="absolute top-0  backdrop-blur-sm w-full h-full rounded-md left-1/2 -translate-x-1/2">
@@ -65,35 +55,37 @@ const Messages = () => {
 
         <div className="h-[10dvh] w-full border-b flex items-center px-5 justify-between">
           <Link
-            className='w-fit px-4 py-1 rounded-md bg-gradient-to-tr from-primary to bg-purple-700 text-white'
-            to={`/user/tickets?status=active`}
-          >back</Link>
+            className='w-fit px-3 py-1 rounded-md bg-gradient-to-tr from-primary to bg-purple-700 text-white'
+            to={`/admin/tickets/active_chats`}
+          >
+            <FaLongArrowAltLeft />
+          </Link>
 
           <div className="flex items-center gap-3">
-            <MdSupportAgent className='text-2xl' />
-            <div className="capitalize">{admin?.firstname ? `admin ${admin?.firstname} ${admin?.lastname}` : 'No support staff joined'}</div>
+            <FaUser className='text-xl' />
+            <div className="capitalize text-base">{tickets?.usertickets?.firstname ? ` ${tickets?.usertickets?.firstname} ${tickets?.usertickets?.lastname}` : 'No support staff joined'}</div>
 
           </div>
 
-           <div className="text-sm">status: <span 
-           className={`${admin?.status === 'online' ? 'text-green-500' : 'text-gray-400'}`}>
-            {admin?.status === 'online' ? 'online' : admin?.status ==='offline' ? 'offline':'not joined' }</span></div>
+          <div className="text-sm">status: <span
+            className={`${tickets?.usertickets?.status === 'online' ? 'text-green-500' : 'text-gray-400'}`}>
+            {tickets?.usertickets?.status === 'online' ? 'online' : tickets?.usertickets?.status === 'offline' ? 'offline' : 'not joined'}</span></div>
         </div>
-        <div className="h-[70dvh] overflow-y-auto w-full py-1 scroll  downdiv ">
-          <div className="text-sm text-primary font-semibold text-right mr-3">Ticket Details</div>
+        <div className="lg:h-[68dvh] h-[78dvh] overflow-y-auto w-full py-1 scroll  downdiv ">
+          <div className="text-sm text-slate-500 font-semibold text-left ml-3">Ticket Details</div>
           <div
-            className={`${tickets?.message?.length || tickets?.subject?.length <= 90 ? 'w-fit' : 'w-[55%]'} relative text-sm  border px-4 mt-1  ml-auto bg-gradient-to-tr from-primary to-purple-700 text-white  py-2 flex items-start flex-col gap-2  rounded-md mr-2`}>
+            className={`${tickets?.message?.length || tickets?.subject?.length <= 90 ? 'w-fit' : 'w-[55%]'} relative text-sm  border px-4 mt-1  mr-auto bg-gradient-to-tr bg-slate-300  py-2 flex items-start flex-col gap-2  rounded-md ml-2`}>
             <div className="flex items-start gap-1">
               <div className="">Subject:</div>
-              <div className="">{tickets.subject}</div>
+              <div className="">{tickets?.subject}</div>
             </div>
             <div className="flex items-start gap-1">
               <div className="">Message:</div>
-              <div className="">{tickets.message}</div>
+              <div className="">{tickets?.message}</div>
             </div>
           </div>
-          <div className="text-sm text-primary font-semibold text-right mr-3 mt-3">Image</div>
-          <div className="text-right mr-3 w-10/12 mb-3 ml-auto">
+          <div className="text-sm text-slate-500 font-semibold text-left ml-3 mt-3">Image</div>
+          <div className="text-left ml-3 w-10/12 mb-3 mr-auto">
             {tickets?.image ?
               <img
                 src={`${profileImg}/tickets/${tickets?.image}`}
@@ -102,10 +94,10 @@ const Messages = () => {
               <div className="text-sm">No image attached</div>
             }
           </div>
-          {tickets?.joined === 'true' && <div className="my-2 w-fit px-5 py-2 border-slate-300 border mx-auto  rounded-lg ">an admin has joined the chats</div>}
+          {tickets?.joined === 'true' && <div className="my-2 w-fit px-5 py-2 border-slate-300 border mx-auto  rounded-lg ">you joined this chats</div>}
           <ChatMessages />
         </div>
-        <div className="h-[12dvh] border-t py-1 w-full ">
+        <div className="lg:h-[12dvh] h-[14dvh] border-t py-1 w-full ">
           <ChatForm ticketid={tickets?.id} fetchMsgs={() => fecthticketMessages()} />
         </div>
       </div>
@@ -113,4 +105,6 @@ const Messages = () => {
   )
 }
 
-export default Messages
+
+
+export default AdminMessages

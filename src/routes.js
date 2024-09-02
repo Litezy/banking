@@ -33,6 +33,9 @@ import InternalTransfer from "user/InternalTransfer";
 import TicketsStatus from "user/TicketsStatus";
 import Messages from "user/Messages";
 import UserKYC from "utils/UserKYC";
+import AdminActiveChats from "admin/adminComponents/AdminActiveChats";
+import AdminClosedChats from "admin/adminComponents/AdminClosedChats";
+import AdminMessages from "admin/utils/AdminMessages";
 
 
 
@@ -83,6 +86,9 @@ export const AdminRoutes = [
     { path: 'contacts', component: Contacts },
     { path: 'newsletters', component: Newsletters },
     { path: 'verifications/:id', component: UserVerifications },
+    { path: 'tickets/active_chats', component: AdminActiveChats },
+    { path: 'tickets/closed_chats', component: AdminClosedChats },
+    { path: 'tickets/active_chats/chats/:id', component: AdminMessages },
 
 
 ]
