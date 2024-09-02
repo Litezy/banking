@@ -96,7 +96,7 @@ export const auth_urls = {
 export const admin_urls = {
     all_users: admin + '/all-users',
     all_depo: admin + '/all-depo',
-    all_kyc: admin + '/all-kyc',
+    all_kycs: admin + '/all-kycs',
     all_proofs: admin + '/all-proofs',
     all_plans: admin + '/all-plans',
     all_trans: admin + '/all-trans',
@@ -123,13 +123,17 @@ export const admin_urls = {
     otp: admin + '/otp',
     single_trans: admin + '/single-trans',
 
-    //tickets
+    //tickets and kycs
     all_active_tickets: admin + '/all-active-tickets',
     all_closed_tickets: admin + '/all-closed-tickets',
     admin_response: admin + '/admin-response',
     get_one_msg: admin + '/one-ticket-msgs',
-    all_kycs: admin + '/all-kycs',
-    close_ticket: admin +'/close-ticket'
+    pending_kycs: admin + '/pending-kycs',
+    one_kyc: admin + '/one-kyc',
+    verified_kycs: admin + '/verified-kycs',
+    close_ticket: admin +'/close-ticket',
+    approve_kyc: admin + '/approve-kyc',
+    overturn_kyc: admin + '/overturn-kyc'
 }
 export const Apis = {
     non_auth: non_auth_urls,

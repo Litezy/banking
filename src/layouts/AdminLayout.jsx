@@ -69,6 +69,7 @@ export default function AdminLayout({ children,show=true }) {
         { path: 'banks', url: '/admin/banks' },
         { path: 'newsletters', url: '/admin/newsletters' },
         { path: 'contacts', url: '/admin/contacts' },
+        { path: 'user kycs', url: '/admin/kycs' },
         { path: 'single-page', url: '/admin/verifications/:id' },
 
     ]
@@ -131,7 +132,7 @@ export default function AdminLayout({ children,show=true }) {
     )
     return (
         <div>
-            <div className={`flex items-center h-screen overflow-hidden bg-white`}>
+            <div className={`flex items-center h-screen overflow-hidden `}>
 
                 <div className="h-screen hidden lg:block w-[25%] bg-gradient-to-tr from-primary to-purple-700 text-white">
                     <AdminSideBar />
@@ -200,7 +201,7 @@ export default function AdminLayout({ children,show=true }) {
                     </ModalLayout>
                 }
                 <div className={`${show === true && 'slate-50 mt-[8rem] overflow-y-auto'} h-screen w-full mt-0 lg:mt-0  overflow-x-hidden`}>
-                    <div className={`${show === true && 'overflow-y-auto pb-20'} h-[97dvh]  overflow-x-hidden `}>
+                    <div className={`${show === true && 'overflow-y-auto pb-20'} bg-slate-50 h-[100dvh]  overflow-x-hidden `}>
                         {children}
                     </div>
                 </div>

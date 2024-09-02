@@ -18,6 +18,7 @@ const AdminLinks = [
     { path: 'banks', url: '/admin/banks' },
     { path: 'newsletters', url: '/admin/newsletters' },
     { path: 'contacts', url: '/admin/contacts' },
+    { path: 'user kycs', url: '/admin/kycs' },
     { path: 'single-page', url: '/admin/verifications/:id' },
 ]
 const TicketFolder = [

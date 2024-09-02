@@ -1,17 +1,21 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import moment from 'moment'
 import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 
-const ClosedComponent = ({closed}) => {
+const ClosedComponent = ({}) => {
 
     const profile = useSelector((state) => state.profile.profile)
     const [loading, setLoading] = useState(false)
+    const closed = useSelector((state)=> state.profile.closed_chats)
+    console.log(closed)
     const TableHeaders = [
         "Ticket ID",
         "Ticket Subject",
         "Ticket Status",
         "Date Created",
+        "past messages"
     ]
 
     return (
@@ -41,6 +45,10 @@ const ClosedComponent = ({closed}) => {
                              </td>
                              <td className="px-3  py-3 truncate">
                                  {moment(item.createdAt).format('DD-MM-YYYY hh:mm A')}
+                             </td>
+                             <td className="px-3  py-3 truncate">
+                                <Link to={`/user/tickets/status/active_chats/${item.id}`}  
+                                className='trucate w-fit px-3 py-1 rounded-md bg-gradient-to-tr from-primary to-purple-700 text-white'>open message</Link>
                              </td>
                          </tr>
                         )) :

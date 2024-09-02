@@ -32,7 +32,7 @@ const Messages = () => {
           const res = await GetApi(`${Apis.auth.find_admin}/${id}`)
           if (res.status !== 200) return errorMessage(res.msg)
           setAdmin(res.data)
-        console.log(res.data)
+        // console.log(res.data)
           MoveToBottom()
         } catch (error) {
           errorMessage(`error in fetch support admin`, error.message)
@@ -66,7 +66,7 @@ const Messages = () => {
         <div className="h-[10dvh] w-full border-b flex items-center px-5 justify-between">
           <Link
             className='w-fit px-4 py-1 rounded-md bg-gradient-to-tr from-primary to bg-purple-700 text-white'
-            to={`/user/tickets?status=active`}
+            to={tickets?.status === 'active' ? `/user/tickets?status=active` : `/user/tickets?status=closed`}
           >back</Link>
 
           <div className="flex items-center gap-3">
@@ -106,7 +106,7 @@ const Messages = () => {
           <ChatMessages />
         </div>
         <div className="h-[12dvh] border-t py-1 w-full ">
-          <ChatForm ticketid={tickets?.id} fetchMsgs={() => fecthticketMessages()} />
+        {tickets?.status === 'active' && <ChatForm ticketid={tickets?.id} fetchMsgs={() => fecthticketMessages()} />}
         </div>
       </div>
     </div>

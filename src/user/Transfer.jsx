@@ -16,63 +16,57 @@ const Transfer = () => {
   const [bal, setBal] = useState(true)
   const [submit, setSubmit] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [loading2, setLoading2] = useState(false)
-  const [transfers, setTransfers] = useState([])
-  const [verifications, setVerifications] = useState({})
-  const [adminBanks, setAdminBanks] = useState([])
-  const [paid, setPaid] = useState(false)
 
-  const Icon = bal ? IoEyeOffSharp :IoEyeOutline
+
+  const Icon = bal ? IoEyeOffSharp : IoEyeOutline
   const profile = useSelector((state) => state.profile.profile)
   const currency = useSelector((state) => state.profile.currency)
-  const [screen, setScreen] = useState()
+  const [screen, setScreen] = useState(1)
   const dispatch = useDispatch()
 
-  const fetchTransfers = useCallback(async () => {
-    try {
-      const res = await GetApi(Apis.auth.get_transfers)
-      const response = await GetApi(Apis.auth.get_adminBanks)
-      setAdminBanks(response.data)
-      // console.log(res, 'post')
-      if (res.status !== 200) return errorMessage(`${res.msg}`)
-      const trans = res.data
-      setTransfers(trans[0]);
-      if (res.data.length < 1) return setScreen(1)
-      if (res.data[0]?.status === 'pending' && (!res.data[0]?.verifications || res.data[0]?.verifications.length < 1)) return setScreen(2)
-      if (res.data[0]?.status === 'complete') return setScreen(1)
-      //   const checks = trans[0]?.verifications.filter((item) => item.verified === 'false')
-      // console.log(checks, 'pol')
-      const checkCodeSubmission = res.data[0]?.verifications.find(ele => ele.verified === 'true')
-      const checkMessage = res.data[0]?.verifications.find(ele => (ele.verified === 'false' && ele.image === null && ele.message !== null))
-      const checkImage = res.data[0]?.verifications.find(ele => (ele.verified === 'false' && ele.image !== null && ele.code === null))
-      const checkCode = res.data[0]?.verifications.find(ele => (ele.verified === 'false' && ele.image !== null && ele.code !== null))
-      if (checkMessage) {
-        setScreen(3)
-        return setVerifications(checkMessage)
-      }
-      if (checkImage) {
-        setScreen(2)
-        return setVerifications(checkImage)
-      }
-      if (checkCode) {
-        setScreen(5)
-        console.log(checkCode, 'check image')
-        return setVerifications(checkCode)
-      }
-      if (checkCodeSubmission) {
-        console.log(checkCodeSubmission, 'subkisson')
-        setScreen(2)
-        return setVerifications(checkCodeSubmission)
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  }, []);
+  // const fetchTransfers = useCallback(async () => {
+  //   try {
+  //     const res = await GetApi(Apis.auth.get_transfers)
+  //     const response = await GetApi(Apis.auth.get_adminBanks)
+  //     setAdminBanks(response.data)
+  //     // console.log(res, 'post')
+  //     if (res.status !== 200) return errorMessage(`${res.msg}`)
+  //     const trans = res.data
+  //     setTransfers(trans[0]);
+  //     if (res.data.length < 1) return setScreen(1)
+  //     if (res.data[0]?.status === 'pending' && (!res.data[0]?.verifications || res.data[0]?.verifications.length < 1)) return setScreen(2)
+  //     if (res.data[0]?.status === 'complete') return setScreen(1)
+  //     //   const checks = trans[0]?.verifications.filter((item) => item.verified === 'false')
+  //     // console.log(checks, 'pol')
+  //     const checkCodeSubmission = res.data[0]?.verifications.find(ele => ele.verified === 'true')
+  //     const checkMessage = res.data[0]?.verifications.find(ele => (ele.verified === 'false' && ele.image === null && ele.message !== null))
+  //     const checkImage = res.data[0]?.verifications.find(ele => (ele.verified === 'false' && ele.image !== null && ele.code === null))
+  //     const checkCode = res.data[0]?.verifications.find(ele => (ele.verified === 'false' && ele.image !== null && ele.code !== null))
+  //     if (checkMessage) {
+  //       setScreen(3)
+  //       return setVerifications(checkMessage)
+  //     }
+  //     if (checkImage) {
+  //       setScreen(2)
+  //       return setVerifications(checkImage)
+  //     }
+  //     if (checkCode) {
+  //       setScreen(5)
+  //       console.log(checkCode, 'check image')
+  //       return setVerifications(checkCode)
+  //     }
+  //     if (checkCodeSubmission) {
+  //       console.log(checkCodeSubmission, 'subkisson')
+  //       setScreen(2)
+  //       return setVerifications(checkCodeSubmission)
+  //     }
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+  // }, []);
 
 
-  useEffect(() => {
-    fetchTransfers()
-  }, [fetchTransfers])
+
 
   const [forms, setForms] = useState({
     acc_no: '',
@@ -81,7 +75,7 @@ const Transfer = () => {
     swift: '',
     amount: '',
     reset_code: '',
-    memo:''
+    memo: ''
   })
 
   const handleChange = (e) => {
@@ -91,84 +85,7 @@ const Transfer = () => {
 
 
 
-  const imgRef = useRef()
-  const [proofimg, setProofimg] = useState({
-    img: "",
-    image: ''
-  })
-
-  const changeImage = (e) => {
-    setProofimg({
-      img: e.target.src,
-      image: null
-    })
-  }
-
-  // console.log(verifications)
-  const handleImage = (e) => {
-    const file = e.target.files[0]
-    if (file.size >= 1000000) {
-      imgRef.current.value = null
-      return errorMessage('file too large')
-    }
-    if (!file.type.startsWith(`image/`)) {
-      imgRef.current.value = null
-      return errorMessage('Invalid file format detected, try with a different photo format like ')
-    }
-    setProofimg({
-      img: URL.createObjectURL(file),
-      image: file
-    })
-    // console.log(proofimg.image)
-  }
-
-  const UploadProof = async () => {
-    const formdata = new FormData()
-    formdata.append('image', proofimg.image)
-    formdata.append('id', verifications?.id)
-    setLoading(true)
-    try {
-      const res = await PostApi(Apis.auth.upload_trans_prof, formdata)
-      // console.log(res)
-      if (res.status === 200) {
-        setScreen(2)
-        successMessage(`payment proof submitted successfully`)
-      } else {
-        errorMessage(res.msg)
-      }
-    } catch (error) {
-      console.log(error)
-      errorMessage(error.message)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  // useEffect(() => {
-  //   if (!transfers || transfers?.status === 'complete' || transfers?.new === 'old') {
-  //     return setScreen(1);
-  //   }
-  //   if (!verifications) return setScreen(2)
-  //   if (verifications?.image !== null && verifications?.code === 'sent') {
-  //     return setScreen(5);
-  //   }
-  //   if (verifications?.message && verifications?.message.trim() !== '' && verifications?.image === null) {
-  //     return setScreen(3);
-  //   }
-  //   if (verifications?.image !== null && verifications?.code === null) {
-  //     return setScreen(2)
-  //   }
-  //   if (transfers?.new === 'new' && verifications?.image === null && verifications?.code === null) {
-  //     return setScreen(2)
-  //   }
-
-
-
-
-  // }, [fetchTransfers]);
-
-
-  const SubmitTransfer = async (e) => {
+  const SubmitTransfer = async () => {
     if (!forms.acc_name) return errorMessage('Account name is required')
     if (!forms.acc_no) return errorMessage('Account number is required')
     if (!forms.bank_name) return errorMessage('Bank name is required')
@@ -180,7 +97,7 @@ const Transfer = () => {
       bank_name: forms.bank_name,
       swift: forms.swift,
       amount: forms.amount,
-      memo:forms.memo
+      memo: forms.memo
     }
     // return console.log(formdata)
     setLoading(true)
@@ -196,7 +113,7 @@ const Transfer = () => {
           bank_name: '',
           swift: '',
           amount: '',
-          memo:''
+          memo: ''
         })
         dispatch(dispatchProfile(res.data))
       } else {
@@ -211,32 +128,7 @@ const Transfer = () => {
     }
   }
 
-  const submitCode = async (e) => {
-    e.preventDefault()
-    if (!verifications?.id) return errorMessage(`Transaction ID missing, contact support`)
-    if (!transfers?.usertransfers?.email) return errorMessage(`Email is required, try again`)
-    if (!forms?.reset_code) return errorMessage(`Code is missing`)
 
-    const formdata = {
-      id: verifications?.id,
-      email: transfers?.usertransfers?.email,
-      reset_code: forms?.reset_code
-    }
-    setLoading2(true)
-    try {
-      const res = await PostApi(Apis.auth.verify_otp, formdata)
-      if (res.status !== 200) return errorMessage(res.msg)
-      successMessage(res.msg)
-      setForms({ reset_code: '' })
-      setScreen(2)
-    } catch (error) {
-      errorMessage(error.message)
-      console.log(error)
-    } finally {
-      setLoading2(false)
-    }
-
-  }
   return (
     <div className='w-full mt-5'>
       <div className="w-11/12 mx-auto ">
@@ -263,14 +155,9 @@ const Transfer = () => {
         {screen === 1 &&
           <div className="my-10 w-full relative flex items-start shadow-lg flex-col py-5 px-2 lg:px-10 bg-white rounded-lg h-fit">
 
-            {loading &&
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2">
-                <Loader />
-              </div>
-            }
             <div className=" my-3 w-full text-xl font-semibold border-b">External Money Transfer</div>
             <div className="flex items-start flex-col gap-8 w-full mt-3">
-              <div className="flex w-full items-center justify-between gap-5 lg:gap-10">
+              <div className="flex w-full items-center flex-col lg:flex-row justify-between gap-5 lg:gap-10">
                 <div className="flex items-start flex-col  lg:w-1/2 w-full">
                   <div className="-500 text-base">Account Name:</div>
                   <FormComponent name={`acc_name`} value={forms.acc_name} onchange={handleChange} />
@@ -280,17 +167,17 @@ const Transfer = () => {
                   <FormComponent name={`bank_name`} value={forms.bank_name} onchange={handleChange} />
                 </div>
               </div>
-              <div className="flex w-full items-center justify-between gap-5 lg:gap-10">
-              <div className="flex items-start flex-col lg:w-1/2 w-full">
-                <div className="-500 text-base">Account No:</div>
-                <FormComponent formtype='phone' name={`acc_no`} value={forms.acc_no} onchange={handleChange} />
+              <div className="flex w-full flex-col lg:flex-row items-center justify-between gap-5 lg:gap-10">
+                <div className="flex items-start flex-col lg:w-1/2 w-full">
+                  <div className="-500 text-base">Account No:</div>
+                  <FormComponent formtype='phone' name={`acc_no`} value={forms.acc_no} onchange={handleChange} />
+                </div>
+                <div className="flex items-start flex-col lg:w-1/2 w-full">
+                  <div className="-500 text-base">Swift No: (required for int'l transfers)</div>
+                  <FormComponent formtype='phone' name={`swift`} value={forms.swift} onchange={handleChange} />
+                </div>
               </div>
-              <div className="flex items-start flex-col lg:w-1/2 w-full">
-                <div className="-500 text-base">Swift No: (required for int'l transfers)</div>
-                <FormComponent formtype='phone' name={`swift`} value={forms.swift} onchange={handleChange} />
-              </div>
-              </div>
-              
+
               <div className="flex items-start flex-col lg:w-1/2 mx-auto w-full">
                 <div className="-500 text-base">Amount ($)</div>
                 <FormComponent formtype='phone' name={`amount`} value={forms.amount} onchange={handleChange} />
@@ -298,134 +185,71 @@ const Transfer = () => {
               <div className="flex items-start flex-col  w-full">
                 <div className=" text-base">Memo</div>
                 <textarea
-                name='memo' 
-                value={ forms.memo} 
-                className='w-full  max-h-20 p-2 rounded-md border hover:border-black'
-                onChange={handleChange}
-                placeholder='memo'
+                  name='memo'
+                  value={forms.memo}
+                  className='w-full  max-h-20 resize-none p-2 rounded-md border hover:border-black'
+                  onChange={handleChange}
+                  placeholder='memo'
                 >
                 </textarea>
               </div>
 
-          <div className="my-2 font-semibold ">* transaction charges will be applied</div>
-              <button disabled={loading ? true:false} onClick={SubmitTransfer}  className="md:w-fit w-full cursor-pointer text-center md:ml-auto md:px-10 py-2 bg-primary rounded-md text-white">Submit</button>
+              <button onClick={() => setScreen(2)} className="md:w-fit w-full cursor-pointer text-center md:ml-auto md:px-10 py-2 bg-gradient-to-tr from-primary to-purple-700 rounded-md text-white">Next</button>
             </div>
           </div>}
 
-        {/* ===============  loading ================== */}
+
         {screen === 2 &&
-          <div className="w-full mt-5 h-96 relative flex items-center justify-center">
-            <div className="md:w-[40%] w-10/12 mx-auto flex-col bg-white rounded-md p-5 h-fit flex items-center justify-center">
-              <Loader />
-              <div className="">withdrawal processing...</div>
-            </div>
-          </div>
+          <div className="my-10 lg:w-[60%] mx-auto w-full relative flex items-start shadow-lg flex-col py-5 px-3 lg:px-10 bg-white rounded-lg h-fit">
 
-        }
-        {/* =======================  upload image message =================== */}
-        {screen === 3 &&
-          <div className="w-full mt-5 h-fit p-5">
-            <div className="w-full p-5 bg-white rounded-md">
-              <div className="text-lg font-semibold text-center capitalize mb-3">Steps to complete your transfer</div>
-              <div className="w-full flex-col flex md:flex-row items-start gap-5 ">
-                <div className="my-5 flex items-start flex-col gap-3 w-full md:w-1/2">
-                  <div className="text-base font-light">{verifications.message}.</div>
-                  <div className="text-2xl font-bold">{currency}{verifications?.amount}</div>
+            {loading &&
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2">
+                <Loader />
+              </div>
+            }
+
+            <button onClick={() => setScreen(1)} className='bg-gradient-to-tr from-primary to-purple-700 text-white w-fit px-4 py-1 rounded-md'>
+              edit
+            </button>
+            <div className="text-left w-full font-bold my-5 text-xl">Review your transfer details</div>
+
+            <div className="mt-6 flex items-start gap-5 flex-col w-full ">
+              <div className="flex w-full items-center flex-col  justify-between gap-5 lg:gap-10">
+                <div className="flex items-center gap-3  w-full">
+                  <div className="-500 text-base">Receiver's Account Name:</div>
+                  <div className="capitalize text-base font-bold">{forms.acc_name}</div>
                 </div>
-                <div className="my-5 flex items-start md:w-1/2 flex-col gap-3 w-full ">
-                  <div className="">Kindly make payment to {adminBanks.length > 1 ? 'any of these bank accounts below.' : "this bank account below."}</div>
-                  {adminBanks.map((bank, i) => (
-                    <div className="flex items-start  flex-col gap-1 w-fit p-5 bg-primary text-white mb-5 rounded-md" key={i}>
-                      <div className="text-base font-light gap-2 flex items-center">
-                        <div className="">Account Holder's Name:</div>
-                        <div className="">{bank.fullname}</div>
-                      </div>
-                      <div className="text-base font-light gap-2 flex items-center">
-                        <div className="">Bank Name:</div>
-                        <div className="">{bank.bank_name}</div>
-                      </div>
-                      <div className="text-base font-light gap-2 flex items-center">
-                        <div className="">Account No:</div>
-                        <div className="">{bank.account_no}</div>
-                      </div>
-                      {bank.route_no && <div className="text-base font-light gap-2 flex items-center">
-                        <div className="">Route:</div>
-                        <div className="">{bank.route_no}</div>
-                      </div>}
-                      {bank.swift && <div className="text-base font-light gap-2 flex items-center">
-                        <div className="">Swift No:</div>
-                        <div className="">{bank.route_no}</div>
-                      </div>}
-                      {bank.iban && <div className="text-base font-light gap-2 flex items-center">
-                        <div className="">IBAN No:</div>
-                        <div className="">{bank.route_no}</div>
-                      </div>}
-                    </div>
-                  ))}
+                <div className="flex items-center gap-3  w-full">
+                  <div className="-500 text-base">Receiver's Bank Name:</div>
+                  <div className="capitalize text-base font-bold">{forms.bank_name}</div>
+                </div>
+                <div className="flex items-center gap-3  w-full">
+                  <div className="-500 text-base">Receiver's Account Name:</div>
+                  <div className="capitalize text-base font-bold">{forms.acc_name}</div>
+                </div>
+                <div className="flex items-center gap-3  w-full">
+                  <div className="-500 text-base">Swift Code:</div>
+                  <div className="capitalize text-base font-bold">{forms.swift}</div>
+                </div>
+                <div className="flex items-center gap-3  w-full">
+                  <div className="-500 text-base">Amount(currency):</div>
+                  <div className="capitalize text-base font-bold">{forms.amount}</div>
+                </div>
+                <div className="flex items-center gap-3  w-full">
+                  <div className="-500 text-base">Memo:</div>
+                  <div className="capitalize text-base font-bold">{forms.memo}</div>
+                </div>
 
-                  {paid === false && <button onClick={() => setPaid(true)} className=" cursor-pointer w-fit px-4 py-2  rounded-full bg-gradient-to-tr   from-primary to-purple-700 border text-white ml-auto">I have made payment</button>}
+                <div className="w-full my-5">
+                  <ButtonComponent type='button' onclick={SubmitTransfer} title={'Send'} bg={`bg-gradient-to-tr from-primary to-purple-700 text-white h-14`} />
                 </div>
               </div>
             </div>
-
-            {paid && <div className="my-10 w-11/12 bg-white p-5 rounded-md">
-              <button onClick={() => setPaid(false)} className='w-fit mr-auto px-3 py-1 rounded-md bg-primary text-white'>hide</button>
-              <div className="text-xl text-center font-semibold">Upload proof of payment</div>
-
-              <div className="mt-3 relative w-2/4 mx-auto">
-
-                {loading &&
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2">
-                    <Loader />
-                  </div>
-                }
-                <label className={`${proofimg.img ? '' : 'border-2 border-black'} mt-5 w-full  h-full border-dashed flex cursor-pointer items-center justify-center `}>
-                  {proofimg.img ? <div className="">
-                    <div onChange={changeImage} className="absolute top-0 right-0 main font-bold ">
-                      <FaEdit className='text-2xl' />
-                    </div>
-                    <img src={proofimg.img} className='w-full h-48' />
-                  </div> :
-                    <div className="flex items-center gap-2 px-2">
-                      <FaPlus className='text-2xl' />
-                      <div className="">Upload proof of payment</div>
-                    </div>
-
-                  }
-                  <input type="file" onChange={handleImage} hidden ref={imgRef} />
-                </label>
-              </div>
-              {proofimg.img &&
-                <div className="w-1/4 mx-auto mt-5">
-                  <ButtonComponent type='button' onclick={UploadProof} title={'Submit'} bg={`bg-primary text-white h-12`} />
-                </div>
-              }
-            </div>}
           </div>
 
         }
 
 
-        {/* =========================  otp code ================= */}
-        {screen === 5 &&
-          <div className="my-10 w-11/12 bg-white p-5 rounded-md">
-            <div className="text-xl text-center font-semibold">Enter code sent</div>
-            <form onSubmit={submitCode} className="mt-3 relative w-2/4 mx-auto">
-              {loading2 &&
-                <div className="absolute top-1/3 left-1/2 -translate-x-1/2">
-                  <Loader />
-                </div>
-              }
-              <div className="my-5 items-center lg:w-2/4 w-10/12 mx-auto flex flex-col gap-1">
-                <div className="">Code:</div>
-                <FormComponent name={`reset_code`} value={forms.reset_code} onchange={handleChange} formtype='code' placeholder={`Enter 6 digit code`} />
-              </div>
-              <div className="mt-5 w-10/12 lg:w-2/4 mx-auto">
-                <ButtonComponent disabled={loading2 ? true : false} title={`Submit`} bg={`bg-primary text-white h-10`} />
-              </div>
-            </form>
-          </div>
-        }
       </div>
     </div>
   )

@@ -53,7 +53,7 @@ const AdminActiveChats = () => {
             successMessage(res.msg)
             setTimeout(() => {
                 navigate(`/admin/tickets/closed_chats`)
-            }, 2000)
+            }, 1000)
         } catch (error) {
             errorMessage(error.message)
         } finally { setLoading(false) }

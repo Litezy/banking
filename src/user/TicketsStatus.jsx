@@ -8,6 +8,8 @@ import { errorMessage, successMessage } from 'utils/functions'
 import { MdDelete } from "react-icons/md";
 import { Apis, GetApi, PostApi } from 'services/Api'
 import Loader from 'utils/Loader'
+import { useDispatch } from 'react-redux'
+import { dispatchActiveChats, dispatchClosedChats } from 'app/reducer'
 
 const TicketsStatus = () => {
     const [searchParams] = useSearchParams()
@@ -18,6 +20,7 @@ const TicketsStatus = () => {
     const navigate = useNavigate()
     const [closed, setClosed] = useState([])
     const [screen, setScreen] = useState(null)
+    const dispatch = useDispatch()
     const [fileName, setFileName] = useState('');
     useEffect(() => {
         if (status === 'create') return setScreen(1)
@@ -76,12 +79,13 @@ const TicketsStatus = () => {
         e.preventDefault()
         imageRef.current.click()
     }
- 
+
     const fetchActiveTickets = useCallback(async () => {
         try {
             const res = await GetApi(Apis.auth.active_tickets)
             if (res.status !== 200) return errorMessage(res.msg)
             setActives(res.data)
+            dispatch(dispatchActiveChats(res.data))
         } catch (error) {
             errorMessage(`something went wrong in fetching active tickets data`, error.message)
         }
@@ -91,19 +95,20 @@ const TicketsStatus = () => {
             const res = await GetApi(Apis.auth.closed_tickets)
             if (res.status !== 200) return errorMessage(res.msg)
             setClosed(res.data)
+            dispatch(dispatchClosedChats(res.data))
         } catch (error) {
             errorMessage(`something went wrong in fetching closed tickets data`, error.message)
         }
     }, [])
 
-    useEffect(()=>{
-        if(status === 'active'){
+    useEffect(() => {
+        if (status === 'active') {
             fetchActiveTickets()
         }
-        if(status === 'closed'){
+        if (status === 'closed') {
             fetchClosedTickets()
         }
-    },[])
+    }, [])
 
     const submitTicket = async (e) => {
         e.preventDefault()
@@ -134,11 +139,11 @@ const TicketsStatus = () => {
             {screen === 1 && <div className='w-11/12 flex items-center justify-center mx-auto h-fit py-5'>
                 <div className="md:w-[80%] mx-auto  bg-white h-fit py-5 rounded-md shadow-md ">
 
-                        {loading && 
+                    {loading &&
                         <div className="absolute top-1/2 left-1/2 -translate-x-1/2">
-                            <Loader/>
+                            <Loader />
                         </div>
-                        }
+                    }
 
                     <div className="p-5 text-xl font-bold">Create New Ticket</div>
                     <hr className='my-2' />
@@ -189,7 +194,7 @@ const TicketsStatus = () => {
                 <div className=" w-full bg-white rounded-md shadow-md h-fit p-5">
                     <div className=" text-xl font-bold">Active Tickets</div>
                     <hr className='my-2' />
-                    <div className="my-5">You have {actives && actives.length > 0 ? `${actives.length} active ticket(s), see them below.`:'0 active tickets.'}</div>
+                    <div className="my-5">You have {actives && actives.length > 0 ? `${actives.length} active ticket(s), see them below.` : '0 active tickets.'}</div>
                     <ActiveComponent actives={actives} />
                 </div>
             </div>}
@@ -201,7 +206,7 @@ const TicketsStatus = () => {
                 <div className=" w-full bg-white rounded-md shadow-md h-fit p-5">
                     <div className=" text-xl font-bold">Closed Tickets</div>
                     <hr className='my-2' />
-                    <div className="my-5">You have {closed && closed.length > 0 ? `${closed.length} active ticket(s), see them below.`:'0 active tickets.'}</div>
+                    <div className="my-5">You have {closed && closed.length > 0 ? `${closed.length} closed ticket(s), see them below.` : '0 closed tickets.'}</div>
                     <ClosedComponent closed={closed} />
                 </div>
             </div>}

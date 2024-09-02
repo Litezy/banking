@@ -3,6 +3,7 @@ import moment from 'moment'
 import { useSelector } from 'react-redux'
 import { errorMessage } from 'utils/functions'
 import { Apis, GetApi } from 'services/Api'
+import { Link } from 'react-router-dom'
 
 const AdminClosedChats = () => {
 
@@ -82,8 +83,11 @@ const AdminClosedChats = () => {
                                             {moment(item.updatedAt).format('DD-MM-YYYY hh:mm A')}
                                         </td>
                                         <td className="px-3  py-3 truncate">
-                                            <button onMouseOver={()=> setSelected(item)} onClick={() => setMsg(true)}
-                                                className='trucate w-fit px-3 py-1 rounded-md bg-gradient-to-tr from-primary to-purple-700 text-white'>view messages</button>
+                                            <Link 
+                                            onMouseOver={()=> setSelected(item)} 
+                                            onClick={() => setMsg(true)}
+                                            to={`/admin/tickets/closed_chats/chats/${item.id}`}
+                                                className='trucate w-fit px-3 py-1 rounded-md bg-gradient-to-tr from-primary to-purple-700 text-white'>view messages</Link>
                                         </td>
                                     </tr>
                                 )) :

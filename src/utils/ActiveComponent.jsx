@@ -4,10 +4,11 @@ import { useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { Apis, GetApi } from 'services/Api'
 
-const ActiveComponent = ({actives}) => {
+const ActiveComponent = ({}) => {
 
 
     const profile = useSelector((state) => state.profile.profile)
+    const actives = useSelector((state) => state.profile.active_chats)
     const navigate = useNavigate()
     const [selected,setSelected] = useState({})
     const [loading, setLoading] = useState(false)

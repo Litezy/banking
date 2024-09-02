@@ -1,7 +1,7 @@
 import { dispatchMessages } from 'app/reducer'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useLocation, useParams } from 'react-router-dom'
 import { Apis, GetApi, profileImg } from 'services/Api'
 import ChatForm from 'utils/ChatForm'
 import ChatMessages from 'utils/ChatMessages'
@@ -15,7 +15,8 @@ const AdminMessages = () => {
   const [messages, setMessages] = useState([])
   const [loading, setLoading] = useState(false)
   const [tickets, setTickets] = useState({})
-  const [admin, setAdmin] = useState({})
+  const [chatform, setChatform] = useState(false)
+  const location = useLocation()
   const { id } = useParams()
   // console.log(id)
   const dispatch = useDispatch()
@@ -40,8 +41,12 @@ const AdminMessages = () => {
   useEffect(() => {
     fecthticketMessages()
     MoveToBottom()
+    if(location.pathname.includes(`closed_chats/chats`)){
+      setChatform(true)
+    }
   }, [])
 
+  
 
   return (
     <div className=' w-full mx-auto lg:h-screen h-[100dvh] flex items-center justify-center'>
@@ -56,7 +61,7 @@ const AdminMessages = () => {
         <div className="h-[10dvh] w-full border-b flex items-center px-5 justify-between">
           <Link
             className='w-fit px-3 py-1 rounded-md bg-gradient-to-tr from-primary to bg-purple-700 text-white'
-            to={`/admin/tickets/active_chats`}
+            to={chatform ? `/admin/tickets/closed_chats` : `/admin/tickets/active_chats`}
           >
             <FaLongArrowAltLeft />
           </Link>
@@ -98,7 +103,7 @@ const AdminMessages = () => {
           <ChatMessages />
         </div>
         <div className="lg:h-[12dvh] h-[14dvh] border-t py-1 w-full ">
-          <ChatForm ticketid={tickets?.id} fetchMsgs={() => fecthticketMessages()} />
+        {!chatform && <ChatForm ticketid={tickets?.id} fetchMsgs={() => fecthticketMessages()} />}
         </div>
       </div>
     </div>

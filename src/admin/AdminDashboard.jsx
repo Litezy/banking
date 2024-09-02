@@ -92,7 +92,7 @@ const AdminDashboard = () => {
 
     const fetchKyc = useCallback(async () => {
         try {
-            const response = await GetApi(Apis.admin.all_kyc)
+            const response = await GetApi(Apis.admin.all_kycs)
             if (response.status === 200) {
                 setKyc(response.data)
             } else {
@@ -119,6 +119,7 @@ const AdminDashboard = () => {
             <Summary   color='bg-green-500 text-white' title={'Total Deposits'} data={`$${savings}`}/>
             <Summary   color='bg-red-500 text-white' title={'Total Transactions'} data={transactions.length}/>
             <Summary   color='bg-orange-500 text-white' title={'Total Savings Plans'} data={plans.length}/>
+            <Summary   color='bg-yellow-500 text-white' title={"Total Submitted KYC's"} data={kyc.length}/>
            </div>
         </div>
       )

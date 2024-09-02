@@ -127,7 +127,7 @@ const AllTransactions = () => {
 
       <div className="relative overflow-x-auto rounded-md mt-10">
         <table className="w-full text-sm text-left rtl:text-right">
-          <thead className=" bg-primary lg:text-xl text-base text-white">
+          <thead className=" bg-gradient-to-tr from-primary to-purple-700 lg:text-xl text-base text-white">
             <tr>
               <th scope="col" className="px-3 py-3">
                 ID

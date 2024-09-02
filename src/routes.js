@@ -36,6 +36,10 @@ import UserKYC from "utils/UserKYC";
 import AdminActiveChats from "admin/adminComponents/AdminActiveChats";
 import AdminClosedChats from "admin/adminComponents/AdminClosedChats";
 import AdminMessages from "admin/utils/AdminMessages";
+import UserKYCS from "admin/adminComponents/UserKYCS";
+import PendingKycs from "admin/utils/PendingKycs";
+import ApprovedKycs from "admin/utils/ApprovedKycs";
+import KycModal from "admin/utils/KycModal";
 
 
 
@@ -71,6 +75,7 @@ export const UserRoutes = [
     { path: 'profile', component: Profile },
     { path: 'loans', component: Loans },
     { path: 'tickets/status/active_chats/:id', component: Messages },
+    { path: 'tickets/status/closed_chats/:id', component: Messages },
     { path: 'tickets', component: TicketsStatus },
     { path: 'kyc', component: UserKYC}
 
@@ -89,6 +94,12 @@ export const AdminRoutes = [
     { path: 'tickets/active_chats', component: AdminActiveChats },
     { path: 'tickets/closed_chats', component: AdminClosedChats },
     { path: 'tickets/active_chats/chats/:id', component: AdminMessages },
+    { path: 'tickets/closed_chats/chats/:id', component: AdminMessages },
+    { path: 'kycs', component: UserKYCS },
+    { path: 'kycs/pending', component: PendingKycs },
+    { path: 'kycs/verified', component: ApprovedKycs },
+    { path: 'kycs/verified/:id', component: KycModal },
+    { path: 'kycs/pending/:id', component: KycModal },
 
 
 ]
