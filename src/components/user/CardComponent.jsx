@@ -1,17 +1,15 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import mastercardimg from '../../assets/dashboard/mastercard.png'
 import visacardimg from '../../assets/dashboard/visa.png'
-import Forminput from 'utils/Forminput'
-import { MenuItem } from '@mui/material'
-import { IoChevronDown } from "react-icons/io5";
 import FormComponent from 'utils/FormComponent'
 import { errorMessage, successMessage } from 'utils/functions'
 import { FaAsterisk } from "react-icons/fa";
 import Loader from 'utils/Loader'
 import ModalLayout from 'utils/ModalLayout'
 import { Apis, GetApi, PostApi } from 'services/Api'
+import Formbutton from 'utils/Formbutton'
 
-const CardComponent = ({ }) => {
+const CardComponent = () => {
 
     const refdiv = useRef(null)
     const [loading, setLoading] = useState(false)
@@ -30,7 +28,6 @@ const CardComponent = ({ }) => {
 
 
     const [allcards, setAllcards] = useState([])
-    const [selectcard, setSelectcard] = useState({})
 
     const fetchUserCards = useCallback(async () => {
         try {
@@ -44,7 +41,7 @@ const CardComponent = ({ }) => {
 
     useEffect(() => {
         fetchUserCards()
-    }, [])
+    }, [fetchUserCards])
 
     const handleChange = (e) => {
         setCards({
@@ -171,13 +168,13 @@ const CardComponent = ({ }) => {
             <div className="flex mb-2 w-full items-center justify-between">
                 <div className=" text-xl font-semibold">My Cards</div>
                 {allcards.length < 2 &&
-                    <button onClick={() => setAdd(true)} className='w-fit px-5 py-2 rounded-lg bg-primary text-white'>Add New Card</button>
+                    <Formbutton onClick={() => setAdd(true)} label="Add New Card" />
                 }
             </div>
-            {Array.isArray(allcards) && !allcards.length > 0 ? <div className=" mx-auto grid grid-cols-1 md:grid-cols-2 gap-5">
+            {Array.isArray(allcards) && allcards.length > 0 ? <div className=" mx-auto grid grid-cols-1 md:grid-cols-2 gap-5">
                 {allcards.map((item, i) => {
                     return (
-                        <div key={i} className={`h-[17rem] w-full bg-gradient-to-tr from-[#1d253f] via-[#152878] to-[#0b2cc9]  rounded-lg py-6 px-5`}>
+                        <div key={i} className={`h-[17rem] w-full bg-gradient-to-tr from-primary to-purple-700  rounded-lg py-6 px-5`}>
                             <div className="flex flex-col text-white h-full justify-between">
                                 <div className="flex items-center  justify-between">
                                     <div className="font-semibold text-xl">Credit</div>
@@ -211,8 +208,8 @@ const CardComponent = ({ }) => {
                 <div className="flex items-center flex-col lg:flex-row justify-between gap-5 lg:gap-10">
                     {new Array(2).fill(0).map((item, i) => {
                         return (
-                            <div key={i} className={`h-[17rem] w-full bg-gradient-to-tr from-[#1d253f] via-[#152878] to-[#0b2cc9]  rounded-lg py-6 px-5`}>
-                                <div className="flex flex-col text-white h-full justify-between">
+                            <div key={i} className={`h-fit w-full  bg-gradient-to-tr from-primary to-purple-700 rounded-lg py-6 px-5`}>
+                                <div className="flex gap-4 flex-col text-white h-full justify-between">
                                     <div className="flex items-center  justify-between">
                                         <div className="flex items-center gap-1">
                                             {new Array(4).fill(0).map((ite, i) => (
@@ -225,7 +222,7 @@ const CardComponent = ({ }) => {
                                             ))}
                                         </div>
                                     </div>
-                                    <div className="mb-2 flex  items-center justify-between  text-white text-base">
+                                    <div className="flex  items-center justify-between  text-white text-base">
                                         <div className="flex-col flex items-start">
                                             <div className="text-sm uppercase">Card No.</div>
                                             <div className="flex items-center gap-1">
