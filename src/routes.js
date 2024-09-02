@@ -30,8 +30,12 @@ import TermsofUse from "components/general/TermsofUse";
 import Cookies from "components/general/Cookies";
 import UserVerifications from "admin/adminComponents/UserVerifications";
 import InternalTransfer from "user/InternalTransfer";
-import Tickets from "user/Tickets";
 import TicketsStatus from "user/TicketsStatus";
+import Messages from "user/Messages";
+import UserKYC from "utils/UserKYC";
+import AdminActiveChats from "admin/adminComponents/AdminActiveChats";
+import AdminClosedChats from "admin/adminComponents/AdminClosedChats";
+import AdminMessages from "admin/utils/AdminMessages";
 
 
 
@@ -66,10 +70,11 @@ export const UserRoutes = [
     { path: 'settings', component: Settings },
     { path: 'profile', component: Profile },
     { path: 'loans', component: Loans },
-    // { path: 'tickets', component: Tickets },
+    { path: 'tickets/status/active_chats/:id', component: Messages },
     { path: 'tickets', component: TicketsStatus },
-   
-   
+    { path: 'kyc', component: UserKYC}
+
+
 ]
 export const AdminRoutes = [
     { path: 'overview', component: AdminDashboard },
@@ -81,6 +86,9 @@ export const AdminRoutes = [
     { path: 'contacts', component: Contacts },
     { path: 'newsletters', component: Newsletters },
     { path: 'verifications/:id', component: UserVerifications },
-   
-   
+    { path: 'tickets/active_chats', component: AdminActiveChats },
+    { path: 'tickets/closed_chats', component: AdminClosedChats },
+    { path: 'tickets/active_chats/chats/:id', component: AdminMessages },
+
+
 ]

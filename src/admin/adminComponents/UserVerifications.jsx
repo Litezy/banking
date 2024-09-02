@@ -149,7 +149,7 @@ const UserVerifications = ({ }) => {
         <div className="w-11/12 mx-auto mt-10">
             <div onClick={() => navigate('/admin/verifications')} className="rounded-md w-fit mr-auto px-4 py-1 bg-primary text-white cursor-pointer">back</div>
             <div className="w-full flex items-center justify-between">
-                <div className="w-2/4 mx-auto">
+                <div className="lg:w-2/4 w-3/4 mx-auto">
                     <Summary color='bg-zinc-500 text-white' title={'Total Verifications'} data={data?.verifications?.length} />
                 </div>
             </div>
@@ -279,8 +279,8 @@ const UserVerifications = ({ }) => {
                                     </td> : '--'}
                                 </tr>
                             )) :
-                                <tr className=" w-full text-lg font-semibold flex items-center justify-center">
-                                    <td>No Verifications found for this transfer</td>
+                                <tr className=" w-full text-lg truncate font-semibold flex items-center justify-center">
+                                    No verifications found for this transfer
                                 </tr>
                             }
 

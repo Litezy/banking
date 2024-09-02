@@ -10,7 +10,7 @@ import { FaUser } from 'react-icons/fa6';
 import { IoCopy } from 'react-icons/io5';
 import { TbHeadset } from 'react-icons/tb';
 import { useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Apis, GetApi, profileImg } from 'services/Api';
 import { errorMessage, successMessage } from 'utils/functions';
 import { HiOutlineBars3BottomRight } from "react-icons/hi2";
@@ -18,10 +18,12 @@ import { HiOutlineBars3BottomRight } from "react-icons/hi2";
 
 export default function UserLayout({ children }) {
     const [loading, setLoading] = useState(true)
+    const [chats,setChats] = useState(false)
     const [openside, setOpenSide] = useState(false)
     const [profile, setProfile] = useState({})
     const dispatch = useDispatch()
     const [notice, setNotice] = useState([])
+    const location = useLocation()
     const navigate = useNavigate()
     const refdiv = useRef(null)
     const fetchUserProfile = useCallback(async () => {
@@ -73,6 +75,13 @@ export default function UserLayout({ children }) {
         }
     }, [])
 
+    useEffect(()=>{
+        if(location.pathname.includes(`active_chats/`)){
+            setChats(true)
+        }else{
+            setChats(false)
+        }
+    },[location.pathname])
 
     if (loading) return (
         <div>
@@ -110,10 +119,10 @@ export default function UserLayout({ children }) {
             {profile?.verified === 'true' &&
                 <div className="flex items-center h-screen  bg-white">
                     <div className="h-screen hidden lg:block lg:w-[20%] bg-gradient-to-tr from-primary to-purple-700 text-white">
-                        <UserSidebar />
+                        <UserSidebar setOpenSide={setOpenSide} />
                     </div>
                     <div className="bg-slate-50 lg:w-[80%] h-screen overflow-y-auto w-full relative">
-                        <div className="lg:w-[78.8%]  w-[100%] bg-white flex z-50 items-center overflow-y-hidden overflow-x-hidden justify-between fixed  h-fit px-5 py-2">
+                       {!chats && <div className="lg:w-[78.8%]  w-[100%] bg-white flex z-50 items-center overflow-y-hidden overflow-x-hidden justify-between fixed  h-fit px-5 py-2">
                             <div className="flex items-center gap-5 w-1/2">
                                 <div onClick={() => navigate(`/user/profile`)} className="cursor-pointer">
                                     {profile?.image ? <img src={`${profileImg}/profiles/${profile?.image}`} className='w-14 h-14 rounded-full object-cover' alt="" /> :
@@ -125,7 +134,7 @@ export default function UserLayout({ children }) {
                                 <div className="font-semibold text-base">Hi, Welcome back</div>
                             </div>
                             <div className="w-1/2 ">
-                                <div className="text-2xl hidden  md:flex items-center justify-end gap-5">
+                                <div className="text-2xl hidden  lg:flex items-center justify-end gap-5">
                                     <Link to={`/user/tickets?status=active`}>
                                         <TbHeadset />
                                     </Link>
@@ -137,20 +146,20 @@ export default function UserLayout({ children }) {
                                         <BsBell />
                                     </Link>
                                 </div>
-                                <div className="md:hidden w-fit ml-auto">
+                                <div className="lg:hidden w-fit ml-auto">
                                     <HiOutlineBars3BottomRight onClick={() => setOpenSide(prev => !prev)} className='text-4xl cursor-pointer font-bold' />
                                 </div>
                             </div>
 
 
-                        </div>
+                        </div>}
                         {openside &&
-                            <div ref={refdiv} className="w-[55%] rounded-s-lg z-50 top-0  right-0 bg-gradient-to-tr from-primary to-purple-700 h-screen fixed">
-                                <UserSidebar setOpenSide={setOpenSide} />
+                            <div ref={refdiv} className="w-[55%] md:w-[35%] rounded-s-lg z-50 top-0  right-0 bg-gradient-to-tr from-primary to-purple-700 h-screen fixed">
+                                <UserSidebar smallView={true} setOpenSide={setOpenSide} />
 
                             </div>
                         }
-                        <div className="h-fit mt-10 overflow-x-hidden pb-10 pt-5">
+                        <div className={`h-fit ${chats ? '':'mt-10'} overflow-x-hidden pb-10 pt-5`}>
                             {children}
                         </div>
 

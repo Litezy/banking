@@ -47,15 +47,15 @@ const Contacts = () => {
         </ModalLayout>
       }
 
-      <div className="w-2/4 mx-auto">
+      <div className="lg:w-2/4 w-3/4 mx-auto">
         <Summary color='bg-yellow-600 text-white' title={'Total Contact Feedbacks'} data={data.length} />
       </div>
 
-      <div className="my-5 text-3xl font-bold text-center ">Feedback Details</div>
+      <div className="my-5 text-xl font-bold text-center ">Feedback Details</div>
 
       <div className="relative overflow-x-auto rounded-md mt-10">
         <table className="w-full text-sm text-left rtl:text-right">
-          <thead className=" bg-yellow-600 text-xl text-white">
+          <thead className=" bg-yellow-600 g:text-xl text-base text-white">
             <tr>
               <th scope="col" className="px-3 py-3">
                 ID
@@ -97,7 +97,7 @@ const Contacts = () => {
                   {item.message.slice(0, 50)}
                 </td>
                 <td className="px-3 py-3">
-                  <button onMouseOver={() => selectAny(item)} onClick={() => setOpen(true)} className='px-3 py-2 w-fit rounded-md bg-yellow-600 text-white'>expand msg</button>
+                  <button onMouseOver={() => selectAny(item)} onClick={() => setOpen(true)} className='px-3 py-2 w-fit rounded-md bg-yellow-600 truncate text-white'>expand msg</button>
                 </td>
 
               </tr>

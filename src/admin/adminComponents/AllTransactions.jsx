@@ -83,7 +83,7 @@ const AllTransactions = () => {
   const maxDate = moment('31-12-2024', 'DD-MM-YYYY').toDate();
   return (
     <div className='w-11/12 mx-auto'>
-      <div className="w-2/4 mx-auto">
+      <div className="lg:w-2/4 w-3/4 mx-auto">
         <Summary color='bg-primary text-white' title={'Total Transactions'} data={transhistory.length} />
       </div>
 
@@ -127,7 +127,7 @@ const AllTransactions = () => {
 
       <div className="relative overflow-x-auto rounded-md mt-10">
         <table className="w-full text-sm text-left rtl:text-right">
-          <thead className=" bg-primary text-xl text-white">
+          <thead className=" bg-primary lg:text-xl text-base text-white">
             <tr>
               <th scope="col" className="px-3 py-3">
                 ID
@@ -161,7 +161,7 @@ const AllTransactions = () => {
                 <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
                   {item.id}
                 </th>
-                <td className="px-3 py-3">
+                <td className="px-3 py-3 capitalize">
                   {item.usertransactions?.firstname}
                 </td>
                 <td className="px-3 py-3">
@@ -173,10 +173,10 @@ const AllTransactions = () => {
                 <td className="px-3 py-3">
                   {item.status}
                 </td>
-                <td className="px-3 py-3">
+                <td className="px-3 py-3 truncate">
                   {item.type}
                 </td>
-                <td className="px-3 py-3">
+                <td className="px-3 truncate py-3">
                   {item.date}
                 </td>
                 <td className="px-3 py-3">

@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux'
 import { Apis, GetApi, PostApi } from 'services/Api'
 import { CookieName, errorMessage, successMessage } from 'utils/functions'
 import { dispatchProfile } from 'app/reducer'
+import { BsChevronDoubleDown } from 'react-icons/bs'
 
 const AdminLinks = [
     { path: 'overview', url: '/admin/overview' },
@@ -19,14 +20,25 @@ const AdminLinks = [
     { path: 'contacts', url: '/admin/contacts' },
     { path: 'single-page', url: '/admin/verifications/:id' },
 ]
+const TicketFolder = [
+    {
+        name: 'tickets',
+        icon: <BsChevronDoubleDown />
+    }
+]
+const ticketsArr = [
+    { path: 'active tickets', url: 'active_chats' },
+    { path: 'closed tickets', url: 'closed_chats' },
+]
 
 const AdminLinks2 = [
     { path: 'logout', url: '' },
 ]
 
-export default function AdminSideBar() {
+export default function AdminSideBar({setSide}) {
     const location = useLocation()
     const dispatch = useDispatch()
+    const [viewall, setViewAll] = useState(false)
     const [logout, setLogout] = useState(false)
     const [profile, setProfile] = useState({})
 
@@ -73,9 +85,10 @@ export default function AdminSideBar() {
     let firstChar = profile?.firstname?.substring(0, 1)
     let lastChar = profile?.lastname?.substring(0, 1)
 
+    // console.log(location.pathname)
     return (
         <div>
-            <div className="flex flex-col px-3 h-[80dvh]">
+            <div className="flex flex-col px-3 h-[90dvh] ">
                 {logout &&
                     <ModalLayout setModal={setLogout} clas={`w-[35%] mx-auto`}>
                         <div className="bg-white py-5 px-3 h-fit flex-col text-black rounded-md flex items-center justify-center">
@@ -89,22 +102,50 @@ export default function AdminSideBar() {
                 }
                 <div className="bg-slate-100/20 rounded-lg p-3 flex flex-col items-center justify-center gap-3 mt-6 mb-5">
                     <div className="py-3 px-3.5 rounded-full text-white bg-gradient-to-tr from-primary to-purple-700 w-fit h-fit uppercase">{firstChar}{lastChar}</div>
-                    <div className="text-white text-center text-sm">{profile?.firstname} {profile?.lastname}</div>
+                    <div className="text-white text-center capitalize text-sm">{profile?.firstname} {profile?.lastname}</div>
 
                 </div>
-                {AdminLinks.map((item, index) => (
-                    <Link to={item.url} key={index} className={`text-sm last:hidden  rounded-lg hover:scale-105 text-slate-200 hover:bg-slate-100/20 ${item.url === location.pathname ? 'bg-slate-100/40' : ''} px-3 mb-1 py-2 font-extralight capitalize transition-all`}>
-                        {item.path}
-                    </Link>
-                ))}
+
+                <div className={` ${viewall ? ' transition-all delay-500 h-[25rem]' : 'h-[30rem]'} scroll w-full overflow-y-auto overflow-x-hidden flex items-start  flex-col`}>
+                    {AdminLinks.slice(0, AdminLinks.length - 1).map((item, index) => (
+                        <Link to={item.url} key={index} className={`text-sm last:hidden w-full  rounded-lg hover:scale-105 hover:text-orange-200 text-slate-200 hover:translate-x-2 font-semibold ${item.url === location.pathname ? 'bg-slate-100/40' : ''} px-3 mb-1 py-2 font-extralight capitalize transition-all`}>
+                            {item.path}
+                        </Link>
+                    ))}
+
+
+                    {TicketFolder.map((item, index) => (
+                        <div key={index}
+                            onClick={() => setViewAll(prev => !prev)}
+                            className={`text-sm mb-2 cursor-pointer  w-full hover:scale-10 flex items-center justify-between text-slate-200 hover:text-orange-200 ${viewall ? 'bg-slate-100/40 rounded-md' : ''} px-3  py-2 font-semibold capitalize transition-all`}>
+                            <div className="">{item.name}</div>
+                            <div className="animate-bounce"> {item.icon} </div>
+
+                        </div>
+                    ))}
+                    {viewall && ticketsArr.map((item, index) => (
+                        <Link
+                            to={`/admin/tickets/${item.url}`}
+                            // onClick={closeUp}
+                            key={index}
+                            className={`text-sm rounded-lg  first:mt-2 w-full hover:scale-10 text-slate-200 hover:text-orange-200 ${(`/admin/tickets/${item.url}`) === location.pathname ? 'bg-slate-100/40' : ''} hover:translate-x-2 px-3 mb-2 last:mb-0 py-2 font-semibold capitalize transition-all`}>
+                            {item.path}
+                        </Link>
+                    ))}
+
+                    {AdminLinks2.map((item, index) => (
+                        <Link to={item.url} onClick={() => logOut(item)} key={index} className="text-sm rounded-lg hover:scale-105 text-slate-200 hover:translate-x-2 w-full font-semibold hover:text-orange-200 px-3 py-2  capitalize transition-all">
+                            {item.path}
+                        </Link>
+                    ))}
+
+
+
+                </div>
+
+
             </div>
-            <div className="flex flex-col px-3 mt-2">
-                {AdminLinks2.map((item, index) => (
-                    <Link to={item.url} onClick={() => logOut(item)} key={index} className="text-sm rounded-lg hover:scale-105 text-slate-200 hover:bg-slate-100/20 px-3 py-2 font-extralight capitalize transition-all">
-                        {item.path}
-                    </Link>
-                ))}
-            </div>
+
         </div>
     )
 }

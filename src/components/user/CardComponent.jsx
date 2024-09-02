@@ -111,7 +111,7 @@ const CardComponent = () => {
         <div className='w-full'>
             {add &&
                 <>
-                    <ModalLayout setModal={setAdd} clas={`lg:w-[60%] w-full mx-auto`}>
+                    <ModalLayout setModal={setAdd} clas={`lg:w-[60%] w-11/12 mx-auto`}>
                         <div ref={refdiv} className={`w-full relative mx-auto rounded-lg bg-white  py-6 px-5 `}>
                             {loading &&
                                 <div className=" absolute h-full items-center flex justify-center z-50 w-full">

@@ -23,15 +23,15 @@ email = support@greenfordbank.com
 export let URL;
 export let profileImg;
 
-// if(window.location.origin.includes('localhost')) {
-//     URL = 'http://localhost:5002'
-//     profileImg = 'http://localhost:5002'
-// }
+if(window.location.origin.includes('localhost')) {
+    URL = 'http://localhost:5002'
+    profileImg = 'http://localhost:5002'
+}
 
-// if(window.location.origin.includes('greenfordbank.com')) {
+ if(window.location.origin.includes('greenfordbank.com')) {
     URL = 'https://api.greenfordbank.com'
     profileImg = 'https://api.greenfordbank.com'
-// }
+ }
 
 
 
@@ -81,7 +81,16 @@ export const auth_urls = {
     withdraw_savings : user + '/withdraw-savings',
     save_history: user + '/save-history',
     fetch_p2p:user +'/find-p2p',
-    internal_transfer: user + '/credit-p2p'
+    internal_transfer: user + '/credit-p2p',
+    submit_kyc: user + '/submit-kyc',
+    
+    //tickets
+    create_ticket: user + '/create-ticket',
+    one_ticket_msgs: user + '/one-ticket-msgs',
+    active_tickets: user + '/active-tickets',
+    closed_tickets: user + '/closed-tickets',
+    send_msg: user + '/send-msg',
+    find_admin: user + '/find-admin'
 }
 
 export const admin_urls = {
@@ -112,7 +121,15 @@ export const admin_urls = {
     all_transfers: admin + '/all-transfers',
     confirm_trans: admin + '/confirm-trans',
     otp: admin + '/otp',
-    single_trans: admin + '/single-trans'
+    single_trans: admin + '/single-trans',
+
+    //tickets
+    all_active_tickets: admin + '/all-active-tickets',
+    all_closed_tickets: admin + '/all-closed-tickets',
+    admin_response: admin + '/admin-response',
+    get_one_msg: admin + '/one-ticket-msgs',
+    all_kycs: admin + '/all-kycs',
+    close_ticket: admin +'/close-ticket'
 }
 export const Apis = {
     non_auth: non_auth_urls,

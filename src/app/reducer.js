@@ -5,7 +5,8 @@ const initialState = {
     notifications: [], 
     forms:{},
     currency:null,
-    usersavings:[]
+    usersavings:[],
+    messages:[]
   };
   
   export const globalStates = createSlice({
@@ -31,10 +32,13 @@ const initialState = {
       dispatchUserSavings: (state, action) => {
         state.usersavings = action.payload;
       },
+      dispatchMessages: (state, action) => {
+        state.messages = action.payload;
+      },
     },
   });
 
 
-export const { dispatchForms,dispatchNotifications,dispatchProfile,dispatchCurrency,dispatchUserSavings } = globalStates.actions
+export const { dispatchForms,dispatchNotifications,dispatchProfile,dispatchCurrency,dispatchUserSavings,dispatchMessages } = globalStates.actions
 
 export default globalStates.reducer

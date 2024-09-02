@@ -9,12 +9,17 @@ import { Apis, PostApi } from 'services/Api';
 import ModalLayout from 'utils/ModalLayout';
 import { CookieName, errorMessage, successMessage } from 'utils/functions';
 import Cookies from 'js-cookie';
+import { BsChevronDoubleDown } from 'react-icons/bs';
+import { useSelector } from 'react-redux';
 
-export default function AdminLayout({ children }) {
+export default function AdminLayout({ children,show=true }) {
+    const profile = useSelector((state) => state.profile.profile)
     const [loading, setLoading] = useState(true)
     const [side, setSide] = useState(false)
     const [logout, setLogout] = useState(false)
+    const [viewall, setViewAll] = useState(false)
     const sideDiv = useRef(null)
+    const [status, setStatus] = useState('')
     const navigate = useNavigate()
 
     const Icon = side ? GrClose : FaBars
@@ -64,12 +69,38 @@ export default function AdminLayout({ children }) {
         { path: 'banks', url: '/admin/banks' },
         { path: 'newsletters', url: '/admin/newsletters' },
         { path: 'contacts', url: '/admin/contacts' },
+        { path: 'single-page', url: '/admin/verifications/:id' },
+
+    ]
+
+    const TicketFolder = [
+        {
+            name: 'tickets',
+            icon: <BsChevronDoubleDown />
+        }
+    ]
+    const ticketsArr = [
+        { path: 'active tickets', url: 'active_chats' },
+        { path: 'closed tickets', url: 'closed_chats' },
     ]
 
     const SideLinks2 = [
         { path: 'logout', url: '' },
     ]
+    const closeUp = () => {
+        setSide(false)  
+    }
     const location = useLocation()
+
+    let firstChar = profile?.firstname?.substring(0, 1)
+    let lastChar = profile?.lastname?.substring(0, 1)
+   
+    if(location.pathname.includes(`active_chats/chats`)){
+        show=false
+    }
+
+
+
     if (loading) return (
         <div>
             <div className="flex items-center h-screen">
@@ -100,34 +131,61 @@ export default function AdminLayout({ children }) {
     )
     return (
         <div>
-            <div className="flex items-center h-screen overflow-hidden bg-white">
+            <div className={`flex items-center h-screen overflow-hidden bg-white`}>
 
-                <div className="h-screen hidden lg:block w-[20%] bg-gradient-to-tr from-primary to-purple-700 text-white">
+                <div className="h-screen hidden lg:block w-[25%] bg-gradient-to-tr from-primary to-purple-700 text-white">
                     <AdminSideBar />
                 </div>
-                <div className="p-4 lg:hidden bg-primary text-white fixed z-50 w-full top-0 flex items-center justify-between">
+                {show === true &&<div className="p-4 lg:hidden bg-gradient-to-tr from-primary to-purple-700 text-white fixed z-50 w-full top-0 flex items-center justify-between">
                     <div onClick={() => setSide(prev => !prev)} className="">
                         <Icon className='text-3xl cursor-pointer' />
                     </div>
                     <div className="">Admin</div>
-                </div>
+                </div>}
                 {side &&
-                    <div ref={sideDiv} className="w-[40%] z-50 absolute py-5  gap-2 flex items-start justify-between  flex-col text-white bg-primary  h-full">
-                        <div className="flex flex-col items-start p-2 mt-16 w-full">
-                            {SideLinks.map((item, index) => (
-                                <Link to={item.url} onClick={() => setSide(false)} key={index} className={`w-full text-sm rounded-lg hover:scale-105 text-slate-200 hover:bg-slate-100/20 ${item.url === location.pathname ? 'bg-slate-100/40' : ''} px-3 mb-3 py-2 font-extralight capitalize transition-all`}>
-                                    {item.path}
-                                </Link>
-                            ))}
-                        </div>
-                        <div className="flex flex-col px-3 mt-2">
-                            {SideLinks2.map((item, index) => (
-                                <Link to={item.url} onClick={() => logOut(item)} key={index} className="text-sm rounded-lg hover:scale-105 text-slate-200 hover:bg-slate-100/20 px-3 py-2 font-extralight capitalize transition-all">
-                                    {item.path}
-                                </Link>
-                            ))}
-                        </div>
+                    <div className="w-[55%] md:w-[35%] rounded-s-lg z-50 top-0   left-0 bg-gradient-to-tr from-primary to-purple-700 h-screen fixed p-4">
+                        <div className="bg-slate-100/20 rounded-lg p-3 flex flex-col items-center justify-center gap-3 mb-5">
+                            <div className="py-3 px-3.5 rounded-full text-white bg-gradient-to-tr from-primary to-purple-700 w-fit h-fit uppercase">{firstChar}{lastChar}</div>
+                            <div className="text-white text-center capitalize text-sm">{profile?.firstname} {profile?.lastname}</div>
 
+                        </div>
+                        <div ref={sideDiv} className={` ${viewall ? ' transition-all delay-500 h-[20rem]' : 'h-[23rem]'} scroll w-full overflow-y-auto overflow-x-hidden flex items-start  flex-col`}>
+                            {SideLinks.slice(0, SideLinks.length - 1).map((item, index) => (
+                                <Link to={item.url}
+                                    key={index}
+                                    onClick={closeUp}
+                                    className={`text-sm rounded-lg w-full hover:scale-10 text-slate-200 hover:text-orange-200 ${item.url === location.pathname ? 'bg-slate-100/40' : ''} hover:translate-x-2 px-3 mb-3 py-2 font-semibold capitalize transition-all`}>
+                                    {item.path}
+                                </Link>
+                            ))}
+
+                            {TicketFolder.map((item, index) => (
+                                <div key={index}
+                                    onClick={() => setViewAll(prev => !prev)}
+                                    className={`text-sm mb-2 cursor-pointer  w-full hover:scale-10 flex items-center justify-between text-slate-200 hover:text-orange-200 ${viewall ? 'bg-slate-100/40 rounded-md' : ''} px-3  py-2 font-semibold capitalize transition-all`}>
+                                    <div className="">{item.name}</div>
+                                    <div className="animate-bounce"> {item.icon} </div>
+                                </div>
+                            ))}
+                            {viewall && ticketsArr.map((item, index) => (
+                                <Link
+                                    to={`/admin/tickets/${item.url}`}
+                                    onClick={closeUp}
+                                    key={index}
+                                    className={`text-sm rounded-lg  first:mt-2 w-full hover:scale-10 text-slate-200 hover:text-orange-200 ${(`/admin/tickets/${item.url}`) === location.pathname ? 'bg-slate-100/40' : ''} hover:translate-x-2 px-3 mb-3 py-2 font-semibold capitalize transition-all`}>
+                                    {item.path}
+                                </Link>
+                            ))}
+                            {SideLinks2.map((item, index) => (
+                                <Link to={item.url} onClick={() => logOut(item)} key={index}
+                                    className={`text-sm rounded-lg flex items-center justify-between  hover:scale-10 text-slate-200 ${item.url === location.pathname ? 'bg-slate-100/40' : ''} hover:text-orange-200 px-3 mb-2 py-2 hover:translate-x-2 font-semibold capitalize transition-all`}>
+                                    <div className="">{item.path}</div>
+                                    <div className=""></div>
+                                </Link>
+                            ))}
+
+
+                        </div>
                     </div>
                 }
                 {logout &&
@@ -141,8 +199,8 @@ export default function AdminLayout({ children }) {
                         </div>
                     </ModalLayout>
                 }
-                <div className="bg-slate-50 h-screen w-full mt-[8rem] lg:mt-0 overflow-y-auto overflow-x-hidden">
-                    <div className="h-[97dvh] overflow-y-auto overflow-x-hidden pb-20">
+                <div className={`${show === true && 'slate-50 mt-[8rem] overflow-y-auto'} h-screen w-full mt-0 lg:mt-0  overflow-x-hidden`}>
+                    <div className={`${show === true && 'overflow-y-auto pb-20'} h-[97dvh]  overflow-x-hidden `}>
                         {children}
                     </div>
                 </div>

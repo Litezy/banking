@@ -27,15 +27,15 @@ const Newsletters = () => {
     },[])
   return (
     <div className='w-11/12 mx-auto'>
-         <div className="w-2/4 mx-auto">
+         <div className="lg:w-2/4 w-3/4 mx-auto">
         <Summary color='bg-slate-600 text-white' title={'Total Newsletter Subscribers'} data={data.length} />
       </div>
 
-      <div className="my-5 text-3xl font-bold text-center ">Susbscribers Details</div>
+      <div className="my-5 text-xl font-bold text-center ">Susbscribers Details</div>
 
       <div className="relative overflow-x-auto rounded-md mt-10">
         <table className="w-full text-sm text-left rtl:text-right">
-          <thead className=" bg-slate-600 text-xl text-white">
+          <thead className=" bg-slate-600 lg:text-xl text-base text-white">
             <tr>
               <th scope="col" className="px-3 py-3">
                 ID

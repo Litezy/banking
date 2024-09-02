@@ -193,7 +193,7 @@ export default function Dashboard() {
                                 <IoEyeOutline />
                             </div>
                             <div className="flex mt-5 items-start">
-                                <div className="text-slate-200 lg:text-4xl text-2xl self-end font-bold">{currency}</div>
+                                <div className="text-slate-200 lg:text-4xl text-4xl self-end font-bold">{currency}</div>
                                 <div className="font-bold text-4xl text-white">{profile?.balance?.toLocaleString()}</div>
                             </div>
                         </div>
@@ -267,9 +267,9 @@ export default function Dashboard() {
                                 </div>
                             </div>
                         )) :
-                            <div className="flex items-center gap-10 w-full">
+                            <div className="flex items-center b flex-col lg:flex-row gap-10 w-full">
                                 {new Array(2).fill(0).map((ite, i) => (
-                                    <div className="flex gap-2 justify-center items-center w-full">
+                                    <div className="flex gap-2  justify-center items-center w-full" key={i}>
                                         <Progress
                                             type="dashboard"
                                             steps={5}

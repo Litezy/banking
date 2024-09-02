@@ -337,6 +337,16 @@ input[type=number] {
 .scroll{
   margin-right: .5rem;
 }
-.file-input {
-  display: none;
+.incoming{
+  border-radius: 64px 96px 32px 128px
 }
+.incoming2{
+  border-radius: 32px;
+}
+.outgoing {
+  border-radius: 10px 100px / 120px 100px;
+}
+.outgoing2 {
+  border-radius: 32px;
+}
+

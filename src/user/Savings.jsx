@@ -595,10 +595,10 @@ const Savings = () => {
                 }
             </div>
 
-            <div className="my-10">
+            <div className="my-10 relative">
                 <CardComponent setAdd={setAdd} add={add} />
             </div>
-            <div className="my-10">
+            <div className="my-10 relative">
                 <UserBanks setAdd={setAdd} add={add} />
             </div>
 

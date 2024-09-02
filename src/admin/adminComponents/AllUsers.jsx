@@ -42,11 +42,11 @@ const AllUsers = () => {
     <div className='w-11/12 mx-auto mt-3'>
       {active === 0 && (
         <>
-          <div className="w-2/4 mx-auto">
+          <div className="lg:w-2/4 w-3/4 mx-auto">
             <Summary color='bg-black text-white' title={'Total Users'} data={users.length} />
           </div>
           <div className="mt-10 font-semibold text-xl">Explore More User Details</div>
-          <div className="my-10 w-11/12 mx-auto flex flex-col items-start gap-5">
+          <div className="my-10 lg:w-11/12 mx-auto flex flex-col items-start gap-5">
             {userHeaders.map((item, i) => (
               <div className="h-20 w-full flex items-center p-5 rounded-md justify-between bg-white" key={i}>
                 <div className="text-base font-semibold">{item.title}</div>
