@@ -4,12 +4,12 @@ import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 
-const ClosedComponent = ({}) => {
+const ClosedComponent = ({closed}) => {
 
     const profile = useSelector((state) => state.profile.profile)
     const [loading, setLoading] = useState(false)
-    const closed = useSelector((state)=> state.profile.closed_chats)
-    console.log(closed)
+    // const closed = useSelector((state)=> state.profile.closed_chats)
+    // console.log(closed)
     const TableHeaders = [
         "Ticket ID",
         "Ticket Subject",

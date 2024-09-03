@@ -32,7 +32,6 @@ const Messages = () => {
           const res = await GetApi(`${Apis.auth.find_admin}/${id}`)
           if (res.status !== 200) return errorMessage(res.msg)
           setAdmin(res.data)
-        // console.log(res.data)
           MoveToBottom()
         } catch (error) {
           errorMessage(`error in fetch support admin`, error.message)

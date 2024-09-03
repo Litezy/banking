@@ -102,12 +102,8 @@ const TicketsStatus = () => {
     }, [])
 
     useEffect(() => {
-        if (status === 'active') {
-            fetchActiveTickets()
-        }
-        if (status === 'closed') {
-            fetchClosedTickets()
-        }
+        fetchActiveTickets()
+        fetchClosedTickets()
     }, [])
 
     const submitTicket = async (e) => {
