@@ -134,7 +134,7 @@ export default function AdminLayout({ children,show=true }) {
         <div>
             <div className={`flex items-center h-screen overflow-hidden `}>
 
-                <div className="h-screen hidden lg:block w-[25%] bg-gradient-to-tr from-primary to-purple-700 text-white">
+                <div className="h-screen hidden lg:block lg:w-[30%] w-[35%] bg-gradient-to-tr from-primary to-purple-700 text-white">
                     <AdminSideBar />
                 </div>
                 {show === true &&<div className="p-4 lg:hidden bg-gradient-to-tr from-primary to-purple-700 text-white fixed z-50 w-full top-0 flex items-center justify-between">

@@ -8,6 +8,8 @@ import { AiOutlineScan } from 'react-icons/ai';
 import { BsBell } from 'react-icons/bs';
 import { FaUser } from 'react-icons/fa6';
 import { IoCopy } from 'react-icons/io5';
+import { FaUserAlt } from "react-icons/fa";
+import { FaHistory } from "react-icons/fa";
 import { TbHeadset } from 'react-icons/tb';
 import { useDispatch } from 'react-redux';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -135,11 +137,11 @@ export default function UserLayout({ children }) {
                             </div>
                             <div className="w-1/2 ">
                                 <div className="text-2xl hidden  lg:flex items-center justify-end gap-5">
-                                    <Link to={`/user/tickets?status=active`}>
-                                        <TbHeadset />
+                                    <Link to={`/user/profile`}>
+                                        <FaUserAlt />
                                     </Link>
-                                    <Link to="">
-                                        <AiOutlineScan />
+                                    <Link to="/user/transactions">
+                                        <FaHistory />
                                     </Link>
                                     <Link to="/user/notifications" className='relative'>
                                         {notice && notice.length > 0 && <div className="w-3 h-3 bg-red-600 rounded-full border-2 border-white absolute top-0 right-0 shadow-lg"></div>}
