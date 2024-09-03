@@ -12,22 +12,10 @@ import { useDispatch } from 'react-redux'
 import { dispatchActiveChats, dispatchClosedChats } from 'app/reducer'
 
 const TicketsStatus = () => {
-    const [searchParams] = useSearchParams()
-    const status = searchParams.get('status')
-    const [pendings, setPendings] = useState([])
     const [loading, setLoading] = useState(false)
-    const [actives, setActives] = useState([])
     const navigate = useNavigate()
-    const [closed, setClosed] = useState([])
-    const [screen, setScreen] = useState(null)
     const dispatch = useDispatch()
     const [fileName, setFileName] = useState('');
-    useEffect(() => {
-        if (status === 'create') return setScreen(1)
-        if (status === 'active') return setScreen(2)
-        if (status === 'closed') return setScreen(3)
-    }, [status])
-
     const [forms, setForms] = useState({
         subject: '',
         message: ''
@@ -80,31 +68,7 @@ const TicketsStatus = () => {
         imageRef.current.click()
     }
 
-    const fetchActiveTickets = useCallback(async () => {
-        try {
-            const res = await GetApi(Apis.auth.active_tickets)
-            if (res.status !== 200) return errorMessage(res.msg)
-            setActives(res.data)
-            dispatch(dispatchActiveChats(res.data))
-        } catch (error) {
-            errorMessage(`something went wrong in fetching active tickets data`, error.message)
-        }
-    }, [])
-    const fetchClosedTickets = useCallback(async () => {
-        try {
-            const res = await GetApi(Apis.auth.closed_tickets)
-            if (res.status !== 200) return errorMessage(res.msg)
-            setClosed(res.data)
-            dispatch(dispatchClosedChats(res.data))
-        } catch (error) {
-            errorMessage(`something went wrong in fetching closed tickets data`, error.message)
-        }
-    }, [])
-
-    useEffect(() => {
-        fetchActiveTickets()
-        fetchClosedTickets()
-    }, [])
+  
 
     const submitTicket = async (e) => {
         e.preventDefault()
@@ -116,28 +80,34 @@ const TicketsStatus = () => {
         if (fileName) {
             formdata.append('image', ticketimg.image)
         }
-        setLoading(false)
+        setLoading(true)
         try {
             const res = await PostApi(Apis.auth.create_ticket, formdata)
             if (res.status !== 200) return errorMessage(res.msg)
+            await new Promise((resolve, reject) => setTimeout(resolve, 2000))
             successMessage(res.msg)
-            navigate(`/user/tickets?status=pending`)
-        } catch (error) {
-            errorMessage(`something went wrong in submitting ticket`, error.message)
-        } finally {
             setLoading(false)
+            setForms({...forms, subject:'',message:''})
+            setTicketimg({
+                img: '',
+                image: ''
+            })
+            navigate(`/user/tickets/status/active`)
+        } catch (error) {
+            setLoading(false)
+            errorMessage(`something went wrong in submitting ticket`, error.message)
         }
 
     }
 
     return (
-        <div className='w-full mt-5'>
-            {screen === 1 && <div className='w-11/12 flex items-center justify-center mx-auto h-fit py-5'>
+        <div className='w-full mt-5 '>
+          <div className='w-11/12 flex items-center justify-center relative mx-auto h-fit py-5'>
                 <div className="md:w-[80%] mx-auto  bg-white h-fit py-5 rounded-md shadow-md ">
 
                     {loading &&
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2">
-                            <Loader />
+                        <div className="fixed top-0 z-50 backdrop-blur-sm w-full h-full rounded-md left-1/2 -translate-x-1/2">
+                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 w-fit p-5 rounded-md bg-white"><Loader /></div>
                         </div>
                     }
 
@@ -178,34 +148,18 @@ const TicketsStatus = () => {
                             bg={`bg-gradient-to-tr mt-5 from-primary to-purple-700 text-white h-12`} />
                     </form>
                 </div>
-            </div>}
+            </div>
 
 
 
 
 
 
-            {screen === 2 && <div className='w-11/12 flex items-center justify-center mx-auto h-fit py-5'>
-
-                <div className=" w-full bg-white rounded-md shadow-md h-fit p-5">
-                    <div className=" text-xl font-bold">Active Tickets</div>
-                    <hr className='my-2' />
-                    <div className="my-5">You have {actives && actives.length > 0 ? `${actives.length} active ticket(s), see them below.` : '0 active tickets.'}</div>
-                    <ActiveComponent actives={actives} />
-                </div>
-            </div>}
+          
 
 
 
-            {screen === 3 && <div className='w-11/12 flex items-center justify-center mx-auto h-fit py-5'>
-
-                <div className=" w-full bg-white rounded-md shadow-md h-fit p-5">
-                    <div className=" text-xl font-bold">Closed Tickets</div>
-                    <hr className='my-2' />
-                    <div className="my-5">You have {closed && closed.length > 0 ? `${closed.length} closed ticket(s), see them below.` : '0 closed tickets.'}</div>
-                    <ClosedComponent closed={closed} />
-                </div>
-            </div>}
+          
 
 
         </div>

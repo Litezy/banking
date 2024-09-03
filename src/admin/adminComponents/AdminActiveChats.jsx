@@ -143,7 +143,7 @@ const AdminActiveChats = () => {
                                         </td>}
                                         <td className="px-3  py-3 truncate">
                                             <button onMouseOver={() => setSelected(item.id)} onClick={() => setConfirm(true)}
-                                                className='trucate w-fit px-3 py-1 rounded-md bg-red-600 text-white'>delete ticket</button>
+                                                className='trucate w-fit px-3 py-1 rounded-md bg-red-600 text-white'>close ticket</button>
                                         </td>
                                     </tr>
                                 )) :

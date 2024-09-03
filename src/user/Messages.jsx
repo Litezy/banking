@@ -1,7 +1,7 @@
 import { dispatchMessages } from 'app/reducer'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useLocation, useParams } from 'react-router-dom'
 import { Apis, GetApi, profileImg } from 'services/Api'
 import ChatForm from 'utils/ChatForm'
 import ChatMessages from 'utils/ChatMessages'
@@ -14,9 +14,11 @@ const Messages = () => {
   const [messages, setMessages] = useState([])
   const [loading, setLoading] = useState(false)
   const [tickets, setTickets] = useState({})
+  const [active, setActive] = useState(false)
   const [admin, setAdmin] = useState({})
   const { id } = useParams()
   const dispatch = useDispatch()
+  const location = useLocation()
 
   const fecthticketMessages = useCallback(async () => {
     setLoading(true)
@@ -51,13 +53,20 @@ const Messages = () => {
     // console.log(admin)
   }, [])
 
+  useEffect(()=>{
+    if(location.pathname.includes(`active_chats`)) {
+      setActive(true)
+    } else{
+      setActive(false)
+    }
+  },[])
 
   return (
-    <div className='-mt-5 w-full mx-auto'>
+    <div className={`${active ? '-mt-5':'mt-5'} w-full mx-auto`}>
       <div className="mb-5 w-full mx-auto md:w-11/12 bg-white h-[90dvh] relative flex-col rounded-lg flex items-start justify-between">
 
         {loading &&
-          <div className="absolute top-0  backdrop-blur-sm w-full h-full rounded-md left-1/2 -translate-x-1/2">
+          <div className="fixed top-0  backdrop-blur-sm w-full h-full rounded-md left-1/2 -translate-x-1/2">
             <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-fit p-5 rounded-md bg-white"><Loader /></div>
           </div>
         }
@@ -65,7 +74,7 @@ const Messages = () => {
         <div className="h-[10dvh] w-full border-b flex items-center px-5 justify-between">
           <Link
             className='w-fit px-4 py-1 rounded-md bg-gradient-to-tr from-primary to bg-purple-700 text-white'
-            to={tickets?.status === 'active' ? `/user/tickets?status=active` : `/user/tickets?status=closed`}
+            to={active ? `/user/tickets/status/active` : `/user/tickets/status/closed`}
           >back</Link>
 
           <div className="flex items-center gap-3">

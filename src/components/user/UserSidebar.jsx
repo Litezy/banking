@@ -175,7 +175,7 @@ export default function UserSidebar({ setOpenSide, smallView = false }) {
                     ))}
                     {viewall && ticketsArr.map((item, index) => (
                         <Link
-                            to={`/user/tickets?status=${encodeURIComponent(item.url)}`}
+                            to={`/user/tickets/status/${item.url}`}
                             onClick={closeUp}
                             key={index}
                             className={`text-sm rounded-lg  first:mt-2 w-full hover:scale-10 text-slate-200 hover:text-orange-200 ${item.url === status ? 'bg-slate-100/40' : ''} hover:translate-x-2 px-3 mb-3 py-2 font-semibold capitalize transition-all`}>

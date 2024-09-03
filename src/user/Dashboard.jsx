@@ -197,7 +197,7 @@ export default function Dashboard() {
                                 <div className="font-bold text-4xl text-white">{profile?.balance?.toLocaleString()}</div>
                             </div>
                         </div>
-                        <div onClick={() => navigate(`/user/profile`)} className="flex flex-col lg:flex-row items-start  gap-5 text-white my-3">
+                        <div  className="flex flex-col lg:flex-row items-start  gap-5 text-white my-3">
                             <div className="flex items-start flex-col">
                                 <div className=" text-sm">Account Name:</div>
                                 <div className="font-semibold capitalize text-lg">{profile?.firstname} {profile?.lastname}</div>

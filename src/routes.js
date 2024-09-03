@@ -40,6 +40,8 @@ import UserKYCS from "admin/adminComponents/UserKYCS";
 import PendingKycs from "admin/utils/PendingKycs";
 import ApprovedKycs from "admin/utils/ApprovedKycs";
 import KycModal from "admin/utils/KycModal";
+import ActiveComponent from "utils/ActiveComponent";
+import ClosedComponent from "utils/ClosedComponent";
 
 
 
@@ -76,7 +78,9 @@ export const UserRoutes = [
     { path: 'loans', component: Loans },
     { path: 'tickets/status/active_chats/:id', component: Messages },
     { path: 'tickets/status/closed_chats/:id', component: Messages },
-    { path: 'tickets', component: TicketsStatus },
+    { path: 'tickets/status/create', component: TicketsStatus },
+    { path: 'tickets/status/active', component: ActiveComponent },
+    { path: 'tickets/status/closed', component: ClosedComponent },
     { path: 'kyc', component: UserKYC}
 
 

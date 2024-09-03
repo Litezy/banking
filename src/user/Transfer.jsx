@@ -25,9 +25,9 @@ const Transfer = () => {
   const profile = useSelector((state) => state.profile.profile)
   const currency = useSelector((state) => state.profile.currency)
   const [screen, setScreen] = useState(1)
-  const [receipt,setReceipt] = useState({})
+  const [receipt, setReceipt] = useState({})
   const dispatch = useDispatch()
-  const [transactionId,setTransactionId] = useState('')
+  const [transactionId, setTransactionId] = useState('')
 
   // const fetchTransfers = useCallback(async () => {
   //   try {
@@ -88,7 +88,15 @@ const Transfer = () => {
   }
 
 
-
+  const fetchUserProfile = useCallback(async () => {
+    try {
+      const response = await GetApi(Apis.auth.profile);
+      if (response.status !== 200) return;
+      dispatch(dispatchProfile(response.data));
+    } catch (error) {
+      errorMessage(`error in fetching profilee`, error.message);
+    }
+  }, [dispatch]);
 
   const SubmitTransfer = async () => {
     if (!forms.acc_name) return errorMessage('Account name is required')
@@ -121,12 +129,12 @@ const Transfer = () => {
           amount: '',
           memo: ''
         })
-        dispatch(dispatchProfile(res.data))
         setReceipt(res.data)
         setTransactionId(res.transId)
-       setTimeout(()=>{
-        setScreen(3)
-       },2000)
+        setTimeout(() => {
+          setScreen(3)
+          fetchUserProfile()
+        }, 2000)
       } else {
         errorMessage(res.msg)
       }
@@ -214,8 +222,8 @@ const Transfer = () => {
           <div className="my-10 lg:w-[60%] mx-auto w-full relative flex items-start shadow-lg flex-col py-5 px-3 lg:px-10 bg-white rounded-lg h-fit">
 
             {loading &&
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2">
-                <Loader />
+              <div className="fixed top-0 z-50 backdrop-blur-sm w-full h-full rounded-md left-1/2 -translate-x-1/2">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 w-fit p-5 rounded-md bg-white"><Loader /></div>
               </div>
             }
 
@@ -242,15 +250,15 @@ const Transfer = () => {
                   <div className="-500 text-base">Amount({currency}):</div>
                   <div className="capitalize text-base font-bold">{forms.amount}</div>
                 </div>
-                
+
                 <div className="flex items-center gap-3  w-full">
                   <div className="-500 text-base">Memo:</div>
                   <div className="capitalize text-base font-bold">{forms.memo}</div>
                 </div>
-               
+
 
                 <div className="w-full my-5">
-                  <ButtonComponent disabled={loading ? true :false} type='button' onclick={SubmitTransfer} title={'Send'} bg={`bg-gradient-to-tr from-primary to-purple-700 text-white h-14`} />
+                  <ButtonComponent disabled={loading ? true : false} type='button' onclick={SubmitTransfer} title={'Send'} bg={`bg-gradient-to-tr from-primary to-purple-700 text-white h-14`} />
                 </div>
               </div>
             </div>
@@ -260,60 +268,60 @@ const Transfer = () => {
 
 
         {screen === 3 &&
-         <div className="my-10 lg:w-[60%] mx-auto w-full relative flex items-center shadow-lg flex-col py-5 px-3 lg:px-10 bg-white rounded-lg h-fit">
-          <div className="my-3 text-center text-2xl font-light">Transfer Successful</div>
-           <Lottie
-            animationData={animationLogo}
-            className="w-auto h-72"
-            loop={true}
-          />
+          <div className="my-10 lg:w-[60%] mx-auto w-full relative flex items-center shadow-lg flex-col py-5 px-3 lg:px-10 bg-white rounded-lg h-fit">
+            <div className="my-3 text-center text-2xl font-light">Transfer Successful</div>
+            <Lottie
+              animationData={animationLogo}
+              className="w-auto h-72"
+              loop={true}
+            />
 
-          <div className="my-5">
-            <div className="text-center font-semibold text-xl">Transfer Receipt</div>
-            <div className="mt-3 flex items-start gap-2 flex-col w-full ">
-              <div className="flex w-full items-center flex-col  justify-between gap-5 ">
-                <div className="flex items-center gap-3  w-full">
-                  <div className="-500 text-base">Receiver's Account Name:</div>
-                  <div className="capitalize text-base font-bold">{receipt.acc_name}</div>
-                </div>
-                <div className="flex items-center gap-3  w-full">
-                  <div className="-500 text-base">Receiver's Bank Name:</div>
-                  <div className="capitalize text-base font-bold">{receipt.bank_name}</div>
-                </div>
-                <div className="flex items-center gap-3  w-full">
-                  <div className="-500 text-base">Receiver's Account Name:</div>
-                  <div className="capitalize text-base font-bold">{receipt.acc_name}</div>
-                </div>
-                <div className="flex items-center gap-3  w-full">
-                  <div className="-500 text-base">Swift Code:</div>
-                  <div className="capitalize text-base font-bold">{receipt.swift}</div>
-                </div>
-                <div className="flex items-center gap-3  w-full">
-                  <div className="-500 text-base">Amount:</div>
-                  <div className="capitalize text-base font-bold">{currency}{receipt.amount}</div>
-                </div>
-                <div className="flex items-center gap-3  w-full">
-                  <div className="-500 text-base">Memo:</div>
-                  <div className="capitalize text-base font-bold">{receipt.memo}</div>
-                </div>
-                <div className="flex items-center gap-3  w-full">
-                  <div className="-500 text-base">Transaction Status:</div>
-                  <div className="capitalize text-base font-bold">{receipt.status}</div>
-                </div>
-                <div className="flex items-center gap-3  w-full">
-                  <div className="-500 text-base">Transaction ID:</div>
-                  <div className="capitalize text-base font-bold">{transactionId}</div>
-                </div>
-                <div className="flex items-center gap-3  w-full">
-                  <div className="-500 text-base">Transaction Date:</div>
-                  <div className="capitalize text-base font-bold">{moment(receipt.createdAt).format(`DD-MM-YYYY hh:mm A`)}</div>
-                </div>
+            <div className="my-5">
+              <div className="text-center font-semibold text-xl">Transfer Receipt</div>
+              <div className="mt-3 flex items-start gap-2 flex-col w-full ">
+                <div className="flex w-full items-center flex-col  justify-between gap-5 ">
+                  <div className="flex items-center gap-3  w-full">
+                    <div className="-500 text-base">Receiver's Account Name:</div>
+                    <div className="capitalize text-base font-bold">{receipt.acc_name}</div>
+                  </div>
+                  <div className="flex items-center gap-3  w-full">
+                    <div className="-500 text-base">Receiver's Bank Name:</div>
+                    <div className="capitalize text-base font-bold">{receipt.bank_name}</div>
+                  </div>
+                  <div className="flex items-center gap-3  w-full">
+                    <div className="-500 text-base">Receiver's Account Name:</div>
+                    <div className="capitalize text-base font-bold">{receipt.acc_name}</div>
+                  </div>
+                  <div className="flex items-center gap-3  w-full">
+                    <div className="-500 text-base">Swift Code:</div>
+                    <div className="capitalize text-base font-bold">{receipt.swift}</div>
+                  </div>
+                  <div className="flex items-center gap-3  w-full">
+                    <div className="-500 text-base">Amount:</div>
+                    <div className="capitalize text-base font-bold">{currency}{receipt.amount}</div>
+                  </div>
+                  <div className="flex items-center gap-3  w-full">
+                    <div className="-500 text-base">Memo:</div>
+                    <div className="capitalize text-base font-bold">{receipt.memo}</div>
+                  </div>
+                  <div className="flex items-center gap-3  w-full">
+                    <div className="-500 text-base">Transaction Status:</div>
+                    <div className="capitalize text-base font-bold">{receipt.status}</div>
+                  </div>
+                  <div className="flex items-center gap-3  w-full">
+                    <div className="-500 text-base">Transaction ID:</div>
+                    <div className="capitalize text-base font-bold">{transactionId}</div>
+                  </div>
+                  <div className="flex items-center gap-3  w-full">
+                    <div className="-500 text-base">Transaction Date:</div>
+                    <div className="capitalize text-base font-bold">{moment(receipt.createdAt).format(`DD-MM-YYYY hh:mm A`)}</div>
+                  </div>
 
+                </div>
               </div>
             </div>
+            <button onClick={() => setScreen(1)} className='mt-6 text-center bg-gradient-to-tr from-primary to-purple-700 text-white w-10/12 mx-auto px-3 py-2 rounded-md'>Close</button>
           </div>
-          <button onClick={()=>setScreen(1)} className='mt-6 text-center bg-gradient-to-tr from-primary to-purple-700 text-white w-10/12 mx-auto px-3 py-2 rounded-md'>Close</button>
-         </div>
         }
 
       </div>
