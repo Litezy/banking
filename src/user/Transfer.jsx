@@ -156,18 +156,18 @@ const Transfer = () => {
   return (
     <div className='w-full mt-5'>
       <div className="w-11/12 mx-auto ">
-        <div className="bg-gradient-to-tr flex items-start flex-col  from-primary to-purple-700 px-6 py-10 rounded-lg">
+        <div className="bg-gradient-to-tr flex items-center justify-center flex-col  from-primary to-purple-700 px-6 py-10 rounded-lg">
           <div className="flex items-center gap-2 text-white text-sm font-extralight">
             <GoShieldLock className='text-green-400 text-lg' />
-            <div className="text-2xl">Available Balance</div>
+            <div className="lg:text-2xl text-base">Available Balance</div>
             <Icon onClick={() => setBal(prev => !prev)} className='text-2xl cursor-pointer' />
           </div>
-          <div className="flex mt-5 self-center ">
+          <div className="flex mt-3 self-center ">
             <div className="text-slate-200 text-2xl self-end font-bold">{currency}</div>
             <div className="font-bold text-2xl text-white">{bal ? profile?.balance?.toLocaleString() :
               <>
                 <div className="flex">
-                  {new Array(3).fill(0).map((item, i) => (
+                  {new Array(5).fill(0).map((item, i) => (
                     <div className="flex items-center text-sm ml-2" key={i}><FaAsterisk /></div>
                   ))}
                 </div>

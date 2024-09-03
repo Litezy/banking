@@ -19,7 +19,7 @@ const ActiveComponent = () => {
         "Ticket Subject",
         "Ticket Status",
         "Date Created",
-        "messages"
+        "Messages"
     ]
 
     const fetchActiveTickets = useCallback(async () => {

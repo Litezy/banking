@@ -8,7 +8,7 @@ import { FaArrowLeft, FaArrowRight, FaMinus, FaUser } from 'react-icons/fa6'
 import { Progress } from 'antd'
 import { Currency, errorMessage, successMessage } from 'utils/functions'
 import { GoShieldLock } from 'react-icons/go'
-import { IoCopy, IoEyeOutline } from 'react-icons/io5'
+import { IoCopy, IoEyeOutline, IoEyeOffOutline } from 'react-icons/io5'
 import img1 from 'assets/img1.png'
 import img2 from 'assets/img2.png'
 import img3 from 'assets/img3.png'
@@ -20,6 +20,7 @@ import axios from 'axios'
 import ModalLayout from 'utils/ModalLayout'
 import VerifyEmailAccount from 'forms/VerifyEmail'
 import CardComponent from 'components/user/CardComponent'
+import { FaAsterisk } from 'react-icons/fa'
 
 const TransData = [
     {
@@ -73,6 +74,8 @@ export default function Dashboard() {
     const [records, setRecords] = useState([])
     const [selectSaving, setSelectSaving] = useState({})
     const [viewMore, setViewMore] = useState(false)
+    const [show, setShow] = useState(true)
+    const Icon = show ? IoEyeOutline : IoEyeOffOutline
 
 
     const fetchUserProfile = useCallback(async () => {
@@ -141,7 +144,8 @@ export default function Dashboard() {
             errorMessage('Failed to copy!');
         }
     };
-
+    const transferin = 'Internal Transfer In'
+    const transferout = 'Internal Transfer Out'
     return (
         <div>
             <div className="w-11/12 mx-auto">
@@ -185,19 +189,27 @@ export default function Dashboard() {
 
 
                 <div className="flex flex-col lg:flex-row w-full gap-10 mt-8 items-center">
-                    <div className="bg-gradient-to-tr lg:w-[65%] w-full from-primary to-purple-700 px-6 lg:py-10 py-5 lg:justify-between justify-evenly rounded-lg flex items-center">
-                        <div className="">
-                            <div className="flex items-center gap-2 text-white text-sm font-extralight">
-                                <GoShieldLock className='text-green-400 text-base' />
-                                <div className="">Available Balance</div>
-                                <IoEyeOutline />
+                    <div className="bg-gradient-to-tr lg:w-[65%] px-3 w-full from-primary to-purple-700  lg:py-10 py-5  rounded-lg flex items-center justify-center flex-col">
+                        <div className="flex items-center flex-col gap-2 ">
+                            <div className="flex items-center gap-3 text-white text-sm font-extralight">
+                                <GoShieldLock className='text-green-400 text-xl ' />
+                                <div className="text-base">Available Balance</div>
+                                <Icon onClick={() => setShow(prev => !prev)} className='text-xl cursor-pointer' />
                             </div>
-                            <div className="flex mt-5 items-start">
-                                <div className="text-slate-200 lg:text-4xl text-4xl self-end font-bold">{currency}</div>
-                                <div className="font-bold text-4xl text-white">{profile?.balance?.toLocaleString()}</div>
+                            <div className="flex  items-start">
+                                <div className="text-slate-200 lg:text-4xl text-3xl  font-bold">{currency}</div>
+                                <div className="font-bold lg:text-4xl text-3xl text-white">{show ? profile?.balance?.toLocaleString() :
+                                    <>
+                                        <div className="flex">
+                                            {new Array(5).fill(0).map((item, i) => (
+                                                <div className="flex items-center text-sm ml-2" key={i}><FaAsterisk /></div>
+                                            ))}
+                                        </div>
+                                    </>
+                                }</div>
                             </div>
                         </div>
-                        <div  className="flex flex-col lg:flex-row items-start  gap-5 text-white my-3">
+                        <div className="flex items-center  gap-5 text-white my-3">
                             <div className="flex items-start flex-col">
                                 <div className=" text-sm">Account Name:</div>
                                 <div className="font-semibold capitalize text-lg">{profile?.firstname} {profile?.lastname}</div>
@@ -313,7 +325,7 @@ export default function Dashboard() {
                 <div className="mt-5 w-full bg-white shadow-md ">
                     {records.length > 0 ? records.slice(0, 4).map((item, index) => (
                         <div className="rounded-xl mb-2 border-b last:border-none" key={index}>
-                            <div className="p-3"> {item.title}</div>
+                            {/* <div className="p-3 border"> {item.title}</div> */}
                             <div className="flex flex-col">
                                 <div className="p-3 border-b last:border-none cursor-pointer">
                                     <div className="grid grid-cols-2">
@@ -323,14 +335,21 @@ export default function Dashboard() {
                                                     <IoIosMailUnread className='text-xl' />
                                                 </div>
                                             </div>
-                                            <div className="text-sm font-bold">{item.type}</div>
-                                            <FaMinus className='text-slate-500' />
-                                            <div className={`text-xs font-semibold ${item.status === 'success' ? 'text-green-600' : item.status === 'pending' ? 'text-yellow-500' : 'text-red-600'}`}>{item.status}</div>
+                                            <div className="text-sm lg:text-base font-bold">{item.type}</div>
+                                            <FaMinus className='text-slate-500 hidden lg:block' />
+                                            <div className={`text-xs font-semibold hidden lg:block ${item.status === 'success' ? 'text-green-600' : item.status === 'pending' ? 'text-yellow-500' : 'text-red-600'}`}>{item.status}</div>
                                         </div>
                                         <div className="">
                                             <div className={`text-base font-bold text-right 
-                        ${item.type === deposit && item.status === 'pending' ? 'text-yellow-500' : item.type === deposit && item.status === 'success' ? 'text-green-600' : "text-red-600"}`}>
-                                                {item.type === deposit && item.status === 'success' ? '+' : item.type === deposit && item.status === 'pending' ? '' : '-'}{currency}{parseInt(item.amount).toLocaleString()}</div>
+                        ${item.type === deposit && item.status === 'pending' ? 'text-yellow-500' :
+                                                    item.type === deposit && item.status === 'success' ? 'text-green-600' :
+                                                        item.type === transferin && item.status === 'success' ? 'text-green-600' : "text-red-600"
+                                                }`}>
+
+                                                {item.type === deposit && item.status === 'success' ? '+' :
+                                                    item.type === deposit && item.status === 'pending' ? '' :
+                                                        item.type === transferin && item.status === 'success' ? '+' : '-'}{currency}{parseInt(item.amount).toLocaleString()}
+                                            </div>
                                             <div className="text-xs text-right">{item.date}</div>
                                         </div>
                                     </div>
@@ -339,7 +358,7 @@ export default function Dashboard() {
                             </div>
                         </div>
                     )) :
-                        <div className="text-xl p-5">No Transactions</div>
+                        <div className="text-xl p-5">No Transactions data</div>
 
                     }
                 </div>

@@ -53,7 +53,7 @@ const SaveHistory = () => {
                     <tbody>
                         {savings.length > 0 ? savings.map((item, i) => (
                             <tr className="bg-white border-b " key={i}>
-                                <td className="px-3 py-3">
+                                <td className="px-3 py-3 truncate">
                                     {item.name}
                                 </td>
                                 <td className="px-3 py-3">

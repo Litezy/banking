@@ -178,7 +178,7 @@ const CardComponent = () => {
             {Array.isArray(allcards) && allcards.length > 0 ? <div className=" mx-auto grid grid-cols-1 md:grid-cols-2 gap-5">
                 {allcards.map((item, i) => {
                     return (
-                        <div key={i} className={`h-[17rem] w-full bg-gradient-to-tr from-primary to-purple-700  rounded-lg py-6 px-5`}>
+                        <div key={i} className={`lg:h-[17rem] h-fit w-full bg-gradient-to-tr from-primary to-purple-700  rounded-lg py-4 px-5`}>
                             <div className="flex flex-col text-white h-full justify-between">
                                 <div className="flex items-center  justify-between">
                                     <div className={`w-fit  ${item.type === 'visa' ? 'h-16' : 'h-fit'} bg-white rounded-md flex items-center justify-center`}>
@@ -186,24 +186,24 @@ const CardComponent = () => {
                                     </div>
                                     <img src={chip} className={`w-fit h-14 `} alt="" />
                                 </div>
-                                <div className="mb-2 flex  items-center justify-between  text-white text-base">
+                                <div className="mb-2 mt-2 flex  items-center justify-between  text-white text-base">
                                     <div className="flex-col flex items-start">
                                         <div className="text-sm">Card No.</div>
-                                        <div className="text-xl font-semibold">{item.card_no}</div>
+                                        <div className="text-lg font-semibold">{item.card_no}</div>
                                     </div>
                                     <div className="flex items-center mr-3 flex-col">
                                         <div className="">cvv</div>
-                                        <div className="text-xl font-bold">{item.cvv}</div>
+                                        <div className="text-lg font-bold">{item.cvv}</div>
                                     </div>
                                 </div>
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-start flex-col">
                                         <div className="text-sm">Card holder</div>
-                                        <div className="font-bold text-2xl">{item.name}</div>
+                                        <div className="font-bold text-xl">{item.name}</div>
                                     </div>
                                     <div className="flex items-center flex-col">
                                         <div className="text-sm">exp</div>
-                                        <div className="font-bold text-xl">{item.exp}</div>
+                                        <div className="font-bold text-lg">{item.exp}</div>
                                     </div>
                                 </div>
                             </div>
@@ -234,7 +234,7 @@ const CardComponent = () => {
                 </div>
 
             }
-            <div className="font-bold mt-1">* max of two credit/debit cards</div>
+            <div className="font-light mt-1">* max of two credit/debit cards</div>
         </div>
     )
 }

@@ -78,7 +78,7 @@ export default function UserLayout({ children }) {
     }, [])
 
     useEffect(()=>{
-        if(location.pathname.includes(`active_chats/`)){
+        if(location.pathname.includes(`active_chats/` || `closed_chats/`)){
             setChats(true)
         }else{
             setChats(false)
@@ -115,25 +115,25 @@ export default function UserLayout({ children }) {
     )
     return (
         <div>
-            {profile?.verified === 'false' &&
+            {profile?.verified === 'false' && profile?.role === 'user' &&
                 <VerifyEmailAccount />
             }
-            {profile?.verified === 'true' &&
+            {profile?.verified === 'true' && profile?.role === 'user' &&
                 <div className="flex items-center h-screen  bg-white">
                     <div className="h-screen hidden lg:block lg:w-[20%] bg-gradient-to-tr from-primary to-purple-700 text-white">
                         <UserSidebar setOpenSide={setOpenSide} />
                     </div>
                     <div className="bg-slate-50 lg:w-[80%] h-screen overflow-y-auto w-full relative">
                        {!chats && <div className="lg:w-[78.8%]  w-[100%] bg-white flex z-50 items-center overflow-y-hidden overflow-x-hidden justify-between fixed  h-fit px-5 py-2">
-                            <div className="flex items-center gap-5 w-1/2">
+                            <div className="flex items-center gap-2 w-2/3">
                                 <div onClick={() => navigate(`/user/profile`)} className="cursor-pointer">
-                                    {profile?.image ? <img src={`${profileImg}/profiles/${profile?.image}`} className='w-14 h-14 rounded-full object-cover' alt="" /> :
+                                    {profile?.image ? <img src={`${profileImg}/profiles/${profile?.image}`} className='lg:w-14 lg:h-14 w-12 h-12 rounded-full object-cover' alt="" /> :
                                         <div className="flex items-center justify-center rounded-full h-14 w-14 border">
                                             <FaUser className='text-3xl' />
                                         </div>
                                     }
                                 </div>
-                                <div className="font-semibold text-base">Hi, Welcome back</div>
+                                <div className="font-semibold text-base ">Hi, Welcome back</div>
                             </div>
                             <div className="w-1/2 ">
                                 <div className="text-2xl hidden  lg:flex items-center justify-end gap-5">
@@ -156,12 +156,12 @@ export default function UserLayout({ children }) {
 
                         </div>}
                         {openside &&
-                            <div ref={refdiv} className="w-[55%] md:w-[35%] rounded-s-lg z-50 top-0  right-0 bg-gradient-to-tr from-primary to-purple-700 h-screen fixed">
+                            <div ref={refdiv} className="w-[65%] md:w-[35%] rounded-s-lg z-50 top-0  right-0 bg-gradient-to-tr from-primary to-purple-700 h-screen fixed">
                                 <UserSidebar smallView={true} setOpenSide={setOpenSide} />
 
                             </div>
                         }
-                        <div className={`h-fit ${chats ? '':'mt-10'} overflow-x-hidden pb-10 pt-5`}>
+                        <div className={`h-fit ${chats ? '':'mt-10 pb-10 pt-5'} overflow-x-hidden `}>
                             {children}
                         </div>
 

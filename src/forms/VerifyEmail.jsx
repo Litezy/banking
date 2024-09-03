@@ -14,7 +14,7 @@ export default function VerifyEmailAccount() {
     const [loading, setLoading] = useState(false)
     const [searchParams] = useSearchParams()
     const [btnDisabled, setBtnDisabled] = useState(false)
-    const [countdown,setCoundown] = useState(0)
+    const [countdown, setCoundown] = useState(0)
     const [pins, setPins] = React.useState(['', '', '', '']);
     const email = searchParams.get('email')
     const profile = useSelector((state) => state.profile.profile)
@@ -46,7 +46,7 @@ export default function VerifyEmailAccount() {
     const navigate = useNavigate()
     const HandleSubmission = async e => {
         e.preventDefault()
-        if(profile?.email){
+        if (profile?.email) {
             const form = {
                 code: pins.join('')
             }
@@ -69,7 +69,7 @@ export default function VerifyEmailAccount() {
             } finally {
                 setLoading(false)
             }
-        }else{
+        } else {
             const form = {
                 code: pins.join('')
             }
@@ -122,15 +122,15 @@ export default function VerifyEmailAccount() {
 
     return (
         <div className='bg-gradient-to-tr from-primary to-purple-700 h-screen overflow-x-hidden flex items-center justify-center'>
-            <div className="w-[97%] mx-auto max-w-xl bg-white relative backdrop-blur-sm p-5 rounded-lg mt-10 lg:mt-20">
+            <div className="w-[90%] mx-auto max-w-xl bg-white relative backdrop-blur-sm p-5 rounded-lg mt-10 lg:mt-20">
 
                 {loading &&
                     <div className="absolute top-1/3 left-1/2 -translate-x-1/2 ">
                         <Loader />
                     </div>
                 }
-                <div className="text-3xl lg:text-4xl font-bold text-primary">Verify your Email Address</div>
-                <div className="">Lets assist you recover your account</div>
+                <div className="text-2xl lg:text-4xl font-bold text-primary">Verify your email address</div>
+                <div className="">Lets help you verify your account</div>
                 <form onSubmit={HandleSubmission} className='mt-5'>
                     <div className="mb-10">
                         <OtpForm
@@ -139,20 +139,18 @@ export default function VerifyEmailAccount() {
                             setup={setup}
                         />
                     </div>
-                    <Formbutton label="Verify my email" loading={false} />
-                    <div className="flex items-center justify-between mt-5">
-                        <div className="">
-                            <div className="text-zinc-500 mt-5 text-center">Don't have an account? <Link to="/signup" className='text-blue-600'>Create Account</Link> </div>
-                            <div className="text-zinc-500 mt-3 text-center"><Link to="/" className='text-blue-600'>Go back home</Link> </div>
-                        </div>
-                        <div className="flex items-center flex-col gap-2">
-                            <div className="">didn't receive email?</div>
-                            {btnDisabled && <div className="w-fit text-xs font-bold  flex items-center gap-1 flex-col">
-                                <div className="">request again in:</div>
-                                <div className="text-primary">{countdown} s</div>
-                            </div>}
-                            <button onClick={RequestOtp} disabled={btnDisabled ? true :false} className='w-fit px-3 py-1 rounded-full bg-primary text-white'>resend</button>
-                        </div>
+                    <Formbutton label="Verify " loading={false} />
+
+                    <div className="flex items-center flex-col mt-5 gap-2">
+                        <div className="">didn't receive code?</div>
+                        {btnDisabled && <div className="w-fit text-xs font-bold  flex items-center gap-1 flex-col">
+                            <div className="">request again in:</div>
+                            <div className="text-primary">{countdown} s</div>
+                        </div>}
+                        <button onClick={RequestOtp} disabled={btnDisabled ? true : false} className='w-fit px-3 py-1 rounded-sm bg-primary text-white'>resend code</button>
+                    </div>
+                    <div className="mt-5">
+                        <div className="text-zinc-500 mt-3 text-center"><Link to="/" className='text-blue-600'>Go back home</Link> </div>
                     </div>
                 </form>
             </div>

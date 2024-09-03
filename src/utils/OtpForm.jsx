@@ -42,7 +42,7 @@ export default function OtpForm ({pins, setPins}) {
 
   return (
     <div>
-      <div className='flex items-center justify-center w-full gap-2 mt-10'>
+      <div className='flex items-center justify-center w-full gap-2 mt-5'>
         {pins.map((part, index) => (
           <input
             key={index}
@@ -52,7 +52,7 @@ export default function OtpForm ({pins, setPins}) {
             autoCapitalize="false"
             autoComplete="false"
             // autoFocus="true"
-            className='border border-zinc-400 h-20 w-20 text-center text-5xl bg-transparent rounded-lg'
+            className='border border-zinc-400 lg:h-20 h-10 w-10 p-3 lg:w-20 text-center text-2xl lg:text-5xl bg-transparent rounded-lg'
             defaultValue={part}
             onChange={(e) => handleInputChange(index, e.target.value)}
             onKeyDown={(e) => handleInputBackspace(index, e)}

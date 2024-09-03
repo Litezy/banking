@@ -7,6 +7,7 @@ import { Apis, GetApi } from 'services/Api'
 import { errorMessage, successMessage } from 'utils/functions'
 import { FaCopy } from "react-icons/fa";
 import Loader from 'utils/Loader'
+import { useNavigate } from 'react-router-dom'
 
 const Transactions = () => {
 
@@ -30,6 +31,7 @@ const Transactions = () => {
   }, [])
 
   const currency = useSelector((state) => state.profile.currency)
+  const navigate = useNavigate()
   useEffect(() => {
     fetchTransHistory()
   }, [])
@@ -56,15 +58,13 @@ const Transactions = () => {
   const deposit = 'Deposit'
   const transferin = 'Internal Transfer In'
   const transferout = 'Internal Transfer Out'
-  const changeCurrentPage = (id, e) => {
-    e.preventDefault();
-    setCurrentPage(id);
-  }
+ 
 
 
   const selectOne = (item) => {
     setSelectedItem(item)
   }
+  // console.log(firstIndex)
 
   const copyToClip = async () => {
     try {
@@ -77,8 +77,8 @@ const Transactions = () => {
 
   return (
     <div className='w-full'>
-      <div className="w-11/12 relative mx-auto mt-10">
-        <div className="text-2xl font-semibold">Transaction History</div>
+      <div className="w-11/12 relative mx-auto mt-3 lg:mt-5">
+        <div className="text-xl lg:text-2xl font-semibold p-3 rounded-md bg-white text-center w-full">Transaction History</div>
 
         {loading &&
           <div className="absolute  top-1/4 left-1/2  -translate-x-1/2 ">
@@ -88,7 +88,7 @@ const Transactions = () => {
         }
 
         <div className="mt-5 w-full">
-          {records.map((item, index) => (
+          {records.length > 0 ? records.map((item, index) => (
             <div className="rounded-xl mb-5 bg-white shadow-md border" key={index}>
               <div className="p-3"> {item.title}</div>
               <div className="flex flex-col">
@@ -101,19 +101,20 @@ const Transactions = () => {
                         </div>
                       </div>
                       <div className="text-sm font-bold">{item.type}</div>
-                      <FaMinus className='text-slate-500' />
-                      <div className={`text-xs font-semibold ${item.status === 'success' ? 'text-green-600' : item.status === 'pending' ? 'text-yellow-500' : 'text-red-600'}`}>{item.status}</div>
+                      <FaMinus className='text-slate-500 hidden lg:block' />
+                      <div className={`text-xs font-semibold hidden lg:block ${item.status === 'success' ? 'text-green-600' : item.status === 'pending' ? 'text-yellow-500' : 'text-red-600'}`}>{item.status}</div>
                     </div>
                     <div className="">
                       <div className={`text-base font-bold text-right 
-                        ${item.type === deposit && item.status === 'pending' ? 'text-yellow-500' : 
-                        item.type === deposit && item.status === 'success' ? 'text-green-600' : 
-                        item.type === transferin && item.status === 'success'? 'text-green-600':"text-red-600"
+                        ${item.type === deposit && item.status === 'pending' ? 'text-yellow-500' :
+                          item.type === deposit && item.status === 'success' ? 'text-green-600' :
+                            item.type === transferin && item.status === 'success' ? 'text-green-600' : "text-red-600"
                         }`}>
 
-                        {item.type === deposit && item.status === 'success' ? '+' : 
-                        item.type === deposit && item.status === 'pending' ? '' : 
-                        item.type === transferin && item.status === 'success' ? '+': '-'}{currency}{parseInt(item.amount).toLocaleString()}</div>
+                        {item.type === deposit && item.status === 'success' ? '+' :
+                          item.type === deposit && item.status === 'pending' ? '' :
+                            item.type === transferin && item.status === 'success' ? '+' : '-'}{currency}{parseInt(item.amount).toLocaleString()}
+                      </div>
                       <div className="text-xs text-right">{item.date}</div>
                     </div>
                   </div>
@@ -128,14 +129,21 @@ const Transactions = () => {
                 </div>
               </div>
             </div>
-          ))}
+          )) :
+          <>
+          <div className="text-center w-full">No Transactions data found</div>
+          <div onClick={()=> navigate('/user')} className="text-center w-full mt-5 underline text-primary text-base cursor-pointer">Go back to dashboard</div>
+          </>
+        
+        
+        }
         </div>
 
-        <div className="w-fit   ml-auto mr-5 mt-10 mb-5">
+        {records.length > 0 &&<div className="w-fit   ml-auto mr-5 mt-10 mb-5">
           <div className="w-full flex flex-col items-center ">
 
             <span className="text-sm text-gray-700 ">
-              Showing <span className="font-semibold text-black">{records?.length === 0 ? '0' : firstIndex}</span> to
+              Showing <span className="font-semibold text-black">{(records.length > 0 && firstIndex === 0) ? '1': firstIndex}</span> to
               <span className="font-semibold text-black"> {lastIndex > transdata?.length ? transdata?.length : lastIndex}</span> of
               <span className="font-semibold text-black"> {transdata?.length} </span>
               Transactions
@@ -153,7 +161,7 @@ const Transactions = () => {
             </div>
 
           </div>
-        </div>
+        </div>}
       </div>
     </div>
   )

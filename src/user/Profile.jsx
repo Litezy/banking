@@ -145,10 +145,7 @@ const Profile = () => {
             <div className="w-11/12 mx-auto">
                 <div className="text-2xl font-semibold">Personal Account</div>
 
-                <div className="my-10 flex items-start flex-col md:flex-row gap-10  ">
-
-
-
+                <div className="my-3 flex items-start flex-col md:flex-row gap-10  ">
                     <div className="md:w-1/2 w-full px-3 py-5 h-fit bg-white shadow-lg rounded-md relative">
                         {loading &&
                             <div className="absolute top-1/4 z-50 left-1/2 -translate-x-1/2  ">

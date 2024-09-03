@@ -18,19 +18,19 @@ const Settings = () => {
     <div className='mt-10'>
       <div className={`w-11/12 mx-auto rounded-lg  `}>
        <div className="px-4 md:px-0 w-11/12 mx-auto md:grid grid-cols-2 gap-5 ">
-          <div  className="bg-white h-48 mt-5 md:mt-0 w-full mx-auto rounded-md border shadow-lg cursor-pointer ">
+          <div  className="bg-white h-fit py-5 mt-5 md:mt-0 w-full mx-auto rounded-md border shadow-lg cursor-pointer ">
             <div onClick={()=> setPassScreen(true)} className="w-11/12 mx-auto flex items-center justify-center gap-5  h-full">
               <RiLockPasswordFill className='text-5xl text-primary'/>
               <h1 className='text-sm md:text-lg'>Change Account Password</h1>
             </div>
           </div>
-          <div  className="bg-white h-48 mt-5 md:mt-0 w-full mx-auto rounded-md border shadow-lg cursor-pointer ">
+          <div  className="bg-white h-fit p-5 mt-5 md:mt-0 w-full mx-auto rounded-md border shadow-lg cursor-pointer ">
             <div onClick={()=> setEmailScreen(true)} className="w-11/12 mx-auto flex items-center justify-center gap-5  h-full">
               <IoMailUnreadSharp  className='text-5xl text-primary'/>
               <h1 className='text-sm md:text-lg'>Change Account Email</h1>
             </div>
           </div>
-          <div  className="bg-white h-48 mt-5 md:mt-0 w-full mx-auto rounded-md border shadow-lg cursor-pointer ">
+          <div  className="bg-white h-fit py-5 mt-5 md:mt-0 w-full mx-auto rounded-md border shadow-lg cursor-pointer ">
             <div  onClick={()=>navigate(`/user/kyc`)} className="w-11/12 mx-auto flex items-center justify-center gap-5  h-full">
               <FaIdCard  className='text-5xl text-primary'/>
               <h1 className='text-sm md:text-lg'>Submit KYC</h1>
