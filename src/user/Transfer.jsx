@@ -98,13 +98,18 @@ const Transfer = () => {
     }
   }, [dispatch]);
 
-  const SubmitTransfer = async () => {
+
+  const NextScreen = () => {
     if (!forms.acc_name) return errorMessage('Account name is required')
     if (!forms.acc_no) return errorMessage('Account number is required')
     if (!forms.bank_name) return errorMessage('Bank name is required')
     if (!forms.amount) return errorMessage('Amount is required')
     if (!forms.memo) return errorMessage('Memo is required')
     if (profile?.balance < forms.amount) return errorMessage('Insufficient balance')
+    setScreen(2)
+  }
+
+  const SubmitTransfer = async () => {
     const formdata = {
       acc_no: forms.acc_no,
       acc_name: forms.acc_name,
@@ -213,7 +218,7 @@ const Transfer = () => {
                 </textarea>
               </div>
 
-              <button onClick={() => setScreen(2)} className="md:w-fit w-full cursor-pointer text-center md:ml-auto md:px-10 py-2 bg-gradient-to-tr from-primary to-purple-700 rounded-md text-white">Next</button>
+              <button onClick={NextScreen} className="md:w-fit w-full cursor-pointer text-center md:ml-auto md:px-10 py-2 bg-gradient-to-tr from-primary to-purple-700 rounded-md text-white">Next</button>
             </div>
           </div>}
 

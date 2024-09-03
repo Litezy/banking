@@ -5,6 +5,7 @@ import {IoHomeOutline} from'react-icons/io5'
 import {GrCreditCard, GrHistory} from'react-icons/gr'
 import {BsGearWideConnected} from'react-icons/bs'
 import { MdOutlineSavings } from "react-icons/md";
+import Translator from 'general/Translator'
 
 
 const Lists = [
@@ -29,6 +30,7 @@ export default function Userfooter() {
                 </Link>
             ))}
         </div>
+        <Translator/>
     </div>
   )
 }
