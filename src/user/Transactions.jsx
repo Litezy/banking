@@ -178,3 +178,21 @@ const Transactions = () => {
 }
 
 export default Transactions
+
+
+//  Toppings function
+// const [pizza,setPizza] = useState({ base:'', toppings:[]})
+// to update base = 
+// const addBase = (base) =>{
+//   setPizza(prev => ({...prev, base}))
+// }
+
+// const addToppings = (topping) =>{
+//   let newToppings;
+//   if(!pizza.toppings.includes(topping)){
+//     newToppings = [...pizza.toppings, topping]
+//   } else{
+//     newToppings = pizza.toppings.filter(item => item !== topping)
+//   }
+//   setPizza({...pizza,toppings:newToppings})
+// }

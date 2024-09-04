@@ -13,6 +13,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Apis, GetApi, profileImg } from 'services/Api';
 import { errorMessage } from 'utils/functions';
 import { HiOutlineBars3BottomRight } from "react-icons/hi2";
+import {motion} from 'framer-motion'
 
 
 export default function UserLayout({ children }) {
@@ -152,10 +153,14 @@ export default function UserLayout({ children }) {
 
                         </div>}
                         {openside &&
-                            <div ref={refdiv} className="w-[65%] md:w-[35%] rounded-s-lg z-50 top-0  right-0 bg-gradient-to-tr from-primary to-purple-700 h-screen fixed">
+                            <motion.div 
+                            initial={{x:'100vw'}}
+                            animate={{x:0}}
+                            transition={{type:'tween',delay:0.2,duration:0.5}}
+                            ref={refdiv} className="w-[65%] md:w-[35%] rounded-s-lg z-50 top-0  right-0 bg-gradient-to-tr from-primary to-purple-700 h-screen fixed">
                                 <UserSidebar smallView={true} setOpenSide={setOpenSide} />
 
-                            </div>
+                            </motion.div>
                         }
                         <div className={`h-fit ${chats ? '':'mt-10 pb-10 pt-5'} overflow-x-hidden `}>
                             {children}
