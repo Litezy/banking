@@ -1,6 +1,5 @@
 import { Box, LinearProgress } from '@mui/material';
 import AdminSideBar from 'admin/adminComponents/AdminSideBar';
-import Userfooter from 'components/user/Userfooter';
 import { FaBars } from "react-icons/fa6";
 import React, { useEffect, useRef, useState } from 'react'
 import { GrClose } from "react-icons/gr";
@@ -19,7 +18,6 @@ export default function AdminLayout({ children,show=true }) {
     const [logout, setLogout] = useState(false)
     const [viewall, setViewAll] = useState(false)
     const sideDiv = useRef(null)
-    const [status, setStatus] = useState('')
     const navigate = useNavigate()
 
     const Icon = side ? GrClose : FaBars

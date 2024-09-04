@@ -1,26 +1,23 @@
 import { Box, LinearProgress } from '@mui/material';
-import { dispatchCurrency, dispatchNotifications, dispatchProfile } from 'app/reducer';
+import { dispatchCurrency, dispatchProfile } from 'app/reducer';
 import UserSidebar from 'components/user/UserSidebar';
 import Userfooter from 'components/user/Userfooter';
 import VerifyEmailAccount from 'forms/VerifyEmail';
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { AiOutlineScan } from 'react-icons/ai';
 import { BsBell } from 'react-icons/bs';
 import { FaUser } from 'react-icons/fa6';
-import { IoCopy } from 'react-icons/io5';
 import { FaUserAlt } from "react-icons/fa";
 import { FaHistory } from "react-icons/fa";
-import { TbHeadset } from 'react-icons/tb';
 import { useDispatch } from 'react-redux';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Apis, GetApi, profileImg } from 'services/Api';
-import { errorMessage, successMessage } from 'utils/functions';
+import { errorMessage } from 'utils/functions';
 import { HiOutlineBars3BottomRight } from "react-icons/hi2";
 
 
 export default function UserLayout({ children }) {
     const [loading, setLoading] = useState(true)
-    const [chats,setChats] = useState(false)
+    const [chats, setChats] = useState(false)
     const [openside, setOpenSide] = useState(false)
     const [profile, setProfile] = useState({})
     const dispatch = useDispatch()
@@ -31,17 +28,16 @@ export default function UserLayout({ children }) {
     const fetchUserProfile = useCallback(async () => {
         try {
             const response = await GetApi(Apis.auth.profile);
-            if (response.status === 200) {
-                setProfile(response.data);
-                dispatch(dispatchProfile(response.data));
-                dispatch(dispatchCurrency(response.data?.currency));
-            } else {
-                errorMessage(response.msg);
-            }
+            if (response.status !== 200) return navigate('/login')
+            setProfile(response.data);
+            dispatch(dispatchProfile(response.data));
+            dispatch(dispatchCurrency(response.data?.currency));
+
         } catch (error) {
+            navigate('/login')
             errorMessage(error.message);
         }
-    }, [dispatch]);
+    }, [dispatch, navigate]);
 
 
     useEffect(() => {
@@ -61,7 +57,7 @@ export default function UserLayout({ children }) {
 
     useEffect(() => {
         fetchUserNotifications()
-    }, [])
+    }, [fetchUserNotifications])
 
     React.useEffect(() => {
         setTimeout(() => {
@@ -80,10 +76,10 @@ export default function UserLayout({ children }) {
     useEffect(()=>{
         if(location.pathname.includes(`active_chats/` || `closed_chats/`)){
             setChats(true)
-        }else{
+        } else {
             setChats(false)
         }
-    },[location.pathname])
+    }, [location.pathname])
 
     if (loading) return (
         <div>
@@ -115,10 +111,10 @@ export default function UserLayout({ children }) {
     )
     return (
         <div>
-            {profile?.verified === 'false' && profile?.role === 'user' &&
+            {profile?.verified === 'false' &&
                 <VerifyEmailAccount />
             }
-            {profile?.verified === 'true' && profile?.role === 'user' &&
+            {profile?.verified === 'true' &&
                 <div className="flex items-center h-screen  bg-white">
                     <div className="h-screen hidden lg:block lg:w-[20%] bg-gradient-to-tr from-primary to-purple-700 text-white">
                         <UserSidebar setOpenSide={setOpenSide} />
@@ -164,7 +160,6 @@ export default function UserLayout({ children }) {
                         <div className={`h-fit ${chats ? '':'mt-10 pb-10 pt-5'} overflow-x-hidden `}>
                             {children}
                         </div>
-
 
                     </div>
                 </div>}

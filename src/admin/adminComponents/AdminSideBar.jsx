@@ -82,7 +82,7 @@ export default function AdminSideBar({setSide}) {
     }, [dispatch]);
     useEffect(() => {
         fetchUserProfile()
-    }, [])
+    }, [fetchUserProfile])
 
     let firstChar = profile?.firstname?.substring(0, 1)
     let lastChar = profile?.lastname?.substring(0, 1)
@@ -90,7 +90,7 @@ export default function AdminSideBar({setSide}) {
     // console.log(location.pathname)
     return (
         <div>
-            <div className="flex flex-col px-3 h-[90dvh] ">
+            <div className="flex flex-col px-3">
                 {logout &&
                     <ModalLayout setModal={setLogout} clas={`w-[35%] mx-auto`}>
                         <div className="bg-white py-5 px-3 h-fit flex-col text-black rounded-md flex items-center justify-center">
@@ -108,8 +108,14 @@ export default function AdminSideBar({setSide}) {
 
                 </div>
 
+<<<<<<< HEAD
                 <div className={` ${viewall ? ' transition-all delay-500 h-[25rem]' : 'h-[30rem]'} scroll w-full overflow-y-auto overflow-x-hidden flex items-start  flex-col`}>
                     {AdminLinks.map((item, index) => (
+=======
+                <div className={`scroll w-full overflow-y-auto overflow-x-hidden flex items-start  flex-col`}>
+                {/* <div className={` ${viewall ? ' transition-all delay-500 h-[25rem]' : 'h-[30rem]'} scroll w-full overflow-y-auto overflow-x-hidden flex items-start  flex-col`}> */}
+                    {AdminLinks.slice(0, AdminLinks.length - 1).map((item, index) => (
+>>>>>>> cc8bbe7a3c78b3a34ed724cfe3a926d340fbdd54
                         <Link to={item.url} key={index} className={`text-sm last:hidden w-full  rounded-lg hover:scale-105 hover:text-orange-200 text-slate-200 hover:translate-x-2 font-semibold ${item.url === location.pathname ? 'bg-slate-100/40' : ''} px-3 mb-1 py-2 font-extralight capitalize transition-all`}>
                             {item.path}
                         </Link>

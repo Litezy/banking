@@ -24,10 +24,10 @@ const QuickLinks2 = [
 ];
 
 const SocialMediaLinks = [
-  { title: "facebook", url: "", Icon: BsFacebook },
-  { title: "x", url: "", Icon: BsTwitterX },
-  { title: "instagram", url: "", Icon: BsInstagram },
-  { title: "whatsapp", url: "", Icon: BsWhatsapp },
+  { title: "facebook", url: "https://web.facebook.com/?_rdc=1&_rdr", Icon: BsFacebook },
+  { title: "x", url: "https://x.com/", Icon: BsTwitterX },
+  { title: "instagram", url: "https://www.instagram.com/", Icon: BsInstagram },
+  { title: "whatsapp", url: "https://www.whatsapp.com/", Icon: BsWhatsapp },
 ];
 
 
@@ -71,12 +71,12 @@ export default function Footer() {
             <div className="text-white text-xl"> <div className="bg-white py-1 w-fit rounded-lg px-3"><img src={logo} alt="" className="h-10 w-auto" /> </div> {SiteName}</div>
             <div className="flex flex-row items-center gap-8 text-2xl text-white mt-8">
               {SocialMediaLinks.map((item, index) => (
-                <div
+                <a href={item.url} target="_blank" rel="noreferrer"
                   className="cursor-pointer hover:text-orange-300 hover:scale-110 transition-all"
                   key={index}
                 >
                   <item.Icon />
-                </div>
+                </a>
               ))}
             </div>
             <div className="text-white mt-8 border-t pt-5 flex flex-col gap-3">

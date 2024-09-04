@@ -1,66 +1,24 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { BsBell } from 'react-icons/bs'
-import { AiOutlineScan } from 'react-icons/ai'
-import { TbHeadset } from 'react-icons/tb'
+import { Link } from 'react-router-dom'
 import { IoIosMailUnread } from 'react-icons/io'
-import { FaArrowLeft, FaArrowRight, FaMinus, FaUser } from 'react-icons/fa6'
+import { FaArrowLeft, FaArrowRight, FaMinus } from 'react-icons/fa6'
 import { Progress } from 'antd'
-import { Currency, errorMessage, successMessage } from 'utils/functions'
+import { errorMessage, successMessage } from 'utils/functions'
 import { GoShieldLock } from 'react-icons/go'
 import { IoCopy, IoEyeOutline, IoEyeOffOutline } from 'react-icons/io5'
 import img1 from 'assets/img1.png'
-import img2 from 'assets/img2.png'
 import img3 from 'assets/img3.png'
 import Imaged from 'utils/Imaged'
-import { Apis, GetApi, profileImg } from 'services/Api'
+import { Apis, GetApi } from 'services/Api'
 import { useDispatch, useSelector } from 'react-redux'
-import { dispatchCurrency, dispatchProfile, dispatchUserSavings } from 'app/reducer'
-import axios from 'axios'
+import { dispatchProfile, } from 'app/reducer'
 import ModalLayout from 'utils/ModalLayout'
-import VerifyEmailAccount from 'forms/VerifyEmail'
 import CardComponent from 'components/user/CardComponent'
 import { FaAsterisk } from 'react-icons/fa'
 
-const TransData = [
-    {
-        title: 'Today',
-        data: [
-            {
-                title: 'Withdrawal',
-                amount: '1200',
-                content: `you have successfully transferred ${Currency}1,000 to keneth williams`,
-                status: 'Success',
-                date: '12:00 PM'
-            },
-            {
-                title: 'Deposit',
-                amount: '1,000',
-                status: 'Failed',
-                content: `you have successfully transferred ${Currency}1,000 to keneth williams`,
-                date: '11:00 PM'
-            },
-            {
-                title: 'Transfer',
-                amount: '500',
-                content: `you have successfully transferred ${Currency}1,000 to keneth williams`,
-                status: 'Success',
-                date: '10:00 PM'
-            },
-            {
-                title: 'Transfer',
-                amount: '700',
-                content: `you have successfully transferred ${Currency}1,000 to keneth williams`,
-                status: 'Failed',
-                date: '9:00 PM'
-            }
-        ]
-    },
-]
-
 
 const DashboardOptions = [
-    { img: img1, url: '/user/transfer', title: 'Transfer' },
+    { img: img1, url: '/user/external-transfer', title: 'Transfer' },
     { img: img3, url: '/user/savings', title: 'Savings' },
 ]
 
@@ -69,8 +27,7 @@ export default function Dashboard() {
     const dispatch = useDispatch();
     const [profile, setProfile] = useState(null);
     const currency = useSelector((state) => state.profile.currency)
-    const [userSavings, setUserSavings] = useState([])
-    const navigate = useNavigate()
+    const [userSavings, ] = useState([])
     const [records, setRecords] = useState([])
     const [selectSaving, setSelectSaving] = useState({})
     const [viewMore, setViewMore] = useState(false)
@@ -100,20 +57,7 @@ export default function Dashboard() {
     }, [fetchUserProfile]);
 
 
-
-    const fetchUserSavings = useCallback(async () => {
-        try {
-            const response = await GetApi(Apis.auth.user_savings)
-            if (response.status !== 200) return;
-            setUserSavings(response.data)
-            dispatch(dispatchUserSavings(response.data))
-        } catch (error) {
-            errorMessage(error.message)
-        }
-    }, [])
-
     const deposit = 'Deposit'
-    const withdraw = 'Withdraw'
 
     const fetchTransHistory = useCallback(async () => {
         try {
@@ -129,7 +73,7 @@ export default function Dashboard() {
     }, [])
     useEffect(() => {
         fetchTransHistory()
-    }, [profile, dispatch])
+    }, [fetchTransHistory])
 
 
     const selectOne = (item) => {
