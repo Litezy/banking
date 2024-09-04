@@ -89,7 +89,7 @@ const Transactions = () => {
   return (
     <div className='w-full'>
       <div className=" relative mx-auto mt-1 lg:mt-3 ">
-        <div className="lg:w-[78.8%] md:w-[98.25%]  mb-5 pt-5 w-[100%] bg-white z-50 overflow-y-hidden overflow-x-hidden fixed  h-fit px-5 py-2">
+        <div className="lg:w-[78.8%] md:w-[98.25%]  mb-5 pt-5 w-[100%] bg-white  overflow-y-hidden overflow-x-hidden fixed  h-fit px-5 py-2">
           <div className="border-b pb-2 text-xl lg:text-2xl font-semibold">Transaction History</div>
           <div className="flex items-center justify-center mt-2 flex-col w-11/12 mx-auto">
             <input onKeyUp={(e) => filterData(e.target.value.toLowerCase())} type="text" className='w-10/12 lg:w-1/2 pl-2 bg-slate-100 h-12 border rounded-md outline-none'
