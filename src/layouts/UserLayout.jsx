@@ -1,26 +1,23 @@
 import { Box, LinearProgress } from '@mui/material';
-import { dispatchCurrency, dispatchNotifications, dispatchProfile } from 'app/reducer';
+import { dispatchCurrency, dispatchProfile } from 'app/reducer';
 import UserSidebar from 'components/user/UserSidebar';
 import Userfooter from 'components/user/Userfooter';
 import VerifyEmailAccount from 'forms/VerifyEmail';
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { AiOutlineScan } from 'react-icons/ai';
 import { BsBell } from 'react-icons/bs';
 import { FaUser } from 'react-icons/fa6';
-import { IoCopy } from 'react-icons/io5';
 import { FaUserAlt } from "react-icons/fa";
 import { FaHistory } from "react-icons/fa";
-import { TbHeadset } from 'react-icons/tb';
 import { useDispatch } from 'react-redux';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Apis, GetApi, profileImg } from 'services/Api';
-import { errorMessage, successMessage } from 'utils/functions';
+import { errorMessage } from 'utils/functions';
 import { HiOutlineBars3BottomRight } from "react-icons/hi2";
 
 
 export default function UserLayout({ children }) {
     const [loading, setLoading] = useState(true)
-    const [chats,setChats] = useState(false)
+    const [chats, setChats] = useState(false)
     const [openside, setOpenSide] = useState(false)
     const [profile, setProfile] = useState({})
     const dispatch = useDispatch()
@@ -31,17 +28,16 @@ export default function UserLayout({ children }) {
     const fetchUserProfile = useCallback(async () => {
         try {
             const response = await GetApi(Apis.auth.profile);
-            if (response.status === 200) {
-                setProfile(response.data);
-                dispatch(dispatchProfile(response.data));
-                dispatch(dispatchCurrency(response.data?.currency));
-            } else {
-                errorMessage(response.msg);
-            }
+            if (response.status !== 200) return navigate('/login')
+            setProfile(response.data);
+            dispatch(dispatchProfile(response.data));
+            dispatch(dispatchCurrency(response.data?.currency));
+
         } catch (error) {
+            navigate('/login')
             errorMessage(error.message);
         }
-    }, [dispatch]);
+    }, [dispatch, navigate]);
 
 
     useEffect(() => {
@@ -61,7 +57,7 @@ export default function UserLayout({ children }) {
 
     useEffect(() => {
         fetchUserNotifications()
-    }, [])
+    }, [fetchUserNotifications])
 
     React.useEffect(() => {
         setTimeout(() => {
@@ -77,13 +73,13 @@ export default function UserLayout({ children }) {
         }
     }, [])
 
-    useEffect(()=>{
-        if(location.pathname.includes(`active_chats/`)){
+    useEffect(() => {
+        if (location.pathname.includes(`active_chats/`)) {
             setChats(true)
-        }else{
+        } else {
             setChats(false)
         }
-    },[location.pathname])
+    }, [location.pathname])
 
     if (loading) return (
         <div>
@@ -124,7 +120,7 @@ export default function UserLayout({ children }) {
                         <UserSidebar setOpenSide={setOpenSide} />
                     </div>
                     <div className="bg-slate-50 lg:w-[80%] h-screen overflow-y-auto w-full relative">
-                       {!chats && <div className="lg:w-[78.8%]  w-[100%] bg-white flex z-50 items-center overflow-y-hidden overflow-x-hidden justify-between fixed  h-fit px-5 py-2">
+                        {!chats && <div className="lg:w-[78.8%]  w-[100%] bg-white flex z-50 items-center overflow-y-hidden overflow-x-hidden justify-between fixed  h-fit px-5 py-2">
                             <div className="flex items-center gap-5 w-1/2">
                                 <div onClick={() => navigate(`/user/profile`)} className="cursor-pointer">
                                     {profile?.image ? <img src={`${profileImg}/profiles/${profile?.image}`} className='w-14 h-14 rounded-full object-cover' alt="" /> :
@@ -161,7 +157,7 @@ export default function UserLayout({ children }) {
 
                             </div>
                         }
-                        <div className={`h-fit ${chats ? '':'mt-10'} overflow-x-hidden pb-10 pt-5`}>
+                        <div className={`h-fit ${chats ? '' : 'mt-10'} overflow-x-hidden pb-10 pt-5`}>
                             {children}
                         </div>
 
