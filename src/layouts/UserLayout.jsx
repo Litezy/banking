@@ -120,7 +120,7 @@ export default function UserLayout({ children }) {
                         <UserSidebar setOpenSide={setOpenSide} />
                     </div>
                     <div className="bg-slate-50 lg:w-[80%] h-screen overflow-y-auto w-full relative">
-                       {!chats && <div className="lg:w-[78.8%]  w-[100%] bg-white flex z-50 items-center overflow-y-hidden overflow-x-hidden justify-between fixed  h-fit px-5 py-2">
+                       {!chats && <div className="lg:w-[78.8%] md:w-[98.25%]  w-[100%] bg-white flex z-50 items-center overflow-y-hidden overflow-x-hidden justify-between fixed  h-fit px-5 py-2">
                             <div className="flex items-center gap-2 w-2/3">
                                 <div onClick={() => navigate(`/user/profile`)} className="cursor-pointer">
                                     {profile?.image ? <img src={`${profileImg}/profiles/${profile?.image}`} className='lg:w-14 lg:h-14 w-12 h-12 rounded-full object-cover' alt="" /> :

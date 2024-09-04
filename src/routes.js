@@ -5,10 +5,6 @@ import Notfound from "general/Nofound";
 import Login from "forms/Login";
 import ForgotPassword from "forms/ForgotPassword";
 import VerifyEmailAccount from "forms/VerifyEmail";
-<<<<<<< HEAD
-=======
-// import ChangePassword from "forms/ChangePassword";
->>>>>>> cc8bbe7a3c78b3a34ed724cfe3a926d340fbdd54
 import Savings from "user/Savings";
 import Transfer from "user/Transfer";
 import Transactions from "user/Transactions";
@@ -28,10 +24,6 @@ import ContactUs from "components/general/ContactUs";
 import AboutUs from "components/general/AboutUs";
 import PrivacyPolicy from "components/general/PrivacyPolicy";
 import TermsofUse from "components/general/TermsofUse";
-<<<<<<< HEAD
-=======
-import UserVerifications from "admin/adminComponents/UserVerifications";
->>>>>>> cc8bbe7a3c78b3a34ed724cfe3a926d340fbdd54
 import InternalTransfer from "user/InternalTransfer";
 import TicketsStatus from "user/TicketsStatus";
 import Messages from "user/Messages";
@@ -57,11 +49,6 @@ export const FormRoutes = [
     { path: '/login', component: Login },
     { path: '/forgot-password', component: ForgotPassword },
     { path: '/verify-email', component: VerifyEmailAccount },
-<<<<<<< HEAD
-    
-=======
-    // { path: '/change-password', component: ChangePassword },
->>>>>>> cc8bbe7a3c78b3a34ed724cfe3a926d340fbdd54
 ]
 
 export const GeneralRoutes = [
