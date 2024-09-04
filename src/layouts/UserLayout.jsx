@@ -111,10 +111,10 @@ export default function UserLayout({ children }) {
     )
     return (
         <div>
-            {profile?.verified === 'false' && profile?.role === 'user' &&
+            {profile?.verified === 'false' &&
                 <VerifyEmailAccount />
             }
-            {profile?.verified === 'true' && profile?.role === 'user' &&
+            {profile?.verified === 'true' &&
                 <div className="flex items-center h-screen  bg-white">
                     <div className="h-screen hidden lg:block lg:w-[20%] bg-gradient-to-tr from-primary to-purple-700 text-white">
                         <UserSidebar setOpenSide={setOpenSide} />
@@ -160,7 +160,6 @@ export default function UserLayout({ children }) {
                         <div className={`h-fit ${chats ? '':'mt-10 pb-10 pt-5'} overflow-x-hidden `}>
                             {children}
                         </div>
-
 
                     </div>
                 </div>}
