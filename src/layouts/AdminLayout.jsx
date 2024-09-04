@@ -148,7 +148,8 @@ export default function AdminLayout({ children,show=true }) {
                             <div className="text-white text-center capitalize text-sm">{profile?.firstname} {profile?.lastname}</div>
 
                         </div>
-                        <div ref={sideDiv} className={` ${viewall ? ' transition-all delay-500 h-[20rem]' : 'h-[23rem]'} scroll w-full overflow-y-auto overflow-x-hidden flex items-start  flex-col`}>
+                        <div ref={sideDiv} className={`scroll w-full overflow-y-auto overflow-x-hidden flex items-start  flex-col`}>
+                        {/* <div ref={sideDiv} className={` ${viewall ? ' transition-all delay-500 h-[20rem]' : 'h-[23rem]'} scroll w-full overflow-y-auto overflow-x-hidden flex items-start  flex-col`}> */}
                             {SideLinks.slice(0, SideLinks.length - 1).map((item, index) => (
                                 <Link to={item.url}
                                     key={index}

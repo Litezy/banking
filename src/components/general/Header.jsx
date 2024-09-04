@@ -15,6 +15,7 @@ export default function Header() {
     const [views, setViews] = useState(false)
     const BarIcon = views ? PiX : SlMenu
   return (
+    <>
     <div className="bg-white">
       <div className="bg-gradient-to-tr from-primary to-purple-700 text-white flex items-center flex-col lg:flex-row justify-around text-sm p-2">
         <div className="flex items-center gap-2">
@@ -92,5 +93,6 @@ export default function Header() {
         </div>
       </div>
     </div>
+    </>
   );
 }
