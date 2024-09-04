@@ -16,7 +16,7 @@ const ClosedComponent = () => {
         "Ticket Subject",
         "Ticket Status",
         "Date Created",
-        "past messages"
+        "Past Messages"
     ]
 
     const [closed, setClosed] = useState([])
@@ -38,9 +38,9 @@ const ClosedComponent = () => {
     return (
         <div className='w-11/12 flex items-center justify-center mx-auto h-fit py-5'>
             <div className=" w-full bg-white rounded-md shadow-md h-fit p-5">
-                <div className=" text-xl font-bold">Active Tickets</div>
+                <div className=" text-xl font-bold">Closed Tickets</div>
                 <hr className='my-2' />
-                <div className="my-5">You have {closed && closed.length > 0 ? `${closed.length} active ticket(s), see them below.` : '0 active tickets.'}</div>
+                <div className="my-5">You have {closed && closed.length > 0 ? `${closed.length} closed ticket(s), see them below.` : '0 active tickets.'}</div>
                 <div className="relative overflow-x-auto rounded-md ">
                     <table className="w-full text-sm text-left rtl:text-right relative">
                         <thead className=" bg-gradient-to-tr from-primary to-purple-700 text-xl text-white">

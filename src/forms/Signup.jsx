@@ -89,7 +89,7 @@ export default function Signup() {
     }
     return (
         <div className='bg-gradient-to-tr from-primary to-purple-700 h-screen overflow-x-hidden'>
-            <div className="w-[97%] mx-auto max-w-xl bg-white backdrop-blur-sm p-5 rounded-lg my-10 lg:my-20">
+            <div className="w-[90%] lg:w-[95%] mx-auto max-w-xl bg-white backdrop-blur-sm p-3 lg:p-5 rounded-lg my-10 ">
                 <div className="text-3xl lg:text-4xl font-bold text-primary">Create Account</div>
                 <form onSubmit={handleSubmission} className="mt-5">
                     <Forminput isError={submit && !forms.firstname ? "First name is missing" : ""}
@@ -173,12 +173,18 @@ export default function Signup() {
                     />
 
 
+                    <div className="flex items-center mb-3">
                     <Forminput
                         isError={checkError ? "Agree to our T&C's" : ""}
                         formtype="checkbox"
-                        placeholder="Confirm you agree to our terms and policies."
+                        placeholder=""
+                        signup={true}
                         onChange={handleCheckboxChange}
                     />
+                    <div className="text-sm">Confirm you agree to our 
+                        <Link className='text-blue-700 font-semibold' to={`/terms`}> terms of use</Link> and  
+                     <Link to={`/privacy-policy`} className='text-blue-700 font-semibold' > privacy policy</Link>.</div>
+                    </div>
 
 
                     <Formbutton label="Create Account" loading={loading ? true :false}/>

@@ -98,13 +98,18 @@ const Transfer = () => {
     }
   }, [dispatch]);
 
-  const SubmitTransfer = async () => {
+
+  const NextScreen = () => {
     if (!forms.acc_name) return errorMessage('Account name is required')
     if (!forms.acc_no) return errorMessage('Account number is required')
     if (!forms.bank_name) return errorMessage('Bank name is required')
     if (!forms.amount) return errorMessage('Amount is required')
     if (!forms.memo) return errorMessage('Memo is required')
     if (profile?.balance < forms.amount) return errorMessage('Insufficient balance')
+    setScreen(2)
+  }
+
+  const SubmitTransfer = async () => {
     const formdata = {
       acc_no: forms.acc_no,
       acc_name: forms.acc_name,
@@ -151,18 +156,18 @@ const Transfer = () => {
   return (
     <div className='w-full mt-5'>
       <div className="w-11/12 mx-auto ">
-        <div className="bg-gradient-to-tr flex items-start flex-col  from-primary to-purple-700 px-6 py-10 rounded-lg">
+        <div className="bg-gradient-to-tr flex items-center justify-center flex-col  from-primary to-purple-700 px-6 py-10 rounded-lg">
           <div className="flex items-center gap-2 text-white text-sm font-extralight">
             <GoShieldLock className='text-green-400 text-lg' />
-            <div className="text-2xl">Available Balance</div>
+            <div className="lg:text-2xl text-base">Available Balance</div>
             <Icon onClick={() => setBal(prev => !prev)} className='text-2xl cursor-pointer' />
           </div>
-          <div className="flex mt-5 self-center ">
+          <div className="flex mt-3 self-center ">
             <div className="text-slate-200 text-2xl self-end font-bold">{currency}</div>
             <div className="font-bold text-2xl text-white">{bal ? profile?.balance?.toLocaleString() :
               <>
                 <div className="flex">
-                  {new Array(3).fill(0).map((item, i) => (
+                  {new Array(5).fill(0).map((item, i) => (
                     <div className="flex items-center text-sm ml-2" key={i}><FaAsterisk /></div>
                   ))}
                 </div>
@@ -213,7 +218,7 @@ const Transfer = () => {
                 </textarea>
               </div>
 
-              <button onClick={() => setScreen(2)} className="md:w-fit w-full cursor-pointer text-center md:ml-auto md:px-10 py-2 bg-gradient-to-tr from-primary to-purple-700 rounded-md text-white">Next</button>
+              <button onClick={NextScreen} className="md:w-fit w-full cursor-pointer text-center md:ml-auto md:px-10 py-2 bg-gradient-to-tr from-primary to-purple-700 rounded-md text-white">Next</button>
             </div>
           </div>}
 

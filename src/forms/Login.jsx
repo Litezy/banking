@@ -63,7 +63,7 @@ export default function Login() {
     }
     return (
         <div className='bg-gradient-to-tr from-primary to-purple-700 h-screen overflow-x-hidden flex items-center justify-center'>
-            <div className="w-[97%] mx-auto max-w-xl bg-white backdrop-blur-sm p-5 relative rounded-lg mt-10 lg:mt-20">
+            <div className="w-[90%] mx-auto max-w-xl bg-white backdrop-blur-sm p-5 relative rounded-lg mt-10 lg:mt-20">
 
                 {loading && 
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2">
@@ -75,7 +75,7 @@ export default function Login() {
                     <FormComponent formtype="email" name={`email`} value={forms.email} onchange={handleChange} placeholder="Email Address" />
                     <FormComponent formtype="password" name={`password`} value={forms.password} onchange={handleChange} placeholder="Password" />
                     <div className="grid grid-cols-2 gap-4 items-center mb-3">
-                        <Forminput formtype="checkbox" placeholder="Remember me" />
+                       
                         <div className="text-right">
                             <Link to="/forgot-password" className='text-blue-600'>Forgot Password?</Link>
                         </div>

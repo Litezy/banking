@@ -39,7 +39,7 @@ const AdminActiveChats = () => {
         "Ticket Status",
         "Date Created",
         "Response",
-        "messages",
+        "Messages",
         "Close Ticket"
     ]
 

@@ -53,17 +53,17 @@ const Messages = () => {
     // console.log(admin)
   }, [])
 
-  useEffect(()=>{
-    if(location.pathname.includes(`active_chats`)) {
+  useEffect(() => {
+    if (location.pathname.includes(`active_chats`)) {
       setActive(true)
-    } else{
+    } else {
       setActive(false)
     }
-  },[])
+  }, [])
 
   return (
-    <div className={`${active ? '-mt-5':'mt-5'} w-full mx-auto`}>
-      <div className="mb-5 w-full mx-auto md:w-11/12 bg-white h-[90dvh] relative flex-col rounded-lg flex items-start justify-between">
+    <div className={`pt-1 w-full mx-auto h-fit overflow-y-hidden ]`}>
+      <div className=" mx-auto md:w-11/12 bg-white overflow-y-hidden  h-[100dvh] overflow-x-hidden w-full relative  flex-col rounded-lg flex items-start justify-between">
 
         {loading &&
           <div className="fixed top-0  backdrop-blur-sm w-full h-full rounded-md left-1/2 -translate-x-1/2">
@@ -73,7 +73,7 @@ const Messages = () => {
 
         <div className="h-[10dvh] w-full border-b flex items-center px-5 justify-between">
           <Link
-            className='w-fit px-4 py-1 rounded-md bg-gradient-to-tr from-primary to bg-purple-700 text-white'
+            className='w-fit text-xs px-4 py-1 rounded-md bg-gradient-to-tr from-primary to bg-purple-700 text-white'
             to={active ? `/user/tickets/status/active` : `/user/tickets/status/closed`}
           >back</Link>
 
@@ -83,11 +83,9 @@ const Messages = () => {
 
           </div>
 
-           <div className="text-sm">status: <span 
-           className={`${admin?.status === 'online' ? 'text-green-500' : 'text-gray-400'}`}>
-            {admin?.status === 'online' ? 'online' : admin?.status ==='offline' ? 'offline':'not joined' }</span></div>
+
         </div>
-        <div className="h-[70dvh] overflow-y-auto w-full py-1 scroll  downdiv ">
+        <div className="h-[87dvh] overflow-y-auto w-full py-1 scroll  downdiv ">
           <div className="text-sm text-primary font-semibold text-right mr-3">Ticket Details</div>
           <div
             className={`${tickets?.message?.length || tickets?.subject?.length <= 90 ? 'w-fit' : 'w-[55%]'} relative text-sm  border px-4 mt-1  ml-auto bg-gradient-to-tr from-primary to-purple-700 text-white  py-2 flex items-start flex-col gap-2  rounded-md mr-2`}>
@@ -113,8 +111,8 @@ const Messages = () => {
           {tickets?.joined === 'true' && <div className="my-2 w-fit px-5 py-2 border-slate-300 border mx-auto  rounded-lg ">an admin has joined the chats</div>}
           <ChatMessages />
         </div>
-        <div className="h-[12dvh] border-t py-1 w-full ">
-        {tickets?.status === 'active' && <ChatForm ticketid={tickets?.id} fetchMsgs={() => fecthticketMessages()} />}
+        <div className="h-[13dvh] border-t py-1 w-full overflow-y-hidden">
+          {tickets?.status === 'active' && <ChatForm ticketid={tickets?.id} fetchMsgs={() => fecthticketMessages()} />}
         </div>
       </div>
     </div>

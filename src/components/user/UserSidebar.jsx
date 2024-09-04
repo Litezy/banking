@@ -178,7 +178,7 @@ export default function UserSidebar({ setOpenSide, smallView = false }) {
                             to={`/user/tickets/status/${item.url}`}
                             onClick={closeUp}
                             key={index}
-                            className={`text-sm rounded-lg  first:mt-2 w-full hover:scale-10 text-slate-200 hover:text-orange-200 ${item.url === status ? 'bg-slate-100/40' : ''} hover:translate-x-2 px-3 mb-3 py-2 font-semibold capitalize transition-all`}>
+                            className={`text-sm rounded-lg  first:mt-2 w-full hover:scale-10 text-slate-200 hover:text-orange-200 ${`/user/tickets/status/${item.url}` === location.pathname ? 'bg-slate-100/40' : ''} hover:translate-x-2 px-3 mb-3 py-2 font-semibold capitalize transition-all`}>
                             {item.path}
                         </Link>
                     ))}

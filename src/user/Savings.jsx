@@ -511,7 +511,7 @@ const Savings = () => {
                 </ModalLayout>
             }
 
-            <div className="mt-4 flex flex-col lg:flex-row items-start h-fit py-5 mb-10 gap-10 ">
+            <div className="flex flex-col lg:flex-row items-start h-fit py-5 mb-10 gap-10 ">
                 <div className="md:w-1/2 w-full h-full py-2 flex items-center justify-center flex-col px-3 rounded-lg bg-white cursor-pointer">
                     <div className="text-lg font-semibold">Three important steps to take in order to complete your deposit</div>
                     {steps.map((ele, i) => (
@@ -525,7 +525,7 @@ const Savings = () => {
                 <div onClick={() => setSupport(true)} className="w-fit cursor-pointer self-center text-white px-5 py-2 rounded-lg bg-gradient-to-tr from-primary to-purple-700 ">Contact Support</div>
             </div>
 
-            <div onClick={() => setCreateSave(true)} className=" mb-3 cursor-pointer w-fit ml-auto text-white bg-gradient-to-tr from-primary to-purple-700   px-5 py-2 rounded-md">Add New Savings</div>
+            <div onClick={() => setCreateSave(true)} className=" mb-3 cursor-pointer w-fit ml-auto text-white bg-gradient-to-tr from-primary to-purple-700   px-3 py-2 rounded-md">Add New Savings</div>
             <div className={`grid grid-cols-1 ${savings.length === 0 ? 'lg:grid-cols-1' : 'lg:grid-cols-2'} gap-5 lg:gap-10`}>
 
                 {savings.length > 0 ? savings.map((item, index) => (
@@ -621,7 +621,7 @@ const Savings = () => {
                                         </div>
                                         <div className="flex items-center gap-3">
                                             <div className="text-sm">Amount</div>
-                                            <div className={`text-xl font-bold`}>{profile?.currency}{item.goal?.toLocaleString()} </div>
+                                            <div className={`text-base font-bold`}>{profile?.currency}{item.goal?.toLocaleString()} </div>
                                         </div>
                                     </div>
                                     <div className="flex items-center flex-col">
@@ -635,7 +635,7 @@ const Savings = () => {
                 )) :
                     <div className="text-lg font-semibold text-center">No savings records found</div>
                 }
-                <div onClick={() => setViewAll(true)} className="w-fit cursor-pointer ml-auto text-white px-4 py-1 my-5 rounded-md bg-gradient-to-tr from-primary to-purple-700 mr-3">view all</div>
+                {records.length > 3 && <div onClick={() => setViewAll(true)} className="w-fit cursor-pointer ml-auto text-white px-4 py-1 my-5 rounded-md bg-gradient-to-tr from-primary to-purple-700 mr-3">view all</div>}
             </div>
 
 

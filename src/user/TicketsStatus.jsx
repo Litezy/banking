@@ -101,9 +101,9 @@ const TicketsStatus = () => {
     }
 
     return (
-        <div className='w-full mt-5 '>
+        <div className='w-full  '>
           <div className='w-11/12 flex items-center justify-center relative mx-auto h-fit py-5'>
-                <div className="md:w-[80%] mx-auto  bg-white h-fit py-5 rounded-md shadow-md ">
+                <div className="md:w-[80%] mx-auto w-full bg-white h-fit py-5 rounded-md shadow-md ">
 
                     {loading &&
                         <div className="fixed top-0 z-50 backdrop-blur-sm w-full h-full rounded-md left-1/2 -translate-x-1/2">
@@ -121,7 +121,7 @@ const TicketsStatus = () => {
                         <div className="flex items-start flex-col gap-1 w-full">
                             <div className="">message <span className='text-red-400'>*</span></div>
                             <textarea placeholder='message'
-                                className='w-full max-h-72 h-52 resize-none border hover:border-black rounded-md p-2'
+                                className='w-full max-h-72 lg:h-52 h-32 resize-none border hover:border-black rounded-md p-2'
                                 name='message'
                                 value={forms.message}
                                 onChange={handleChange}

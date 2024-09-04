@@ -155,19 +155,20 @@ export default function ForgotPassword() {
     }
 
     return (
-        <div className='bg-gradient-to-tr from-primary to-purple-700 h-fit py-20 overflow-x-hidden flex items-center justify-center'>
-            <div className="w-[97%] mx-auto max-w-xl bg-white relative backdrop-blur-sm p-5 rounded-lg mt-10 lg:mt-20">
+        <div className='bg-gradient-to-tr from-primary to-purple-700 h-screen py-20 overflow-x-hidden flex items-center justify-center'>
+            <div className="w-[90%] mx-auto max-w-xl bg-white relative backdrop-blur-sm p-5 rounded-lg mt-10 lg:mt-20">
 
                 {loading &&
                     <div className="absolute z-50 top-1/3 left-1/2 -translate-x-1/2 ">
                         <Loader />
                     </div>
                 }
-                <div className="text-3xl lg:text-4xl font-bold text-primary">Forgot Password</div>
-                <div className="">Lets assist you recover your account</div>
+
 
                 {screen === 1 &&
                     <>
+                        <div className="text-2xl lg:text-4xl font-bold text-primary">Forgot Password</div>
+                        <div className="">Lets assist you recover your account</div>
                         <form onSubmit={checkEmail} className='mt-5'>
                             <Forminput
                                 name={'email'}
@@ -182,10 +183,13 @@ export default function ForgotPassword() {
 
 
                 {screen === 2 &&
-                    <form onSubmit={handleCode} className='mt-5'>
-                        <div className="text-center font-semibold">Enter OTP code Sent to your email</div>
+                    <form onSubmit={handleCode} className=''>
+                        <div onClick={() => setScreen(1)} className="w-fit mr-auto px-5  py-1 cursor-pointer rounded-full bg-gradient-to-tr from-primary to-purple-700 text-white mb-2">
+                            <FaLongArrowAltLeft className='text-white text-xl' />
+                        </div>
+                        <div className="text-center font-semibold">Enter OTP code sent to your email</div>
 
-                        <div className="mb-10">
+                        <div className="mb-5">
                             <OtpForm
                                 pins={pins}
                                 setPins={setPins}
@@ -193,11 +197,9 @@ export default function ForgotPassword() {
                             />
                         </div>
                         <Formbutton label="Submit code" />
-                        <div className="mt-3 flex items-start justify-between">
-                        <div onClick={()=>setScreen(1)} className="w-fit mr-auto px-5 py-1 cursor-pointer rounded-full bg-primary">
-                            <FaLongArrowAltLeft className='text-white text-xl' />
-                        </div>
-                        <div className="flex mt-3  items-center flex-col gap-2">
+
+
+                        <div className="flex mt-3  items-center justify-center flex-col gap-2">
                             <div className="">didn't receive email?</div>
                             {btnDisabled && <div className="w-fit text-xs font-bold  flex items-center gap-1 flex-col">
                                 <div className="">request again in:</div>
@@ -205,7 +207,7 @@ export default function ForgotPassword() {
                             </div>}
                             <button type='button' onClick={RequestOtp} disabled={btnDisabled ? true : false} className={`w-fit px-3 py-1 rounded-full  text-white ${btnDisabled ? 'bg-slate-300' : 'bg-primary'}`}>resend</button>
                         </div>
-                        </div>
+
                     </form>
                 }
 
@@ -235,7 +237,7 @@ export default function ForgotPassword() {
                         </form>
                     </>
                 }
-                <div className="text-zinc-500 mt-5 text-center">Don't have an account? <Link to="/signup" className='text-blue-600'>Create Account</Link> </div>
+
                 <div className="text-zinc-500 mt-3 text-center"><Link to="/" className='text-blue-600'>Go back home</Link> </div>
             </div>
         </div>

@@ -19,9 +19,11 @@ const InternalTransfer = () => {
         memo: ''
     })
 
-    const [loading, setLoading] = useState(false)
+    const [loading1, setLoading1] = useState(false)
+    const [loading2, setLoading2] = useState(false)
     const [screen, setScreen] = useState(1)
     const [bal, setBal] = useState(true)
+    const [load,setLoad] = useState(false)
     const [userdata, setUserData] = useState({})
     const navigate = useNavigate()
     const Icon = bal ? IoEyeOffSharp : IoEyeOutline
@@ -50,7 +52,7 @@ const InternalTransfer = () => {
             return errorMessage("Can't send to self")
         }
         if (emailRegex.test(input)) {
-            setLoading(true)
+            setLoading1(true)
             setStatus({ ...status, email: true, phone: false })
             try {
                 const res = await GetApi(`${Apis.auth.fetch_p2p}/${input}`)
@@ -67,11 +69,11 @@ const InternalTransfer = () => {
             }
 
             finally {
-                setLoading(false)
+                setLoading1(false)
                 setStatus({ ...status, email: false, phone: false })
             }
         } else if (phoneRegex.test(input)) {
-            setLoading(true)
+            setLoading2(true)
             setStatus({ ...status, email: false, phone: true })
 
             try {
@@ -88,7 +90,7 @@ const InternalTransfer = () => {
                 errorMessage(`something went wrong`, error.message)
             }
             finally {
-                setLoading(false)
+                setLoading2(false)
                 setStatus({ ...status, email: false, phone: false })
             }
         } else {
@@ -107,7 +109,7 @@ const InternalTransfer = () => {
             receiveremail: userdata?.email,
             amount: forms.amount
         }
-        setLoading(true)
+        setLoad(true)
         try {
             const res = await PostApi(Apis.auth.internal_transfer, formdata)
             if (res.status !== 200) return;
@@ -118,7 +120,7 @@ const InternalTransfer = () => {
         } catch (error) {
             errorMessage(`something went wrong`, error.message)
         } finally {
-            setLoading(false)
+            setLoad(false)
         }
     }
 
@@ -126,10 +128,10 @@ const InternalTransfer = () => {
     return (
         <div>
             <div className="w-11/12 mx-auto mt-5 ">
-                <div className="bg-gradient-to-tr flex items-start flex-col  from-primary to-purple-700 px-6 py-10 rounded-lg">
+                <div className="bg-gradient-to-tr flex items-center justify-center flex-col  from-primary to-purple-700 px-6 py-10 rounded-lg">
                     <div className="flex items-center gap-2 text-white text-sm font-extralight">
                         <GoShieldLock className='text-green-400 text-lg' />
-                        <div className="text-2xl">Available Balance</div>
+                        <div className="lg:text-2xl text-base">Available Balance</div>
                         <Icon onClick={() => setBal(prev => !prev)} className='text-2xl cursor-pointer' />
                     </div>
                     <div className="flex mt-5 self-center ">
@@ -137,7 +139,7 @@ const InternalTransfer = () => {
                         <div className="font-bold text-2xl text-white">{bal ? profile?.balance?.toLocaleString() :
                             <>
                                 <div className="flex">
-                                    {new Array(3).fill(0).map((item, i) => (
+                                    {new Array(5).fill(0).map((item, i) => (
                                         <div className="flex items-center text-sm ml-2" key={i}><FaAsterisk /></div>
                                     ))}
                                 </div>
@@ -149,11 +151,12 @@ const InternalTransfer = () => {
 
                 <div className="my-10 w-full relative flex items-start shadow-lg flex-col py-5 px-5 lg:px-10 bg-white rounded-lg h-fit">
 
-                    {loading &&
+                    {loading1 &&
                         <div className="absolute top-1/2 left-1/2 z-40 -translate-x-1/2">
                             <Loader />
                         </div>
                     }
+
                     <div className=" my-3 w-full  border-b py-3">
                         <div className="text-xl font-semibold">Internal Money Transfer</div>
                         <div className="text-sm ">This process is usually fast, secure, and free  of charge</div>
@@ -162,28 +165,35 @@ const InternalTransfer = () => {
                     {screen === 1 &&
                         <>
                             <div className="my-10 w-full relative ">
-                                {loading &&
+                                {loading1 &&
                                     <div className="absolute top-1/2 z-40 left-1/2 -translate-x-1/2">
+                                        <Loader />
+                                    </div>
+                                }
+
+                                {loading2 &&
+                                    <div className="absolute top-1/2 left-1/2 z-40 -translate-x-1/2">
                                         <Loader />
                                     </div>
                                 }
                                 <div className="flex items-start flex-col mx-auto  lg:w-1/2 w-full">
                                     <div className="-500 text-base">Email/Phone Number</div>
-                                    <FormComponent  name={`input`} value={forms.input} onchange={handleChange} />
+                                    <FormComponent name={`input`} value={forms.input} onchange={handleChange} />
                                 </div>
                             </div>
-                            <button disabled={loading ? true : false} onClick={() => handleInput(forms.input)} className="w-10/12 lg:w-1/2 mx-auto cursor-pointer text-center md:px-10 py-2 bg-primary rounded-md text-white">Find User</button>
+                            <button disabled={loading1 || loading2 ? true : false} onClick={() => handleInput(forms.input)} className="w-10/12 lg:w-1/2 mx-auto cursor-pointer text-center md:px-10 py-2 bg-primary rounded-md text-white">Find User</button>
                         </>
                     }
                     {screen === 2 &&
                         <>
                             <div className="my-10 w-full relative">
 
-                                {loading &&
+                                {load &&
                                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2">
                                         <Loader />
                                     </div>
                                 }
+                                <div onClick={()=> setScreen(1)} className="px-3 w-fit rounded-md mb-2 py-1 bg-gradient-to-tr from-primary to-purple-700 text-white text-sm">back</div>
                                 <div className=" font-bold text-lg">User Details</div>
                                 <div className="flex items-center gap-3 mb-2">
                                     <div className="">Full Name:</div>
@@ -198,7 +208,7 @@ const InternalTransfer = () => {
                                     <FormComponent formtype='phone' name={`amount`} value={forms.amount} onchange={handleChange} />
                                 </div>
                             </div>
-                            <button disabled={loading ? true : false} onClick={() => handleTransfer(forms.input)} className="w-10/12 lg:w-1/2 mx-auto cursor-pointer text-center md:px-10 py-2 bg-primary rounded-md text-white">Send Money</button >
+                            <button disabled={load ? true : false} onClick={() => handleTransfer(forms.input)} className="w-10/12 lg:w-1/2 mx-auto cursor-pointer text-center md:px-10 py-2 bg-primary rounded-md text-white">Send Money</button >
                         </>
                     }
 
