@@ -16,10 +16,6 @@ const UserBanks = ({ setActive }) => {
             const res = await GetApi(Apis.admin.all_banks)
             if (res.status === 200) {
                 setBanksArr(res.data)
-                // const banks = res.data.map(user => user.userbanks)
-                // setUsers(banks)
-                // const uniqueUserIds = new Set(banks.map(user => user.userid))
-                // setUniqueId(uniqueUserIds.size)
             }
         } catch (error) {
             console.log(error)

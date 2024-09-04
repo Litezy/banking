@@ -118,10 +118,16 @@ export const admin_urls = {
     remove_bank: admin + '/remove-bank',
     contacts:admin + '/contacts',
     subs:admin + '/subs',
-    all_transfers: admin + '/all-transfers',
+    completed_transfers: admin + '/completed-transfers',
     confirm_trans: admin + '/confirm-trans',
     otp: admin + '/otp',
     single_trans: admin + '/single-trans',
+    pending_transfers : admin + '/all-pending-transfers',
+    terminated_savings : admin + '/all-terminated-savings',
+    completed_savings : admin + '/all-completed-savings',
+    all_contacts : admin + '/all-contacts',
+    all_deposits: admin + '/all-deposits',
+    verified_kycs: admin + '/verified-kycs',
 
     //tickets and kycs
     all_active_tickets: admin + '/all-active-tickets',
@@ -133,7 +139,8 @@ export const admin_urls = {
     verified_kycs: admin + '/verified-kycs',
     close_ticket: admin +'/close-ticket',
     approve_kyc: admin + '/approve-kyc',
-    overturn_kyc: admin + '/overturn-kyc'
+    overturn_kyc: admin + '/overturn-kyc',
+    all_tickets: admin + '/all-tickets'
 }
 export const Apis = {
     non_auth: non_auth_urls,

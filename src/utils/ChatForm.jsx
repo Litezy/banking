@@ -69,10 +69,6 @@ const ChatForm = ({ ticketid, admin_res = false, fetchMsgs,fetchActives,setJoine
 
         }
     }
-
-
-
-
     return (
         <div className='text-black relative flex h-[8dvh] my-2 '>
             <div className="flex items-center w-[95%]   pt-1 mx-auto">

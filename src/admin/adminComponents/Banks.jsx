@@ -28,7 +28,7 @@ const Banks = () => {
       console.log(error)
       errorMessage(error.message)
     }
-  }, [profile])
+  }, [])
 
   useEffect(() => {
     fetchBanks()
