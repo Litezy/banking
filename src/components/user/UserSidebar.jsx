@@ -14,8 +14,8 @@ import { FiRefreshCcw } from "react-icons/fi";
 const SideLinks = [
     { path: 'dashboard', url: '/user' },
     { path: 'savings', url: '/user/savings' },
-    { path: 'external transfer', url: '/user/external-transfer' },
-    { path: 'internal transfer', url: '/user/internal-transfer' },
+    { path: 'external transfers', url: '/user/external-transfers' },
+    { path: 'internal transfers', url: '/user/internal-transfers' },
     { path: 'transactions', url: '/user/transactions' },
     { path: 'notifications', url: '/user/notifications' },
     { path: 'profile', url: '/user/profile' },
