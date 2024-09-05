@@ -154,9 +154,9 @@ export default function UserLayout({ children }) {
                         </div>}
                         {openside &&
                             <motion.div 
-                            initial={{x:'100vw'}}
-                            animate={{x:0}}
-                            transition={{type:'tween',delay:0.2,duration:0.5}}
+                            initial={{x:'100vw', opacity:0}}
+                            animate={{x:0, opacity:1}}
+                            transition={{type:'tween',mass:0.4, damping:10,duration:0.5}}
                             ref={refdiv} className="w-[65%] md:w-[35%] rounded-s-lg z-50 top-0  right-0 bg-gradient-to-tr from-primary to-purple-700 h-screen fixed">
                                 <UserSidebar smallView={true} setOpenSide={setOpenSide} />
 
