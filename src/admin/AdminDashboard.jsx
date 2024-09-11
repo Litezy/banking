@@ -127,7 +127,7 @@ const AdminDashboard = () => {
     const fetchKyc = useCallback(async () => {
         try {
             const response = await GetApi(Apis.admin.all_kycs)
-            if (response.status !== 200) return errorMessage(response.msg)
+            if (response.status !== 200) return ;
             setKyc(response.data)
         } catch (error) {
             errorMessage(error.message)
@@ -137,7 +137,7 @@ const AdminDashboard = () => {
     const fetchPendingKyc = useCallback(async () => {
         try {
             const response = await GetApi(Apis.admin.pending_kycs)
-            if (response.status !== 200) return errorMessage(response.msg)
+            if (response.status !== 200) return ;
             setPendingKycs(response.data)
         } catch (error) {
             errorMessage(error.message)
@@ -160,7 +160,7 @@ const AdminDashboard = () => {
     const fetchApprovedKyc = useCallback(async () => {
         try {
             const response = await GetApi(Apis.admin.verified_kycs)
-            if (response.status !== 200) return errorMessage(response.msg)
+            if (response.status !== 200) return ;
             setApprovedKycs(response.data)
         } catch (error) {
             errorMessage(error.message)
@@ -169,7 +169,7 @@ const AdminDashboard = () => {
     const fetchContacts = useCallback(async () => {
         try {
             const response = await GetApi(Apis.admin.all_contacts)
-            if (response.status !== 200) return errorMessage(response.msg)
+            if (response.status !== 200) return ;
             setContacts(response.data)
 
         } catch (error) {
@@ -179,7 +179,7 @@ const AdminDashboard = () => {
     const fetchAllDeposits = useCallback(async () => {
         try {
             const response = await GetApi(Apis.admin.all_deposits)
-            if (response.status !== 200) return errorMessage(response.msg)
+            if (response.status !== 200) return ;
             setDeposits(response.data)
 
         } catch (error) {
@@ -189,7 +189,7 @@ const AdminDashboard = () => {
     const fetchAllTransfers = useCallback(async () => {
         try {
             const response = await GetApi(Apis.admin.pending_transfers)
-            if (response.status !== 200) return errorMessage(response.msg)
+            if (response.status !== 200) return ;
             setPendingTransfers(response.data)
             setAmount(response.amount)
 
@@ -200,7 +200,7 @@ const AdminDashboard = () => {
     const fetchAllTickets = useCallback(async () => {
         try {
             const response = await GetApi(Apis.admin.all_tickets)
-            if (response.status !== 200) return errorMessage(response.msg)
+            if (response.status !== 200) return ;
             setTickets(response.data)
 
         } catch (error) {
@@ -210,7 +210,7 @@ const AdminDashboard = () => {
     const fetchAllTerminatedSavings = useCallback(async () => {
         try {
             const response = await GetApi(Apis.admin.terminated_savings)
-            if (response.status !== 200) return errorMessage(response.msg)
+            if (response.status !== 200) return ;
             setTerminatedSavings(response.data)
             setTerminatedAmount(response.amount)
         } catch (error) {
@@ -220,7 +220,7 @@ const AdminDashboard = () => {
     const fetchAllCompletedSavings = useCallback(async () => {
         try {
             const response = await GetApi(Apis.admin.completed_savings)
-            if (response.status !== 200) return errorMessage(response.msg)
+            if (response.status !== 200) return ;
             setCompletedSavings(response.data)
             setCompletedAmount(response.amount)
         } catch (error) {

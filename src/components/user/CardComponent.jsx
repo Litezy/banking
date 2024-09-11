@@ -23,7 +23,8 @@ const CardComponent = () => {
             card_no: '',
             cvv: '',
             card_name: '',
-            exp: ''
+            exp: '',
+            visa_type: ''
         },
 
     )
@@ -73,6 +74,23 @@ const CardComponent = () => {
             card_no: formattedValue
         });
     };
+    const handleCvv = (event) => {
+        let value = event.target.value.replace(/\D/g, ''); // Remove all non-digit characters
+        value = value.substring(0, 3); // Limit to 3 digits
+        setCards({
+            ...cards,
+            cvv: value
+        });
+    };
+    const handleExp = (event) => {
+        let value = event.target.value.replace(/\D/g, ''); // Remove all non-digit characters
+        value = value.substring(0, 4); // Limit to 4 digits
+        const formattedVal = value.match(/.{1,2}/g)?.join(`/`) || value
+        setCards({
+            ...cards,
+            exp: formattedVal
+        });
+    };
 
     const addCardsArr = async (e) => {
         e.preventDefault()
@@ -86,6 +104,7 @@ const CardComponent = () => {
             card_no: cards.card_no,
             cvv: cards.cvv,
             exp: cards.exp,
+            visa_type: cards.visa_type ? cards.visa_type :'',
             type: cards.type
         }
         setLoading(true)
@@ -127,14 +146,32 @@ const CardComponent = () => {
                                     <div className="w-1/2 ">
                                         <label className='w-1/2 ' >
                                             <select name="type" value={cards.type} onChange={handleChange} className='w-full outline-none h-14 border px-2 py-1 rounded-md' id="">
-                                                <option value="">Select Card Type</option>
+                                                <option value="">--select card type--</option>
                                                 <option value="visa">Visa</option>
                                                 <option value="mastercard">Mastercard</option>
                                             </select>
-
                                         </label>
                                     </div>
                                 </div>
+
+                                {cards.type === 'visa' &&
+                                    <div className="flex items-center justify-between w-full">
+                                        <div className="text-lg ">Visa Type:</div>
+                                        <div className="w-1/2 ">
+                                            <label className='w-1/2 ' >
+                                                <select name="visa_type" value={cards.visa_type} onChange={handleChange} className='w-full outline-none h-14 border px-2 py-1 rounded-md' id="">
+                                                    <option value="">--select visa-type</option>
+                                                    <option value="visa classic">Visa Classic</option>
+                                                    <option value="visa gold">Visa Gold</option>
+                                                    <option value="visa platinum">Visa Platinum</option>
+                                                    <option value="visa infinite">Visa Infinite</option>
+                                                    <option value="visa buiness">Visa Business</option>
+                                                    <option value="visa corporate">Visa Corporate</option>
+                                                </select>
+                                            </label>
+                                        </div>
+                                    </div>
+                                }
                                 <div className="flex items-center justify-between w-full">
                                     <div className="text-lg ">Card No:</div>
                                     <div className="w-1/2">
@@ -151,13 +188,13 @@ const CardComponent = () => {
                                     <div className="text-lg ">Card CVV:</div>
 
                                     <div className="w-1/4">
-                                        <FormComponent formtype={'cvv'} name={`cvv`} value={cards.cvv} onchange={handleChange} />
+                                        <FormComponent formtype={'cvv'} name={`cvv`} value={cards.cvv} onchange={handleCvv} />
                                     </div>
                                 </div>
                                 <div className="flex items-center justify-between w-full">
                                     <div className="text-lg ">Card Exp:</div>
                                     <div className="w-1/4">
-                                        <FormComponent formtype={'text'} name={`exp`} value={cards.exp} onchange={handleChange} />
+                                        <FormComponent formtype={'text'} name={`exp`} value={cards.exp} onchange={handleExp} />
                                     </div>
                                 </div>
                             </div>
@@ -170,9 +207,9 @@ const CardComponent = () => {
             <div className="flex mb-2 w-full items-center justify-between">
                 <div className=" text-xl font-semibold">My Cards</div>
                 {allcards.length < 2 &&
-                   <div className="w-fit ">
-                     <ButtonComponent  onclick={() => setAdd(true)} title="Add New Card" bg={`text-white bg-gradient-to-tr px-3 from-primary text-sm to-purple-700 h-12`} />
-                   </div>
+                    <div className="w-fit ">
+                        <ButtonComponent onclick={() => setAdd(true)} title="Add New Card" bg={`text-white bg-gradient-to-tr px-3 from-primary text-sm to-purple-700 h-12`} />
+                    </div>
                 }
             </div>
             {Array.isArray(allcards) && allcards.length > 0 ? <div className=" mx-auto grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -184,6 +221,7 @@ const CardComponent = () => {
                                     <div className={`w-fit  ${item.type === 'visa' ? 'h-16' : 'h-fit'} bg-white rounded-md flex items-center justify-center`}>
                                         <img src={item.type === 'visa' ? visacardimg : mastercardimg} className={`w-24 `} alt="" />
                                     </div>
+                                    {item.visa_type && <div className="w-fit px-4 py-2 rounded-md bg-white text-primary font-bold text-base capitalize italic">{item.visa_type}</div>}
                                     <img src={chip} className={`w-fit h-14 `} alt="" />
                                 </div>
                                 <div className="mb-2 mt-2 flex  items-center justify-between  text-white text-base">

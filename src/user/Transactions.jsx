@@ -196,3 +196,5 @@ export default Transactions
 //   }
 //   setPizza({...pizza,toppings:newToppings})
 // }
+
+// bg-gradient-to-tr from-[#021526]   to-[#201E43]
