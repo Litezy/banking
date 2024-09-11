@@ -63,12 +63,12 @@ export default function AdminLayout({ children,show=true }) {
         { path: 'users', url: '/admin/users' },
         { path: 'transfers', url: '/admin/transfers' },
         { path: 'transactions', url: '/admin/transactions' },
-        { path: 'verifications', url: '/admin/verifications' },
+        { path: 'pending transfers', url: '/admin/pending_transfers' },
+        { path: 'verified transfers', url: '/admin/verified_transfers' },
         { path: 'banks', url: '/admin/banks' },
         { path: 'newsletters', url: '/admin/newsletters' },
         { path: 'contacts', url: '/admin/contacts' },
         { path: 'user kycs', url: '/admin/kycs' },
-        { path: 'single-page', url: '/admin/verifications/:id' },
 
     ]
 
@@ -148,9 +148,8 @@ export default function AdminLayout({ children,show=true }) {
                             <div className="text-white text-center capitalize text-sm">{profile?.firstname} {profile?.lastname}</div>
 
                         </div>
-                        <div ref={sideDiv} className={`scroll w-full overflow-y-auto overflow-x-hidden flex items-start  flex-col`}>
-                        {/* <div ref={sideDiv} className={` ${viewall ? ' transition-all delay-500 h-[20rem]' : 'h-[23rem]'} scroll w-full overflow-y-auto overflow-x-hidden flex items-start  flex-col`}> */}
-                            {SideLinks.slice(0, SideLinks.length - 1).map((item, index) => (
+                        <div ref={sideDiv} className={` ${viewall ? ' transition-all delay-500 h-[20rem]' : 'h-[23rem]'} scroll w-full overflow-y-auto overflow-x-hidden flex items-start  flex-col`}>
+                            {SideLinks.map((item, index) => (
                                 <Link to={item.url}
                                     key={index}
                                     onClick={closeUp}

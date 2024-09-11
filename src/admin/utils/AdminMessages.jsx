@@ -50,7 +50,7 @@ const AdminMessages = () => {
 
   return (
     <div className=' w-full mx-auto lg:h-screen h-[100dvh] flex items-center justify-center'>
-      <div className="mb-5 w-full mx-auto md:w-11/12 bg-white lg:h-[90dvh] h-[90dvh] relative flex-col rounded-lg flex items-start justify-between">
+      <div className="mb-5 w-full mx-auto md:w-11/12 bg-white  h-[100dvh] relative flex-col rounded-lg flex items-start justify-between">
 
         {loading &&
           <div className="absolute top-0  backdrop-blur-sm w-full h-full rounded-md left-1/2 -translate-x-1/2">
@@ -58,7 +58,7 @@ const AdminMessages = () => {
           </div>
         }
 
-        <div className="h-[10dvh] w-full border-b flex items-center px-5 justify-between">
+        <div className="h-[10dvh] py-2 w-full border-b flex items-center px-5 justify-between">
           <Link
             className='w-fit px-3 py-1 rounded-md bg-gradient-to-tr from-primary to bg-purple-700 text-white'
             to={chatform ? `/admin/tickets/closed_chats` : `/admin/tickets/active_chats`}
@@ -72,11 +72,8 @@ const AdminMessages = () => {
 
           </div>
 
-          <div className="text-sm">status: <span
-            className={`${tickets?.usertickets?.status === 'online' ? 'text-green-500' : 'text-gray-400'}`}>
-            {tickets?.usertickets?.status === 'online' ? 'online' : tickets?.usertickets?.status === 'offline' ? 'offline' : 'not joined'}</span></div>
         </div>
-        <div className="lg:h-[68dvh] h-[78dvh] overflow-y-auto w-full py-1 scroll  downdiv ">
+        <div className="lg:h-[78dvh] h-[88dvh] overflow-y-auto w-full py-1 scroll  downdiv ">
           <div className="text-sm text-slate-500 font-semibold text-left ml-3">Ticket Details</div>
           <div
             className={`${tickets?.message?.length || tickets?.subject?.length <= 90 ? 'w-fit' : 'w-[55%]'} relative text-sm  border px-4 mt-1  mr-auto bg-gradient-to-tr bg-slate-300  py-2 flex items-start flex-col gap-2  rounded-md ml-2`}>
@@ -99,10 +96,10 @@ const AdminMessages = () => {
               <div className="text-sm">No image attached</div>
             }
           </div>
-          {tickets?.joined === 'true' && <div className="my-2 w-fit px-5 py-2 border-slate-300 border mx-auto  rounded-lg ">you joined this chats</div>}
+          {tickets?.joined === 'true' && <div className="my-2 w-fit px-5 py-2 border-slate-300 border mx-auto  rounded-lg ">you joined this chat</div>}
           <ChatMessages />
         </div>
-        <div className="lg:h-[12dvh] h-[14dvh] border-t py-1 w-full ">
+        <div className="lg:h-[12dvh] h-[10dvh] border-t py-1 w-full ">
         {!chatform && <ChatForm ticketid={tickets?.id} fetchMsgs={() => fecthticketMessages()} />}
         </div>
       </div>

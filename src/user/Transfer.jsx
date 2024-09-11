@@ -315,7 +315,7 @@ const Transfer = () => {
                   </div>
                   <div className="flex items-center gap-3  w-full">
                     <div className="-500 text-base">Transaction ID:</div>
-                    <div className="capitalize text-base font-bold">{transactionId}</div>
+                    <div className="capitalize text-base font-bold">{receipt.transid}</div>
                   </div>
                   <div className="flex items-center gap-3  w-full">
                     <div className="-500 text-base">Transaction Date:</div>

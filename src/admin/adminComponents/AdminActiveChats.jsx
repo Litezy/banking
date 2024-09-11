@@ -65,7 +65,7 @@ const AdminActiveChats = () => {
         <div className='w-11/12 flex items-center justify-center mx-auto h-fit py-5'>
 
             {joinedmsg &&
-                <ModalLayout setModal={setJoinedMsg} clas={`lg:w-[60%] mx-auto w-10/12`}>
+                <ModalLayout setModal={setJoinedMsg} clas={`lg:w-[60%] mx-auto w-11/12`}>
                     <div className="w-full bg-white rounded-lg p-10 ">
 
                         {loading &&

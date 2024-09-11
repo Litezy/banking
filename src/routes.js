@@ -5,7 +5,6 @@ import Notfound from "general/Nofound";
 import Login from "forms/Login";
 import ForgotPassword from "forms/ForgotPassword";
 import VerifyEmailAccount from "forms/VerifyEmail";
-// import ChangePassword from "forms/ChangePassword";
 import Savings from "user/Savings";
 import Transfer from "user/Transfer";
 import Transactions from "user/Transactions";
@@ -23,10 +22,8 @@ import Newsletters from "admin/adminComponents/Newsletters";
 import Services from "components/general/Services";
 import ContactUs from "components/general/ContactUs";
 import AboutUs from "components/general/AboutUs";
-import Verifications from "admin/adminComponents/Verifications";
 import PrivacyPolicy from "components/general/PrivacyPolicy";
 import TermsofUse from "components/general/TermsofUse";
-import UserVerifications from "admin/adminComponents/UserVerifications";
 import InternalTransfer from "user/InternalTransfer";
 import TicketsStatus from "user/TicketsStatus";
 import Messages from "user/Messages";
@@ -40,6 +37,8 @@ import ApprovedKycs from "admin/utils/ApprovedKycs";
 import KycModal from "admin/utils/KycModal";
 import ActiveComponent from "utils/ActiveComponent";
 import ClosedComponent from "utils/ClosedComponent";
+import VerifiedTransfers from "admin/adminComponents/VerifiedTransfers";
+import PendingTransfers from "admin/adminComponents/PendingTransfers";
 
 
 
@@ -50,7 +49,6 @@ export const FormRoutes = [
     { path: '/login', component: Login },
     { path: '/forgot-password', component: ForgotPassword },
     { path: '/verify-email', component: VerifyEmailAccount },
-    // { path: '/change-password', component: ChangePassword },
 ]
 
 export const GeneralRoutes = [
@@ -67,8 +65,8 @@ export const GeneralRoutes = [
 export const UserRoutes = [
     { path: '', component: Dashboard },
     { path: 'savings', component: Savings },
-    { path: 'external-transfer', component: Transfer },
-    { path: 'internal-transfer', component: InternalTransfer },
+    { path: 'external-transfers', component: Transfer },
+    { path: 'internal-transfers', component: InternalTransfer },
     { path: 'transactions', component: Transactions },
     { path: 'notifications', component: Notifications },
     { path: 'settings', component: Settings },
@@ -88,11 +86,11 @@ export const AdminRoutes = [
     { path: 'transfers', component: AllTransfers },
     { path: 'transactions', component: AllTransactions },
     { path: 'users', component: AllUsers },
-    { path: 'verifications', component: Verifications },
+    { path: 'pending_transfers', component: PendingTransfers },
+    { path: 'verified_transfers', component: VerifiedTransfers  },
     { path: 'banks', component: Banks },
     { path: 'contacts', component: Contacts },
     { path: 'newsletters', component: Newsletters },
-    { path: 'verifications/:id', component: UserVerifications },
     { path: 'tickets/active_chats', component: AdminActiveChats },
     { path: 'tickets/closed_chats', component: AdminClosedChats },
     { path: 'tickets/active_chats/chats/:id', component: AdminMessages },

@@ -13,6 +13,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Apis, GetApi, profileImg } from 'services/Api';
 import { errorMessage } from 'utils/functions';
 import { HiOutlineBars3BottomRight } from "react-icons/hi2";
+import {motion} from 'framer-motion'
 
 
 export default function UserLayout({ children }) {
@@ -120,7 +121,7 @@ export default function UserLayout({ children }) {
                         <UserSidebar setOpenSide={setOpenSide} />
                     </div>
                     <div className="bg-slate-50 lg:w-[80%] h-screen overflow-y-auto w-full relative">
-                       {!chats && <div className="lg:w-[78.8%]  w-[100%] bg-white flex z-50 items-center overflow-y-hidden overflow-x-hidden justify-between fixed  h-fit px-5 py-2">
+                       {!chats && <div className="lg:w-[78.8%] md:w-[98.25%]  w-[100%] bg-white flex z-50 items-center overflow-y-hidden overflow-x-hidden justify-between fixed  h-fit px-5 py-2">
                             <div className="flex items-center gap-2 w-2/3">
                                 <div onClick={() => navigate(`/user/profile`)} className="cursor-pointer">
                                     {profile?.image ? <img src={`${profileImg}/profiles/${profile?.image}`} className='lg:w-14 lg:h-14 w-12 h-12 rounded-full object-cover' alt="" /> :
@@ -152,10 +153,14 @@ export default function UserLayout({ children }) {
 
                         </div>}
                         {openside &&
-                            <div ref={refdiv} className="w-[65%] md:w-[35%] rounded-s-lg z-50 top-0  right-0 bg-gradient-to-tr from-primary to-purple-700 h-screen fixed">
+                            <motion.div 
+                            initial={{x:'100vw', opacity:0}}
+                            animate={{x:0, opacity:1}}
+                            transition={{type:'tween',mass:0.4, damping:10,duration:0.5}}
+                            ref={refdiv} className="w-[65%] md:w-[35%] rounded-s-lg z-50 top-0  right-0 bg-gradient-to-tr from-primary to-purple-700 h-screen fixed">
                                 <UserSidebar smallView={true} setOpenSide={setOpenSide} />
 
-                            </div>
+                            </motion.div>
                         }
                         <div className={`h-fit ${chats ? '':'mt-10 pb-10 pt-5'} overflow-x-hidden `}>
                             {children}

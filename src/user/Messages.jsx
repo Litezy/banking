@@ -62,16 +62,15 @@ const Messages = () => {
   }, [])
 
   return (
-    <div className={`pt-1 w-full mx-auto h-fit overflow-y-hidden ]`}>
-      <div className=" mx-auto md:w-11/12 bg-white overflow-y-hidden  h-[100dvh] overflow-x-hidden w-full relative  flex-col rounded-lg flex items-start justify-between">
-
+    <div className=' w-full mx-auto lg:h-screen h-[100dvh] flex items-center justify-center'>
+      <div className="mb-5 w-full mx-auto md:w-11/12 bg-white  h-[100dvh] relative flex-col rounded-lg flex items-start justify-between">
         {loading &&
           <div className="fixed top-0  backdrop-blur-sm w-full h-full rounded-md left-1/2 -translate-x-1/2">
             <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-fit p-5 rounded-md bg-white"><Loader /></div>
           </div>
         }
 
-        <div className="h-[10dvh] w-full border-b flex items-center px-5 justify-between">
+        <div className="h-[12dvh]  w-full border-b flex items-center px-5 justify-between">
           <Link
             className='w-fit text-xs px-4 py-1 rounded-md bg-gradient-to-tr from-primary to bg-purple-700 text-white'
             to={active ? `/user/tickets/status/active` : `/user/tickets/status/closed`}
@@ -85,7 +84,7 @@ const Messages = () => {
 
 
         </div>
-        <div className="h-[87dvh] overflow-y-auto w-full py-1 scroll  downdiv ">
+        <div className="h-[80dvh] overflow-y-auto w-full py-1 scroll  downdiv ">
           <div className="text-sm text-primary font-semibold text-right mr-3">Ticket Details</div>
           <div
             className={`${tickets?.message?.length || tickets?.subject?.length <= 90 ? 'w-fit' : 'w-[55%]'} relative text-sm  border px-4 mt-1  ml-auto bg-gradient-to-tr from-primary to-purple-700 text-white  py-2 flex items-start flex-col gap-2  rounded-md mr-2`}>
@@ -105,7 +104,7 @@ const Messages = () => {
                 src={`${profileImg}/tickets/${tickets?.image}`}
                 className='w-fit object-fill'
                 alt="ticketimg" /> :
-              <div className="text-sm">No image attached</div>
+              <div className="text-sm">No image(s) attached</div>
             }
           </div>
           {tickets?.joined === 'true' && <div className="my-2 w-fit px-5 py-2 border-slate-300 border mx-auto  rounded-lg ">an admin has joined the chats</div>}

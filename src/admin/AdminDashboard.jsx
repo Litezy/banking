@@ -10,19 +10,35 @@ import Summary from './adminComponents/Summary'
 
 const AdminDashboard = () => {
 
-    
+
     const dispatch = useDispatch();
     const [profile, setProfile] = useState(null);
     const [users, setUsers] = useState([])
     const [savings, setSavings] = useState('')
     const [kyc, setKyc] = useState([])
     const [transactions, setTransactions] = useState([])
-    const [plans,setPlans] = useState([])
-    const [viewMore, setViewMore] = useState(false)
+    const [plans, setPlans] = useState([])
+    const [contacts, setContacts] = useState([])
+    const [pendingTransfers, setPendingTransfers] = useState([])
+    const [amount, setAmount] = useState('')
+    const [terminatedamount, setTerminatedAmount] = useState('')
+    const [completedamount, setCompletedAmount] = useState('')
+    const [deposits, setDeposits] = useState([])
+    const [terminatedSavings, setTerminatedSavings] = useState([])
+    const [completedSavings, setCompletedSavings] = useState([])
+    const [tickets, setTickets] = useState([])
+    const [actives, setActives] = useState([])
+    const [closed, setClosed] = useState([])
+    const [banks, setBanks] = useState([])
+    const [adminBanks, setAdminBanks] = useState([])
+    const [cards, setCards] = useState([])
+    const [pendingKycs, setPendingKycs] = useState([])
+    const [approvedKycs, setApprovedKycs] = useState([])
+    const [news, setNews] = useState([])
 
-   
-  
-    const fetchUser= useCallback(async () => {
+
+
+    const fetchUser = useCallback(async () => {
         try {
             const response = await GetApi(Apis.auth.profile)
             if (response.status === 200) {
@@ -36,9 +52,9 @@ const AdminDashboard = () => {
         }
     }, [])
 
-    useEffect(()=>{
+    useEffect(() => {
         fetchUser()
-    },[])
+    }, [])
     const fetchUsers = useCallback(async () => {
         try {
             const response = await GetApi(Apis.admin.all_users)
@@ -52,6 +68,24 @@ const AdminDashboard = () => {
             console.log(error)
         }
     }, [])
+    const fetchActiveChats = useCallback(async () => {
+        try {
+            const res = await GetApi(Apis.admin.all_active_tickets)
+            if (res.status !== 200) return;
+            setActives(res.data)
+        } catch (error) {
+            errorMessage(error.message)
+        }
+    }, [])
+    const fetchClosedChats = useCallback(async ()=>{
+        try {
+            const res = await GetApi(Apis.admin.all_closed_tickets)
+            if(res.status !== 200) return errorMessage(res.msg)
+                setClosed(res.data)
+        } catch (error) {
+           errorMessage(`error in fethcing closed messages`, error.message) 
+        } 
+    },[])
 
     const fetchUserSavings = useCallback(async () => {
         try {
@@ -93,36 +127,187 @@ const AdminDashboard = () => {
     const fetchKyc = useCallback(async () => {
         try {
             const response = await GetApi(Apis.admin.all_kycs)
-            if (response.status === 200) {
-                setKyc(response.data)
-            } else {
-                console.log(response.msg)
-            }
+            if (response.status !== 200) return errorMessage(response.msg)
+            setKyc(response.data)
         } catch (error) {
             errorMessage(error.message)
         }
     }, [])
+
+    const fetchPendingKyc = useCallback(async () => {
+        try {
+            const response = await GetApi(Apis.admin.pending_kycs)
+            if (response.status !== 200) return errorMessage(response.msg)
+            setPendingKycs(response.data)
+        } catch (error) {
+            errorMessage(error.message)
+        }
+    }, [])
+
+    const fetchNews = useCallback( async ()=>{
+        try {
+          const res = await GetApi(Apis.admin.subs)
+          if(res.status === 200 ){
+            setNews(res.data)
+          }else{
+            errorMessage(res.msg)
+          }
+        } catch (error) {
+          errorMessage(error.message)
+        }
+      },[])
+
+    const fetchApprovedKyc = useCallback(async () => {
+        try {
+            const response = await GetApi(Apis.admin.verified_kycs)
+            if (response.status !== 200) return errorMessage(response.msg)
+            setApprovedKycs(response.data)
+        } catch (error) {
+            errorMessage(error.message)
+        }
+    }, [])
+    const fetchContacts = useCallback(async () => {
+        try {
+            const response = await GetApi(Apis.admin.all_contacts)
+            if (response.status !== 200) return errorMessage(response.msg)
+            setContacts(response.data)
+
+        } catch (error) {
+            errorMessage(error.message)
+        }
+    }, [])
+    const fetchAllDeposits = useCallback(async () => {
+        try {
+            const response = await GetApi(Apis.admin.all_deposits)
+            if (response.status !== 200) return errorMessage(response.msg)
+            setDeposits(response.data)
+
+        } catch (error) {
+            errorMessage(error.message)
+        }
+    }, [])
+    const fetchAllTransfers = useCallback(async () => {
+        try {
+            const response = await GetApi(Apis.admin.pending_transfers)
+            if (response.status !== 200) return errorMessage(response.msg)
+            setPendingTransfers(response.data)
+            setAmount(response.amount)
+
+        } catch (error) {
+            errorMessage(error.message)
+        }
+    }, [])
+    const fetchAllTickets = useCallback(async () => {
+        try {
+            const response = await GetApi(Apis.admin.all_tickets)
+            if (response.status !== 200) return errorMessage(response.msg)
+            setTickets(response.data)
+
+        } catch (error) {
+            errorMessage(error.message)
+        }
+    }, [])
+    const fetchAllTerminatedSavings = useCallback(async () => {
+        try {
+            const response = await GetApi(Apis.admin.terminated_savings)
+            if (response.status !== 200) return errorMessage(response.msg)
+            setTerminatedSavings(response.data)
+            setTerminatedAmount(response.amount)
+        } catch (error) {
+            errorMessage(error.message)
+        }
+    }, [])
+    const fetchAllCompletedSavings = useCallback(async () => {
+        try {
+            const response = await GetApi(Apis.admin.completed_savings)
+            if (response.status !== 200) return errorMessage(response.msg)
+            setCompletedSavings(response.data)
+            setCompletedAmount(response.amount)
+        } catch (error) {
+            errorMessage(error.message)
+        }
+    }, [])
+    const fetchUserBanks = useCallback(async () => {
+        try {
+            const res = await GetApi(Apis.admin.all_banks)
+            if (res.status !== 200) return errorMessage(res.msg)
+            setBanks(res.data)
+        } catch (error) {
+            errorMessage(error.message)
+        }
+    }, [])
+
+    const fetchUserCards = useCallback(async () => {
+        try {
+            const res = await GetApi(Apis.admin.all_cards)
+            if (res.status !== 200) return errorMessage(res.msg)
+            setCards(res.data)
+        } catch (error) {
+            errorMessage(error.message)
+        }
+    }, [])
+    const fetchAdminBanks = useCallback(async () => {
+        try {
+          const res = await GetApi(Apis.admin.admin_banks)
+          if (res.status !== 200) return errorMessage(res.msg)
+            setAdminBanks(res.data)
+        } catch (error) {
+          console.log(error)
+          errorMessage(error.message)
+        }
+      }, [])
     useEffect(() => {
         fetchUsers()
         fetchTransactions()
         fetchUserSavings()
         fetchSavingsPlans()
         fetchKyc()
+        fetchContacts()
+        fetchActiveChats()
+        fetchClosedChats()
+        fetchAllCompletedSavings()
+        fetchAllDeposits()
+        fetchAllTickets()
+        fetchAllTerminatedSavings()
+        fetchAllTransfers()
+        fetchAdminBanks()
+        fetchUserBanks()
+        fetchUserCards()
+        fetchPendingKyc()
+        fetchApprovedKyc()
+        fetchNews()
     }, [profile, dispatch])
 
 
-    
+
     return (
-        <div className='mt-20 md:mt-5 w-11/12 mx-auto h-fit pb-20  '>
-           <div className="md:grid block md:grid-cols-2 md:w-full w-3/4 mx-auto gap-5 md:h-40">
-           <Summary  color='bg-black text-white' title={'Total Users'} data={users.length}/>
-            <Summary   color='bg-green-500 text-white' title={'Total Deposits'} data={`$${savings}`}/>
-            <Summary   color='bg-red-500 text-white' title={'Total Transactions'} data={transactions.length}/>
-            <Summary   color='bg-orange-500 text-white' title={'Total Savings Plans'} data={plans.length}/>
-            <Summary   color='bg-yellow-500 text-white' title={"Total Submitted KYC's"} data={kyc.length}/>
-           </div>
+        <div className=' md:mt-5 w-11/12 mx-auto h-fit py-10   '>
+            <div className="md:grid block md:grid-cols-2 md:w-full lg:grid-cols-3 w-3/4 mx-auto gap-5 ">
+                <Summary color='bg-black text-white' title={'Total Users'} data={users.length} />
+                <Summary color='bg-blue-500  text-white' title={"Total User's Balance"} data={`$${savings}`} />
+                <Summary color='bg-green-500 text-white' title={'Total Transactions'} data={transactions.length} />
+                <Summary color='bg-red-400 text-white' title={"Total Deposits"} data={deposits.length} />
+                <Summary color='bg-red-600 text-white' title={"Total User Banks"} data={banks.length} />
+                <Summary color='bg-red-900 text-white' title={"Total Admin Banks"} data={adminBanks.length} />
+                <Summary color='bg-orange-900 text-white' title={"Total User Cards"} data={cards.length} />
+                <Summary color='bg-orange-500 text-white' title={'Total Savings Plans'} data={plans.length} />
+                <Summary color='bg-purple-500 text-white' title={"Total Pending Transfers"} data={pendingTransfers.length} />
+                <Summary color='bg-purple-700 text-white' title={"Total Pending Transfers Amount"} data={`$${amount}`} />
+                <Summary color='bg-slate-500 text-white' title={"Total Terminated Savings"} data={terminatedSavings.length} />
+                <Summary color='bg-sky-500 text-white' title={"Total Terminated Savings Amount"} data={`$${terminatedamount}`} />
+                <Summary color='bg-slate-700 text-white' title={"Total Completed Savings"} data={completedSavings.length} />
+                <Summary color='bg-sky-700 text-white' title={"Total Completed Savings Amount"} data={`$${completedamount}`} />
+                <Summary color='bg-yellow-300 text-white' title={"Total KYC's"} data={kyc.length} />
+                <Summary color='bg-yellow-600 text-white' title={"Total Pending KYC's"} data={pendingKycs.length} />
+                <Summary color='bg-yellow-900 text-white' title={"Total Approved KYC's"} data={approvedKycs.length} />
+                <Summary color='bg-indigo-400 text-white' title={"Total Tickets"} data={tickets.length} />
+                <Summary color='bg-indigo-600 text-white' title={"Total Active Tickets"} data={actives.length} />
+                <Summary color='bg-indigo-900 text-white' title={"Total Closed Tickets"} data={closed.length} />
+                <Summary color='bg-blue-700 text-white' title={"Total Contacts"} data={contacts.length} />
+                <Summary color='bg-pink-600 text-white' title={"Total Newsletter Subscribers"} data={news.length} />
+            </div>
         </div>
-      )
+    )
 
 
 }
