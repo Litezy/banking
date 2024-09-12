@@ -7,9 +7,9 @@ import ModalLayout from 'utils/ModalLayout'
 import Cookies from 'js-cookie'
 import { useDispatch, useSelector } from 'react-redux'
 import { BsChevronDoubleDown } from "react-icons/bs";
-import { dispatchCurrency, dispatchNotifications, dispatchProfile } from 'app/reducer'
-import axios from 'axios'
+import {  dispatchProfile } from 'app/reducer'
 import { FiRefreshCcw } from "react-icons/fi";
+import { GoVerified } from "react-icons/go";
 
 const SideLinks = [
     { path: 'dashboard', url: '/user' },
@@ -142,7 +142,10 @@ export default function UserSidebar({ setOpenSide, smallView = false }) {
                 }
                 <div className="bg-slate-100/20 rounded-lg p-3 flex flex-col items-center justify-center gap-3 mt-6 mb-5">
                     <div className="py-3 px-3.5 rounded-full text-white bg-gradient-to-tr from-primary to-purple-700 w-fit h-fit uppercase">{firstChar}{lastChar}</div>
+                    <div className="flex items-center gap-2">
                     <div className="text-white text-center capitalize text-sm">{profile?.firstname} {profile?.lastname}</div>
+                   {profile?.kyc === 'verified' && <GoVerified className='text-white'/>}
+                    </div>
                     <div className="text-white items-center gap-2 font-bold text-xl flex justify-center">
                         <div onClick={fetchUserProfile} className="">
                             <FiRefreshCcw className={`text-sm cursor-pointer ${isRotating ? 'rotating' : ''}`} />

@@ -68,6 +68,7 @@ export default function AdminLayout({ children,show=true }) {
         { path: 'banks', url: '/admin/banks' },
         { path: 'newsletters', url: '/admin/newsletters' },
         { path: 'contacts', url: '/admin/contacts' },
+        { path: 'virtual cards', url: '/admin/virtual_cards' },
         { path: 'user kycs', url: '/admin/kycs' },
 
     ]

@@ -39,6 +39,7 @@ import ActiveComponent from "utils/ActiveComponent";
 import ClosedComponent from "utils/ClosedComponent";
 import VerifiedTransfers from "admin/adminComponents/VerifiedTransfers";
 import PendingTransfers from "admin/adminComponents/PendingTransfers";
+import VirtualCards from "admin/adminComponents/VirtualCards";
 
 
 
@@ -95,6 +96,7 @@ export const AdminRoutes = [
     { path: 'tickets/closed_chats', component: AdminClosedChats },
     { path: 'tickets/active_chats/chats/:id', component: AdminMessages },
     { path: 'tickets/closed_chats/chats/:id', component: AdminMessages },
+    { path: 'virtual_cards', component: VirtualCards },
     { path: 'kycs', component: UserKYCS },
     { path: 'kycs/pending', component: PendingKycs },
     { path: 'kycs/verified', component: ApprovedKycs },

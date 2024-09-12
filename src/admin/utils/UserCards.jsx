@@ -45,7 +45,7 @@ const UserBanks = ({ setActive }) => {
                         <form className="h-fit w-full relative bg-white rounded-lg mb-3 p-10" key={i}>
 
                             <div className="w-full flex items-start gap-5 flex-col ">
-                                <div className="self-center md:text-2xl text-lg text-primary font-semibold">{item.usercards?.firstname} {item.usercards?.lastname }'s {item.type}  Card Details</div>
+                                <div className="self-center md:text-2xl text-lg text-primary font-semibold capitalize">{item.usercards?.firstname} {item.usercards?.lastname }'s {item.type}  Card Details</div>
                                 <div className="flex w-full lg:items-center flex-col lg:flex-row justify-between">
                                     <div className="lg:w-[45%]">Card Holder:</div>
                                     <FormComponent value={item.name} />

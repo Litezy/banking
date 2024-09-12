@@ -1,19 +1,18 @@
 import { Box, LinearProgress } from '@mui/material';
 import { dispatchCurrency, dispatchProfile } from 'app/reducer';
 import UserSidebar from 'components/user/UserSidebar';
-import Userfooter from 'components/user/Userfooter';
 import VerifyEmailAccount from 'forms/VerifyEmail';
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { BsBell } from 'react-icons/bs';
 import { FaUser } from 'react-icons/fa6';
-import { FaUserAlt } from "react-icons/fa";
-import { FaHistory } from "react-icons/fa";
 import { useDispatch } from 'react-redux';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Apis, GetApi, profileImg } from 'services/Api';
 import { errorMessage } from 'utils/functions';
 import { HiOutlineBars3BottomRight } from "react-icons/hi2";
 import {motion} from 'framer-motion'
+import { MdHistory } from 'react-icons/md';
+import { BiUser } from 'react-icons/bi';
 
 
 export default function UserLayout({ children }) {
@@ -135,10 +134,10 @@ export default function UserLayout({ children }) {
                             <div className="w-1/2 ">
                                 <div className="text-2xl hidden  lg:flex items-center justify-end gap-5">
                                     <Link to={`/user/profile`}>
-                                        <FaUserAlt />
+                                        <BiUser />
                                     </Link>
                                     <Link to="/user/transactions">
-                                        <FaHistory />
+                                        <MdHistory />
                                     </Link>
                                     <Link to="/user/notifications" className='relative'>
                                         {notice && notice.length > 0 && <div className="w-3 h-3 bg-red-600 rounded-full border-2 border-white absolute top-0 right-0 shadow-lg"></div>}

@@ -20,10 +20,6 @@ const CardComponent = () => {
     const [cards, setCards] = useState(
         {
             type: '',
-            card_no: '',
-            cvv: '',
-            card_name: '',
-            exp: '',
             visa_type: ''
         },
 
@@ -31,6 +27,7 @@ const CardComponent = () => {
 
 
     const [allcards, setAllcards] = useState([])
+    const [cardRequests, setCardRequests] = useState([])
 
     const fetchUserCards = useCallback(async () => {
         try {
@@ -41,9 +38,19 @@ const CardComponent = () => {
             errorMessage(error.message)
         }
     }, [])
+    const fetchCardRequests = useCallback(async () => {
+        try {
+            const response = await GetApi(Apis.auth.card_requests)
+            if (response.status !== 200) return;
+            setCardRequests(response?.user?.card_owner)
+        } catch (error) {
+            errorMessage(error.message)
+        }
+    }, [])
 
     useEffect(() => {
         fetchUserCards()
+        fetchCardRequests()
     }, [fetchUserCards])
 
     const handleChange = (e) => {
@@ -65,54 +72,25 @@ const CardComponent = () => {
         }
     }, [])
 
-    const handleCardNumberChange = (event) => {
-        let value = event.target.value.replace(/\D/g, ''); // Remove all non-digit characters
-        value = value.substring(0, 16); // Limit to 16 digits
-        const formattedValue = value.match(/.{1,4}/g)?.join('-') || value; // Insert hyphens every 4 digits
-        setCards({
-            ...cards,
-            card_no: formattedValue
-        });
-    };
-    const handleCvv = (event) => {
-        let value = event.target.value.replace(/\D/g, ''); // Remove all non-digit characters
-        value = value.substring(0, 3); // Limit to 3 digits
-        setCards({
-            ...cards,
-            cvv: value
-        });
-    };
-    const handleExp = (event) => {
-        let value = event.target.value.replace(/\D/g, ''); // Remove all non-digit characters
-        value = value.substring(0, 4); // Limit to 4 digits
-        const formattedVal = value.match(/.{1,2}/g)?.join(`/`) || value
-        setCards({
-            ...cards,
-            exp: formattedVal
-        });
-    };
+    
 
     const addCardsArr = async (e) => {
         e.preventDefault()
         if (!cards.type) return errorMessage('Card type is required')
-        if (!cards.card_name) return errorMessage('Card name is required')
-        if (!cards.card_no) return errorMessage('Card number is required')
-        if (!cards.cvv) return errorMessage('Card cvv is required')
-        if (!cards.exp) return errorMessage('Card expiry date is required')
+        if (cards.type === 'visa' && !cards.visa_type) return errorMessage('Visa type is required for visa cards')
         const formdata = {
-            name: cards.card_name,
-            card_no: cards.card_no,
-            cvv: cards.cvv,
-            exp: cards.exp,
             visa_type: cards.visa_type ? cards.visa_type :'',
-            type: cards.type
+            card_type: cards.type
         }
+        // return console.log(formdata)
         setLoading(true)
         try {
-            const response = await PostApi(Apis.auth.create_card, formdata)
+            const response = await PostApi(Apis.auth.request_card, formdata)
             if (response.status === 200) {
-                setCards({ card_name: '', card_no: '', cvv: '', exp: '', type: '' })
+                setCards({ visa_type:'',type: '' })
                 successMessage(response.msg)
+                await new Promise((resolve, reject) => setTimeout(resolve, 2000))
+                fetchCardRequests()
                 fetchUserCards()
                 setAdd(false)
             } else {
@@ -139,7 +117,7 @@ const CardComponent = () => {
                                     <Loader />
                                 </div>
                             }
-                            <div className="text-xl font-semibold text-balance">Enter Card Details</div>
+                            <div className="text-xl font-semibold text-balance">Enter Card Request below</div>
                             <div className="my-5 flex flex-col items-start gap-5">
                                 <div className="flex items-center justify-between w-full">
                                     <div className="text-lg ">Card type:</div>
@@ -172,33 +150,9 @@ const CardComponent = () => {
                                         </div>
                                     </div>
                                 }
-                                <div className="flex items-center justify-between w-full">
-                                    <div className="text-lg ">Card No:</div>
-                                    <div className="w-1/2">
-                                        <FormComponent formtype={'text'} value={cards.card_no} onchange={handleCardNumberChange} />
-                                    </div>
-                                </div>
-                                <div className="flex items-center justify-between w-full">
-                                    <div className="text-lg ">Card Holder Name:</div>
-                                    <div className="w-1/2">
-                                        <FormComponent formtype={'text'} name={`card_name`} value={cards.card_name} onchange={handleChange} />
-                                    </div>
-                                </div>
-                                <div className="flex items-center justify-between w-full">
-                                    <div className="text-lg ">Card CVV:</div>
-
-                                    <div className="w-1/4">
-                                        <FormComponent formtype={'cvv'} name={`cvv`} value={cards.cvv} onchange={handleCvv} />
-                                    </div>
-                                </div>
-                                <div className="flex items-center justify-between w-full">
-                                    <div className="text-lg ">Card Exp:</div>
-                                    <div className="w-1/4">
-                                        <FormComponent formtype={'text'} name={`exp`} value={cards.exp} onchange={handleExp} />
-                                    </div>
-                                </div>
+                                
                             </div>
-                            <button disabled={loading ? true : false} onClick={addCardsArr} className=' h-12 w-full bg-gradient-to-tr from-primary to-purple-700  text-white rounded-lg'>Add Card</button>
+                            <button disabled={loading ? true : false} onClick={addCardsArr} className=' h-12 w-full lg:w-8/12 mx-auto bg-gradient-to-tr from-primary to-purple-700  text-white rounded-lg'>Send Request</button>
                         </div>
                     </ModalLayout>
                 </>
@@ -206,11 +160,23 @@ const CardComponent = () => {
 
             <div className="flex mb-2 w-full items-center justify-between">
                 <div className=" text-xl font-semibold">My Cards</div>
-                {allcards.length < 2 &&
+                {cardRequests.length === 0 && allcards.length === 0 &&
                     <div className="w-fit ">
-                        <ButtonComponent onclick={() => setAdd(true)} title="Add New Card" bg={`text-white bg-gradient-to-tr px-3 from-primary text-sm to-purple-700 h-12`} />
+                        <ButtonComponent onclick={() => setAdd(true)} title="Request Virtual Card" bg={`text-white bg-gradient-to-tr px-3 from-primary text-sm to-purple-700 h-12`} />
                     </div>
                 }
+                {cardRequests.length === 1 && allcards.length === 0 &&
+                    <div className="w-fit font-bold text-base">First virtual card request in process</div>
+                }
+                {cardRequests.length === 1 && allcards.length === 1 &&
+                    <div className="w-fit ">
+                    <ButtonComponent onclick={() => setAdd(true)} title="Request Another  Card" bg={`text-white bg-gradient-to-tr px-3 from-primary text-sm to-purple-700 h-12`} />
+                </div>
+                }
+                {cardRequests.length > 1 && allcards.length === 1 &&
+                    <div className="w-fit font-bold text-base">Second virtual card request in process</div>
+                }
+                
             </div>
             {Array.isArray(allcards) && allcards.length > 0 ? <div className=" mx-auto grid grid-cols-1 md:grid-cols-2 gap-5">
                 {allcards.map((item, i) => {
