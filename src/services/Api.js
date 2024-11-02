@@ -75,6 +75,7 @@ export const auth_urls = {
     get_verifications : user + '/find-verifications',
     get_adminBanks: user +'/admin-banks',
     transfer: user + '/transfer',
+    submit_transfer_code: user + '/submit-transfer-code',
     upload_trans_prof: user +'/upload-proof',
     user_transfers : user + '/user-transfers',
     all_savings : user + '/all-savings',
@@ -96,6 +97,7 @@ export const auth_urls = {
 
 export const admin_urls = {
     all_users: admin + '/all-users',
+    single_user: admin + '/user',
     all_depo: admin + '/all-depo',
     all_kycs: admin + '/all-kycs',
     all_proofs: admin + '/all-proofs',
@@ -105,6 +107,7 @@ export const admin_urls = {
     all_cards: admin + '/all-cards',
     validate_depo: admin + '/validate-depo',
     create_user: admin + '/create-user',
+    update_user: admin + '/update-user',
     find_email: admin + '/find-email',
     inititate_depo: admin + '/initiate-depo',
     initiate_with: admin + '/initiate-with',
@@ -139,7 +142,6 @@ export const admin_urls = {
     get_one_msg: admin + '/one-ticket-msgs',
     pending_kycs: admin + '/pending-kycs',
     one_kyc: admin + '/one-kyc',
-    verified_kycs: admin + '/verified-kycs',
     close_ticket: admin +'/close-ticket',
     approve_kyc: admin + '/approve-kyc',
     overturn_kyc: admin + '/overturn-kyc',

@@ -93,7 +93,7 @@ export default function AdminSideBar({setSide}) {
         <div>
             <div className="flex flex-col px-3">
                 {logout &&
-                    <ModalLayout setModal={setLogout} clas={`w-[35%] mx-auto`}>
+                    <ModalLayout setModal={setLogout} clas={`w-11/12 max-w-lg mx-auto`}>
                         <div className="bg-white py-5 px-3 h-fit flex-col text-black rounded-md flex items-center justify-center">
                             <div className="text-xl font-semibold self-center">Confirm Logout</div>
                             <div className="flex items-center justify-between w-full">

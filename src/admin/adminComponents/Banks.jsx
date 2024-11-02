@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import Summary from './Summary'
-import { useSelector } from 'react-redux'
 import { Apis, GetApi, PostApi } from 'services/Api'
 import { errorMessage, successMessage } from 'utils/functions'
 import Loader from 'utils/Loader'
@@ -10,7 +9,6 @@ import ButtonComponent from 'utils/ButtonComponent'
 
 const Banks = () => {
   const [banks, setBanks] = useState([])
-  const profile = useSelector((state) => state.profile.profile)
   const [loading, setLoading] = useState(false)
   const [selectedItem, setSelectedItem] = useState({})
   const [add, setAdd] = useState(false)
@@ -32,7 +30,7 @@ const Banks = () => {
 
   useEffect(() => {
     fetchBanks()
-  }, [profile])
+  }, [fetchBanks])
 
 
   const select = (item) => {
@@ -130,7 +128,7 @@ const Banks = () => {
 
       {add &&
 
-        <ModalLayout setModal={setAdd} clas={`w-11/12 mx-auto lg:w-[70%]`}>
+        <ModalLayout setModal={setAdd} clas={`w-11/12 mx-auto max-w-3xl`}>
           <form onSubmit={AddBank} className="w-full bg-white p-5 rounded-md relative">
 
           {loading &&
@@ -222,7 +220,7 @@ const Banks = () => {
           <tbody>
             {banks.length > 0 ? banks.map((item, i) => (
               <tr className="bg-white border-b " key={i}>
-                <td scope="row" className="px-6 py-4 font-medium truncate text-gray-900 whitespace-nowrap ">
+                <td className="px-6 py-4 font-medium truncate text-gray-900 whitespace-nowrap ">
                   {item.bank_name}
                 </td>
                 <td className="px-3 truncate py-3">

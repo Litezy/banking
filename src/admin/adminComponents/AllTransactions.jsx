@@ -2,43 +2,43 @@ import React, { useCallback, useEffect, useState } from 'react'
 import Summary from './Summary'
 import { errorMessage, successMessage } from 'utils/functions'
 import { Apis, GetApi, PostApi } from 'services/Api'
-import { useSelector } from 'react-redux'
 import moment from 'moment'
 import ModalLayout from 'utils/ModalLayout'
 import ButtonComponent from 'utils/ButtonComponent'
 import Loader from 'utils/Loader'
 import 'react-datepicker/dist/react-datepicker.css';
 import DatePicker from 'react-datepicker'
+import TablePagination from './TablePagination'
 
 const AllTransactions = () => {
 
   const [transhistory, setTransHistory] = useState([])
-  const profile = useSelector((state) => state.profile.profile)
   const [selectedItem, setSelectedItem] = useState({})
   const [loading, setLoading] = useState(false)
   const [modal, setModal] = useState(false)
   const [dates, setDates] = useState(false)
+  const [page, setPage] = useState(1)
   const [forms, setForms] = useState({
     date: ''
   })
+  const [message, setMessage] = useState('')
+
   const getAllTrans = useCallback(async () => {
     try {
-      const res = await GetApi(Apis.admin.all_trans)
+      const res = await GetApi(`${Apis.admin.all_trans}?page=${page}`)
       if (res.status === 200) {
-        setTransHistory(res.data)
-        // console.log(res.data)
+        setTransHistory(res)
       } else {
         errorMessage(res.msg)
       }
     } catch (error) {
-      console.log(error)
       errorMessage(error.message)
     }
-  }, [])
+  }, [page])
 
   useEffect(() => {
     getAllTrans()
-  }, [profile])
+  }, [getAllTrans])
 
   const [selectedDate, setSelectedDate] = useState(null);
 
@@ -47,11 +47,10 @@ const AllTransactions = () => {
     setForms({ ...forms, date: formattedDate });
     setSelectedDate(date);
   };
-  const handleChange = (e) => {
-    setForms({ ...forms, [e.target.name]: e.target.value })
-  }
+  
   const selectOne = (item) => {
     setSelectedItem(item)
+    setMessage(item.message)
   }
 
 
@@ -59,7 +58,8 @@ const AllTransactions = () => {
     e.preventDefault()
     const formdata = {
       id: selectedItem.id,
-      date: forms.date
+      date: forms.date,
+      message: message
     }
     setLoading(true)
     // console.log(formdata)
@@ -84,11 +84,11 @@ const AllTransactions = () => {
   return (
     <div className='w-11/12 mx-auto'>
       <div className="lg:w-2/4 w-3/4 mx-auto">
-        <Summary color='bg-primary text-white' title={'Total Transactions'} data={transhistory.length} />
+        <Summary color='bg-primary text-white' title={'Total Transactions'} data={`Showing ${transhistory.data?.length} out of ${transhistory.total}`} />
       </div>
 
       {modal &&
-        <ModalLayout setModal={setModal} clas={`w-11/12 mx-auto md:w-[40%] lg-[30%]`}>
+        <ModalLayout setModal={setModal} clas={`w-11/12 mx-auto w-11/12 max-w-xl`}>
           <form onSubmit={Changedate} className={`w-full p-5 bg-white relative ${dates ? "h-[73dvh]" : 'h-fit'} rounded-md`}>
             {loading &&
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2  ">
@@ -118,8 +118,18 @@ const AllTransactions = () => {
                 />
               </div>
             </div>
-            <div className="mt-5 w-2/4 mx-auto">
-              <ButtonComponent title={`Change Date`} bg={`h-10 text-white bg-primary`} />
+            <div className="mt-5">
+              <div className="">Transfer message</div>
+                <textarea
+                  value={message}
+                  className='w-full  max-h-20 resize-none p-2 rounded-md border hover:border-black'
+                  onChange={e => setMessage(e.target.value)}
+                  placeholder='Transfer message'
+                >
+                </textarea>
+            </div>
+            <div className="mt-5 w-full mx-auto">
+              <ButtonComponent title={`Change transaction`} bg={`h-10 text-white bg-primary`} />
             </div>
           </form>
         </ModalLayout>
@@ -156,7 +166,7 @@ const AllTransactions = () => {
             </tr>
           </thead>
           <tbody>
-            {transhistory.length > 0 ? transhistory.map((item, i) => (
+            {transhistory.total > 0 ? transhistory.data?.map((item, i) => (
               <tr className="bg-white border-b " key={i}>
                 <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
                   {item.id}
@@ -192,6 +202,12 @@ const AllTransactions = () => {
           </tbody>
         </table>
 
+        <TablePagination
+              onChange={num => setPage(num)}
+              page={page}
+              perPage={transhistory.page_size}
+              total={transhistory.total}
+            />
 
       </div>
     </div>

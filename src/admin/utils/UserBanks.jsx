@@ -1,31 +1,28 @@
+import TablePagination from 'admin/adminComponents/TablePagination';
 import React, { useCallback, useEffect, useState } from 'react'
 import { IoReturnUpBackOutline } from "react-icons/io5";
-import { useSelector } from 'react-redux';
 import { Apis, GetApi } from 'services/Api';
-import FormComponent from 'utils/FormComponent';
 import { errorMessage } from 'utils/functions';
 
 const UserBanks = ({ setActive }) => {
-    const profile = useSelector((state) => state.profile.profile)
     const [banksArr, setBanksArr] = useState([])
-    const [uniqueId,setUniqueId] = useState([])
-    const [users, setUsers] = useState([])
-    
+    const [page, setPage] = useState(1)
+
     const fetchUserBanks = useCallback(async () => {
         try {
-            const res = await GetApi(Apis.admin.all_banks)
+            const res = await GetApi(`${Apis.admin.all_banks}?p=${page}`)
             if (res.status === 200) {
-                setBanksArr(res.data)
+                setBanksArr(res)
             }
         } catch (error) {
             console.log(error)
             errorMessage(error.message)
         }
-    }, [])
+    }, [page])
 
     useEffect(() => {
         fetchUserBanks()
-    }, [profile])
+    }, [fetchUserBanks])
     return (
         <div className='w-full'>
             <div className="w-full flex items-center justify-between">
@@ -36,54 +33,60 @@ const UserBanks = ({ setActive }) => {
             </div>
 
             <div className="my-5 bg-white w-full h-fit p-5 rounded-md shadow-md">
-                <div className="text-center text-xl font-semibold" >{banksArr.length === 0 ? `${banksArr.length} bank`:`${banksArr.length} banks`} submitted    </div>
+                <div className="text-center text-xl font-semibold" >Showing {banksArr.data?.length} out of {banksArr.total === 0 ? `${banksArr.total} bank` : `${banksArr.total} banks`} submitted    </div>
 
 
             </div>
 
             <div className="">
-                {banksArr.map((item, i) => {
+                {banksArr.data?.map((item, i) => {
                     return (
-                        <form className="h-fit w-full relative bg-white rounded-lg mb-3 p-10" key={i}>
+                        <div className="h-fit w-full relative bg-white rounded-lg mb-3 p-10" key={i}>
 
                             <div className="w-full flex items-start gap-5 flex-col ">
-                                <div className="self-center md:text-2xl text-lg text-primary font-semibold">{item.userbanks?.firstname} {item.userbanks?.lastname }'s {item.bank_name} Bank Details</div>
+                                <div className="self-center md:text-2xl text-lg text-primary font-semibold">{item.userbanks?.firstname} {item.userbanks?.lastname}'s {item.bank_name} Bank Details</div>
                                 <div className="flex w-full lg:items-center flex-col lg:flex-row justify-between">
                                     <div className="lg:w-[45%]">Holder's Fullname:</div>
-                                    <FormComponent value={item.fullname} />
+                                    <div className="text-right">{item.fullname}</div>
                                 </div>
                                 <div className="flex w-full lg:items-center flex-col lg:flex-row justify-between">
                                     <div className="lg:w-[45%]">Bank Name:</div>
-                                    <FormComponent value={item.bank_name} />
+                                    <div className="text-right">{item.bank_name}</div>
                                 </div>
                                 <div className="flex w-full lg:items-center flex-col lg:flex-row justify-between">
                                     <div className="lg:w-[45%]">Bank Account No:</div>
-                                    <FormComponent value={item.account_no} />
+                                    <div className="text-right">{item.account_no}</div>
                                 </div>
                                 <div className="flex w-full lg:items-center flex-col lg:flex-row justify-between">
                                     <div className="lg:w-[45%]">Bank Address:</div>
-                                    <FormComponent value={item.bank_address} />
+                                    <div className="text-right">{item.bank_address}</div>
                                 </div>
                                 <div className="flex w-full lg:items-center flex-col lg:flex-row justify-between">
                                     <div className="lg:w-[45%]">Account Type:</div>
-                                    <FormComponent value={item.account_type} />
+                                    <div className="text-right">{item.account_type}</div>
                                 </div>
                                 <div className="flex w-full lg:items-center flex-col lg:flex-row justify-between">
                                     <div className="lg:w-[45%]">Routing No.</div>
-                                    <FormComponent name={'route_no'} value={item.route_no} />
+                                    <div className="text-right">{item.route_no}</div>
                                 </div>
                                 <div className="flex w-full lg:items-center flex-col lg:flex-row justify-between">
                                     <div className="lg:w-[45%]">Swift/BIC Code</div>
-                                    <FormComponent name={'swift'} value={item.swift} />
+                                    <div className="text-right">{item.swift}</div>
                                 </div>
                                 <div className="flex w-full lg:items-center flex-col lg:flex-row justify-between">
                                     <div className="lg:w-[45%]">IBAN</div>
-                                    <FormComponent name={'iban'} value={item.iban} />
+                                    <div className="text-right">{item.iban}</div>
                                 </div>
                             </div>
-                        </form>
+                        </div>
                     )
                 })}
+
+                <TablePagination
+                    onChange={num => setPage(num)}
+                    page={page}
+                    perPage={banksArr.page_size}
+                    total={banksArr.total} />
             </div>
         </div>
     )

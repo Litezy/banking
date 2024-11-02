@@ -1,13 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import mastercardimg from '../../assets/dashboard/mastercard.png'
 import visacardimg from '../../assets/dashboard/visa.png'
-import FormComponent from 'utils/FormComponent'
 import { errorMessage, successMessage } from 'utils/functions'
-import { FaAsterisk } from "react-icons/fa";
 import Loader from 'utils/Loader'
 import ModalLayout from 'utils/ModalLayout'
 import { Apis, GetApi, PostApi } from 'services/Api'
-import Formbutton from 'utils/Formbutton'
 import chip from 'assets/chip-sm.png'
 import ButtonComponent from 'utils/ButtonComponent'
 
@@ -51,7 +48,7 @@ const CardComponent = () => {
     useEffect(() => {
         fetchUserCards()
         fetchCardRequests()
-    }, [fetchUserCards])
+    }, [fetchUserCards, fetchCardRequests])
 
     const handleChange = (e) => {
         setCards({
@@ -110,7 +107,7 @@ const CardComponent = () => {
         <div className='w-full'>
             {add &&
                 <>
-                    <ModalLayout setModal={setAdd} clas={`lg:w-[60%] w-11/12 mx-auto`}>
+                    <ModalLayout setModal={setAdd} clas={`max-w-xl w-11/12 mx-auto`}>
                         <div ref={refdiv} className={`w-full relative mx-auto rounded-lg bg-white  py-6 px-5 `}>
                             {loading &&
                                 <div className=" absolute h-full items-center flex justify-center z-50 w-full">
@@ -166,7 +163,7 @@ const CardComponent = () => {
                     </div>
                 }
                 {cardRequests.length === 1 && allcards.length === 0 &&
-                    <div className="w-fit font-bold text-base">First virtual card request in process</div>
+                    <div className="w-fit font-bold text-base animate-pulse">First virtual card request in process...</div>
                 }
                 {cardRequests.length === 1 && allcards.length === 1 &&
                     <div className="w-fit ">
@@ -174,7 +171,7 @@ const CardComponent = () => {
                 </div>
                 }
                 {cardRequests.length > 1 && allcards.length === 1 &&
-                    <div className="w-fit font-bold text-base">Second virtual card request in process</div>
+                    <div className="w-fit font-bold text-base animate-pulse">Second virtual card request in process...</div>
                 }
                 
             </div>

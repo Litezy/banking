@@ -10,8 +10,6 @@ import ModalLayout from 'utils/ModalLayout'
 const KycModal = () => {
     const refdiv = useRef(null)
     const { id } = useParams()
-    const approveref = useRef(null)
-    const declineref = useRef(null)
     const [loading, setLoading] = useState(false)
     const [user, setUser] = useState({})
     const navigate = useNavigate()
@@ -31,9 +29,9 @@ const KycModal = () => {
         } finally {
             setLoading(false)
         }
-    }, [])
+    }, [id])
 
-    useEffect(() => { fetchSingleKyc() }, [])
+    useEffect(() => { fetchSingleKyc() }, [fetchSingleKyc])
 
 
     const DeclineKyc = async () => {
@@ -165,7 +163,7 @@ const KycModal = () => {
                 </div>
                 }
                 {decline &&
-                    <ModalLayout setModal={setDecline} clas={`lg:w-[50%] w-10/12 mx-auto`}>
+                    <ModalLayout setModal={setDecline} clas={`max-w-xl w-10/12 mx-auto`}>
                         <div className="p-5  bg-white shadow-xl rounded-md">
                             <div className="text-base text-center mb-3">Are you sure you want to decline</div>
                             <div className="flex items-center justify-between">
@@ -177,7 +175,7 @@ const KycModal = () => {
                     </ModalLayout>
                 }
                 {approve &&
-                    <ModalLayout setModal={setApprove} clas={`lg:w-[50%] w-10/12 mx-auto`}>
+                    <ModalLayout setModal={setApprove} clas={`max-w-xl w-10/12 mx-auto`}>
                         <div className="p-5  bg-white shadow-xl rounded-md">
                             <div className="text-base text-center mb-3">Are you sure you want to approve</div>
                             <div className="flex items-center justify-between">

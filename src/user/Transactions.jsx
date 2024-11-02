@@ -1,14 +1,14 @@
-import axios from 'axios'
+
 import React, { useCallback, useEffect, useState } from 'react'
 import { FaMinus } from 'react-icons/fa6'
 import { IoIosMailUnread } from 'react-icons/io'
 import { useSelector } from 'react-redux'
 import { Apis, GetApi } from 'services/Api'
 import { errorMessage, successMessage } from 'utils/functions'
-import { FaCopy, FaFilter } from "react-icons/fa";
+import { FaCopy } from "react-icons/fa";
 import Loader from 'utils/Loader'
 import { useNavigate } from 'react-router-dom'
-import { CiFilter } from "react-icons/ci";
+
 
 const Transactions = () => {
   const [transdata, setTransData] = useState([])
@@ -98,7 +98,7 @@ const Transactions = () => {
           </div>
         </div>
 
-        {loading && 
+        {loading &&
           <div className="absolute top-1/4 left-1/2 -translate-x-1/2">
             <Loader />
           </div>
@@ -116,7 +116,10 @@ const Transactions = () => {
                           <IoIosMailUnread className='text-xl' />
                         </div>
                       </div>
-                      <div className="text-sm font-bold">{item.type}</div>
+                      <div className="">
+                        <div className="text-lg font-bold">{item.type}</div>
+                        <div className="text-sm font-bold">{item.status}</div>
+                      </div>
                       <FaMinus className='text-slate-500 hidden lg:block' />
                       <div className={`text-xs font-semibold hidden lg:block ${item.status === 'success' ? 'text-green-600' : item.status === 'pending' ? 'text-yellow-500' : 'text-red-600'}`}>{item.status}</div>
                     </div>

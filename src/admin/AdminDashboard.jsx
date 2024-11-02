@@ -1,18 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { errorMessage } from 'utils/functions'
 
-import { Apis, GetApi, profileImg } from 'services/Api'
-import { useDispatch, useSelector } from 'react-redux'
-import { dispatchCurrency, dispatchProfile, dispatchUserSavings } from 'app/reducer'
-import axios from 'axios'
-import ModalLayout from 'utils/ModalLayout'
+import { Apis, GetApi } from 'services/Api'
 import Summary from './adminComponents/Summary'
 
 const AdminDashboard = () => {
 
 
-    const dispatch = useDispatch();
-    const [profile, setProfile] = useState(null);
+    const [, setProfile] = useState(null);
     const [users, setUsers] = useState([])
     const [savings, setSavings] = useState('')
     const [kyc, setKyc] = useState([])
@@ -52,9 +47,6 @@ const AdminDashboard = () => {
         }
     }, [])
 
-    useEffect(() => {
-        fetchUser()
-    }, [])
     const fetchUsers = useCallback(async () => {
         try {
             const response = await GetApi(Apis.admin.all_users)
@@ -68,6 +60,11 @@ const AdminDashboard = () => {
             console.log(error)
         }
     }, [])
+
+    useEffect(() => {
+        fetchUser()
+    }, [fetchUser])
+
     const fetchActiveChats = useCallback(async () => {
         try {
             const res = await GetApi(Apis.admin.all_active_tickets)
@@ -276,7 +273,8 @@ const AdminDashboard = () => {
         fetchPendingKyc()
         fetchApprovedKyc()
         fetchNews()
-    }, [profile, dispatch])
+        // eslint-disable-next-line
+    }, [])
 
 
 

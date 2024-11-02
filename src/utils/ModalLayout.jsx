@@ -12,7 +12,7 @@ const ModalLayout = ({children,setModal,clas}) => {
               }
             },true)
         }
-        // eslint-disable-next-ling
+        // eslint-disable-next-line
     },[])
     return (
         <div className="w-full z-50 h-screen fixed   flex top-0 left-0 items-center justify-center bg-black/40 backdrop-blur-sm ">

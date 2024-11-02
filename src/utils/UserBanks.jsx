@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
 import { Apis, GetApi, PostApi } from 'services/Api'
 import { errorMessage } from './functions'
 import ModalLayout from './ModalLayout'
@@ -9,7 +8,6 @@ import Loader from './Loader'
 
 const UserBanks = () => {
 
-    const profile = useSelector((state) => state.profile.profile)
     const [banksArr, setBanksArr] = useState([])
     const [loading, setLoading] = useState(false)
     const [modal, setModal] = useState(false)
@@ -93,7 +91,7 @@ const UserBanks = () => {
         <div className='w-full'>
 
             {modal &&
-                <ModalLayout setModal={setModal} clas={`w-11/12 mx-auto md:w-[60%] overflow-auto`}>
+                <ModalLayout setModal={setModal} clas={`w-11/12 mx-auto max-w-2xl overflow-auto`}>
                     <form onSubmit={AddBankAcc} className="h-fit w-full relative bg-white rounded-lg p-10">
 
                         {loading &&
@@ -151,7 +149,7 @@ const UserBanks = () => {
                 </ModalLayout>
             }
             {viewdetails &&
-                <ModalLayout setModal={setViewDetails} clas={`w-11/12 mx-auto md:w-[60%] overflow-auto`}>
+                <ModalLayout setModal={setViewDetails} clas={`w-11/12 mx-auto max-w-2xl overflow-auto`}>
                     {banksArr.map((item, i) => {
                         return (
                             <form className="h-fit w-full relative bg-white rounded-lg mb-3 p-10" key={i}>

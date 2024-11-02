@@ -87,7 +87,7 @@ const CreateUsers = ({ setActive }) => {
     return (
         <div className='w-full'>
               {loading &&
-                    <ModalLayout setModal={setLoading} clas={`w-11/12 mx-auto lg:w-[60%]`}>
+                    <ModalLayout setModal={setLoading} clas={`w-11/12 mx-auto max-w-xl`}>
                         <div className="absolute left-1/2 bg-white p-5 rounded-md -translate-x-1/2 top-1/2">
                         <Loader />
                     </div>

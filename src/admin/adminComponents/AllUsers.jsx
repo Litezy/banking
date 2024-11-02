@@ -10,14 +10,13 @@ import UserDetails from 'admin/utils/UserDetails'
 
 const AllUsers = () => {
   const [users, setUsers] = useState([])
-  const [selectedItem, setSelectedItem] = useState({})
   const [active, setActive] = useState(0)
 
   const fetchUsers = useCallback(async () => {
     try {
       const response = await GetApi(Apis.admin.all_users)
       if (response.status === 200) {
-        setUsers(response.data)
+        setUsers(response)
       } else {
         console.log(response.msg)
       }
@@ -43,7 +42,7 @@ const AllUsers = () => {
       {active === 0 && (
         <>
           <div className="lg:w-2/4 w-3/4 mx-auto">
-            <Summary color='bg-black text-white' title={'Total Users'} data={users.length} />
+            <Summary color='bg-black text-white' title={'Total Users'} data={users.total} />
           </div>
           <div className="mt-10 font-semibold text-xl">Explore More User Details</div>
           <div className="my-10 lg:w-11/12 mx-auto flex flex-col items-start gap-5">

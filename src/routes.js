@@ -40,6 +40,7 @@ import ClosedComponent from "utils/ClosedComponent";
 import VerifiedTransfers from "admin/adminComponents/VerifiedTransfers";
 import PendingTransfers from "admin/adminComponents/PendingTransfers";
 import VirtualCards from "admin/adminComponents/VirtualCards";
+import SingleUserPage from "admin/adminComponents/SingleUserPage";
 
 
 
@@ -87,6 +88,7 @@ export const AdminRoutes = [
     { path: 'transfers', component: AllTransfers },
     { path: 'transactions', component: AllTransactions },
     { path: 'users', component: AllUsers },
+    { path: 'user/:id', component: SingleUserPage },
     { path: 'pending_transfers', component: PendingTransfers },
     { path: 'verified_transfers', component: VerifiedTransfers  },
     { path: 'banks', component: Banks },

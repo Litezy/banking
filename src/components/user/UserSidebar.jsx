@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { IoEyeOutline } from 'react-icons/io5'
-import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Apis, GetApi, PostApi } from 'services/Api'
 import { CookieName, errorMessage, successMessage } from 'utils/functions'
 import ModalLayout from 'utils/ModalLayout'
@@ -106,10 +106,6 @@ export default function UserSidebar({ setOpenSide, smallView = false }) {
 
     const containerRef = useRef(null)
 
-
-    const searchParams = new URLSearchParams(location.search);
-    const status = searchParams.get('status');
-
     useEffect(() => {
         if (viewall && containerRef) {
             containerRef.current.scrollTop = containerRef.current.scrollHeight
@@ -130,7 +126,7 @@ export default function UserSidebar({ setOpenSide, smallView = false }) {
         <div>
             <div className="flex flex-col px-3 h-[90dvh]">
                 {logout &&
-                    <ModalLayout setModal={setLogout} clas={`lg:w-[35%] w-11/12 mx-auto`}>
+                    <ModalLayout setModal={setLogout} clas={`max-w-xl w-11/12 mx-auto`}>
                         <div className="bg-white py-5 px-3 h-fit flex-col text-black rounded-md flex items-center justify-center">
                             <div className="text-xl font-semibold self-center">Confirm Logout</div>
                             <div className="flex items-center justify-between w-full">

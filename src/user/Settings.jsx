@@ -39,12 +39,12 @@ const Settings = () => {
         </div>
 
         {passscreen  && 
-        <ModalLayout setModal={setPassScreen} clas={`md:w-1/2 w-11/12`}>
+        <ModalLayout setModal={setPassScreen} clas={`max-w-3xl w-11/12`}>
             <EmailandPassModal pass={true} setModal={setPassScreen}/>
         </ModalLayout>
         }
         {emailscreen  && 
-        <ModalLayout setModal={setEmailScreen} clas={`md:w-1/2 w-11/12`}>
+        <ModalLayout setModal={setEmailScreen} clas={`max-w-3xl w-11/12`}>
             <EmailandPassModal email={true} setModal={setEmailScreen}/>
         </ModalLayout>
         }

@@ -5,10 +5,7 @@ import { Apis, GetApi, PostApi, profileImg } from 'services/Api'
 import { errorMessage, successMessage } from 'utils/functions'
 import moment from 'moment'
 import ModalLayout from 'utils/ModalLayout'
-import FormComponent from 'utils/FormComponent'
-import ButtonComponent from 'utils/ButtonComponent'
 import Loader from 'utils/Loader'
-import { useSelector } from 'react-redux'
 
 const ValidateDeposit = ({ setScreen }) => {
 
@@ -35,16 +32,11 @@ const ValidateDeposit = ({ setScreen }) => {
       errorMessage(error.message)
     }
   }, [])
-  const [forms, setForms] = useState({
-    amount: ''
-  })
-
-  const handleChange = (e) => {
-    setForms({ ...forms, [e.target.name]: e.target.value })
-  }
+  
+  
   useEffect(() => {
     getProofs()
-  }, [])
+  }, [getProofs])
 
  
   const selectItem = (item) => {
@@ -62,7 +54,7 @@ const ValidateDeposit = ({ setScreen }) => {
     try {
       const res = await PostApi(Apis.admin.validate_depo, formdata)
       // console.log(res)
-      if (res.status == 200) {
+      if (res.status === 200) {
         successMessage(res.msg)
         setModal(false)
         getProofs()
@@ -86,7 +78,7 @@ const ValidateDeposit = ({ setScreen }) => {
     setLoading(true)
     try {
       const res = await PostApi(Apis.admin.decline_depo, formdata)
-      if (res.status == 200) {
+      if (res.status === 200) {
         successMessage(res.msg)
         setModal(false)
         getProofs()
@@ -107,7 +99,7 @@ const ValidateDeposit = ({ setScreen }) => {
       <div className="w-full flex items-center justify-between">
 
         {modal &&
-          <ModalLayout setModal={setModal} clas={`w-11/12 mx-auto lg:w-[60%]`}>
+          <ModalLayout setModal={setModal} clas={`w-11/12 mx-auto max-w-xl`}>
             <div className="  rounded-lg bg-white p-5 w-full relative">
 
         

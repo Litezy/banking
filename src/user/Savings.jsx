@@ -1,9 +1,8 @@
 import { Progress } from 'antd'
-import UserLayout from 'layouts/UserLayout'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { FaArrowLeft, FaArrowRight, FaMinus } from 'react-icons/fa6'
+import { FaArrowLeft, FaArrowRight } from 'react-icons/fa6'
 import { Link } from 'react-router-dom'
-import { Currency, errorMessage, successMessage } from 'utils/functions'
+import { errorMessage, successMessage } from 'utils/functions'
 import { BiSupport } from "react-icons/bi";
 import { MdAddAPhoto } from "react-icons/md";
 import { MdOutlineAvTimer } from "react-icons/md";
@@ -67,7 +66,7 @@ const Savings = () => {
     useEffect(() => {
         fetchUserSavings()
         fetchAdminBanks()
-    }, [])
+    }, [fetchUserSavings, fetchAdminBanks])
 
 
     const fetchSavingsHistory = useCallback(async () => {
@@ -236,9 +235,7 @@ const Savings = () => {
         id: selectedItem.id,
         amount: ''
     })
-    const deposit = 'Deposit'
-    const withdraw = 'Withdraw'
-
+    
     const topUpSavings = async (e) => {
         e.preventDefault()
 
@@ -331,7 +328,7 @@ const Savings = () => {
         <div className={`w-11/12  mx-auto ${add && 'overflow-hidden'}`}>
 
             {createsave &&
-                <ModalLayout setModal={setCreateSave} clas={`lg:w-[60%] w-11/12 mx-auto`}>
+                <ModalLayout setModal={setCreateSave} clas={`max-w-2xl w-11/12 mx-auto`}>
                     <form onSubmit={createSavings} className="h-fit w-full relative bg-white rounded-lg p-10">
 
                         {load3 &&
@@ -364,7 +361,7 @@ const Savings = () => {
             }
 
             {support &&
-                <ModalLayout setModal={setSupport} clas={`lg:w-[60%] w-11/12 mx-auto`}>
+                <ModalLayout setModal={setSupport} clas={`max-w-2xl w-11/12 mx-auto`}>
                     <div ref={proofDiv} className={`w-full p-10 rounded-lg bg-white h-fit `}>
                         <div className="w-full">
                             <form onSubmit={submitForm} className="lg:w-3/4 w-full mx-auto">
@@ -412,7 +409,7 @@ const Savings = () => {
                                             <div onChange={changeImage} className="absolute top-0 right-0 main font-bold ">
                                                 <FaEdit className='text-2xl' />
                                             </div>
-                                            <img src={proofimg.img} className='w-full h-48' />
+                                            <img src={proofimg.img} alt="Bank App" className='w-full h-48' />
                                         </div> :
                                             <div className="flex items-center gap-2 px-2">
                                                 <FaPlus className='text-2xl' />
@@ -437,7 +434,7 @@ const Savings = () => {
             }
 
             {closeview &&
-                <ModalLayout setModal={setCloseView} clas={`lg:w-[60%] w-11/12 mx-auto`}>
+                <ModalLayout setModal={setCloseView} clas={`max-w-2xl w-11/12 mx-auto`}>
                     <div className="w-full bg-white h-fit p-10 rounded-lg relative ">
 
 
@@ -641,7 +638,7 @@ const Savings = () => {
 
             {viewall &&
 
-                <ModalLayout setModal={setViewAll} clas={`w-11/12 mx-auto lg:w-[70%]`}>
+                <ModalLayout setModal={setViewAll} clas={`w-11/12 mx-auto max-w-3xl`}>
                     <div className=" w-full bg-white shadow-lg pb-3 rounded-md overflow-y-auto">
                         {Array.isArray(records) ? records.map((item, index) => (
                             <div className="rounded-xl border-b " key={index}>

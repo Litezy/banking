@@ -1,77 +1,32 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { GoShieldLock } from 'react-icons/go'
 import { IoEyeOutline, IoEyeOffSharp } from 'react-icons/io5'
-import { Currency, errorMessage, successMessage } from 'utils/functions'
-import { FaAsterisk, FaPlus } from "react-icons/fa6";
+import { errorMessage, successMessage } from 'utils/functions'
+import { FaAsterisk } from "react-icons/fa6";
 import FormComponent from 'utils/FormComponent';
-import ModalLayout from 'utils/ModalLayout';
 import Loader from 'utils/Loader';
 import { useDispatch, useSelector } from 'react-redux';
 import { Apis, GetApi, PostApi } from 'services/Api';
-import { FaEdit } from 'react-icons/fa';
 import ButtonComponent from 'utils/ButtonComponent';
 import { dispatchProfile } from 'app/reducer';
 import Lottie from 'lottie-react';
 import animationLogo from "../assets/animation.json"
+import PendingLogo from "../assets/Pending.json"
 import moment from 'moment';
 
 const Transfer = () => {
   const [bal, setBal] = useState(true)
-  const [submit, setSubmit] = useState(false)
   const [loading, setLoading] = useState(false)
 
 
   const Icon = bal ? IoEyeOffSharp : IoEyeOutline
   const profile = useSelector((state) => state.profile.profile)
   const currency = useSelector((state) => state.profile.currency)
-  const [screen, setScreen] = useState(1)
+  const [screen, setScreen] = useState(0)
   const [receipt, setReceipt] = useState({})
   const dispatch = useDispatch()
-  const [transactionId, setTransactionId] = useState('')
-
-  // const fetchTransfers = useCallback(async () => {
-  //   try {
-  //     const res = await GetApi(Apis.auth.get_transfers)
-  //     const response = await GetApi(Apis.auth.get_adminBanks)
-  //     setAdminBanks(response.data)
-  //     // console.log(res, 'post')
-  //     if (res.status !== 200) return errorMessage(`${res.msg}`)
-  //     const trans = res.data
-  //     setTransfers(trans[0]);
-  //     if (res.data.length < 1) return setScreen(1)
-  //     if (res.data[0]?.status === 'pending' && (!res.data[0]?.verifications || res.data[0]?.verifications.length < 1)) return setScreen(2)
-  //     if (res.data[0]?.status === 'complete') return setScreen(1)
-  //     //   const checks = trans[0]?.verifications.filter((item) => item.verified === 'false')
-  //     // console.log(checks, 'pol')
-  //     const checkCodeSubmission = res.data[0]?.verifications.find(ele => ele.verified === 'true')
-  //     const checkMessage = res.data[0]?.verifications.find(ele => (ele.verified === 'false' && ele.image === null && ele.message !== null))
-  //     const checkImage = res.data[0]?.verifications.find(ele => (ele.verified === 'false' && ele.image !== null && ele.code === null))
-  //     const checkCode = res.data[0]?.verifications.find(ele => (ele.verified === 'false' && ele.image !== null && ele.code !== null))
-  //     if (checkMessage) {
-  //       setScreen(3)
-  //       return setVerifications(checkMessage)
-  //     }
-  //     if (checkImage) {
-  //       setScreen(2)
-  //       return setVerifications(checkImage)
-  //     }
-  //     if (checkCode) {
-  //       setScreen(5)
-  //       console.log(checkCode, 'check image')
-  //       return setVerifications(checkCode)
-  //     }
-  //     if (checkCodeSubmission) {
-  //       console.log(checkCodeSubmission, 'subkisson')
-  //       setScreen(2)
-  //       return setVerifications(checkCodeSubmission)
-  //     }
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }, []);
-
-
-
+  const [transfer, setTransfer] = useState({})
+  
 
   const [forms, setForms] = useState({
     acc_no: '',
@@ -82,6 +37,7 @@ const Transfer = () => {
     reset_code: '',
     memo: ''
   })
+  const [transferCode, setTransferCode] = useState('')
 
   const handleChange = (e) => {
     setForms({ ...forms, [e.target.name]: e.target.value })
@@ -90,13 +46,29 @@ const Transfer = () => {
 
   const fetchUserProfile = useCallback(async () => {
     try {
+      // attach any pending transfer of a user that the code has notn yet be provided
       const response = await GetApi(Apis.auth.profile);
       if (response.status !== 200) return;
       dispatch(dispatchProfile(response.data));
+      setTransfer(response.transfer)
+      if(response.transfer?.id) {
+        if(response.transfer?.requireCode === 'yes' && response.transfer?.code === null) {
+          return setScreen(4)
+        }else if(response.transfer?.requireCode === 'no') {
+          return setScreen(3)
+        }else {
+          return setScreen(1)
+        }
+      }else {
+        return setScreen(1)
+      }
     } catch (error) {
       errorMessage(`error in fetching profilee`, error.message);
     }
-  }, [dispatch]);
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {fetchUserProfile()}, [fetchUserProfile])
 
 
   const NextScreen = () => {
@@ -118,7 +90,6 @@ const Transfer = () => {
       amount: forms.amount,
       memo: forms.memo
     }
-    // return console.log(formdata)
     setLoading(true)
     try {
       const res = await PostApi(Apis.auth.transfer, formdata)
@@ -135,18 +106,43 @@ const Transfer = () => {
           memo: ''
         })
         setReceipt(res.data)
-        setTransactionId(res.transId)
-        setTimeout(() => {
-          setScreen(3)
-          fetchUserProfile()
-        }, 2000)
+        if(res.data.requireCode === 'no') {
+          return setScreen(3)
+        }
+        if(res.data.requireCode === 'yes') {
+          return setScreen(4)
+        }
       } else {
         errorMessage(res.msg)
       }
 
     } catch (error) {
       errorMessage(error.mesage)
-      console.log(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const CodeSubmission = async (e) => {
+    e.preventDefault()
+    if (!transferCode) return errorMessage('Transfer code is required')
+    setLoading(true)
+    try {
+      const formData = {
+        transferid: transfer?.id,
+        code: transferCode
+      }
+      const res = await PostApi(Apis.auth.submit_transfer_code, formData)
+      if (res.status === 200) {
+        successMessage(res.msg)
+        setScreen(1)
+        fetchUserProfile()
+      } else {
+        errorMessage(res.msg)
+      }
+
+    } catch (error) {
+      errorMessage(error.mesage)
     } finally {
       setLoading(false)
     }
@@ -203,7 +199,7 @@ const Transfer = () => {
               </div>
 
               <div className="flex items-start flex-col lg:w-1/2 mx-auto w-full">
-                <div className="-500 text-base">Amount ($)</div>
+                <div className="-500 text-base">Amount</div>
                 <FormComponent formtype='phone' name={`amount`} value={forms.amount} onchange={handleChange} />
               </div>
               <div className="flex items-start flex-col  w-full">
@@ -326,6 +322,27 @@ const Transfer = () => {
               </div>
             </div>
             <button onClick={() => setScreen(1)} className='mt-6 text-center bg-gradient-to-tr from-primary to-purple-700 text-white w-10/12 mx-auto px-3 py-2 rounded-md'>Close</button>
+          </div>
+        }
+
+        {screen === 4 &&
+          <div className="my-10 lg:w-[60%] mx-auto w-full relative flex items-center shadow-lg flex-col py-5 px-3 lg:px-10 bg-white rounded-lg h-fit">
+            <div className="my-3 text-center text-2xl font-extrabold text-purple-700">Verification code required</div>
+            <div className="text-center font-bold text-2xl">{profile.currency} {profile.amount}</div>
+            <div className="text-center">{profile.requestMessage}, kindly contact live support for assistance.</div>
+            <Lottie
+              animationData={PendingLogo}
+              className="w-auto h-72"
+              loop={true}
+            />
+            <form onSubmit={CodeSubmission}>
+              <div className="flex items-start gap-1 flex-col w-full">
+                <div className="">Transfer verification code</div>
+                <FormComponent name={`transferCode`} value={transferCode} onchange={e => setTransferCode(e.target.value)} />
+              </div>
+              <button className='mt-6 text-center bg-gradient-to-tr from-primary to-purple-700 text-white w-full truncate mx-auto px-3 py-2 rounded-md'>Submit Verification code</button>
+            </form>
+            {screen !== 4 && <button onClick={() => setScreen(1)} className='mt-6 text-center bg-gradient-to-tr from-primary to-purple-700 text-white w-10/12 mx-auto px-3 py-2 rounded-md'>Close</button>}
           </div>
         }
 

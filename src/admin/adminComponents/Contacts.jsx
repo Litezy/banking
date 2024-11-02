@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Apis, GetApi } from 'services/Api'
 import { errorMessage } from 'utils/functions'
 import Summary from './Summary'
-import moment from 'moment'
 import ModalLayout from 'utils/ModalLayout'
 
 const Contacts = () => {
@@ -27,7 +26,7 @@ const Contacts = () => {
 
   useEffect(() => {
     fetchContacts()
-  }, [])
+  }, [fetchContacts])
 
 
   const selectAny = (items) => {
@@ -37,7 +36,7 @@ const Contacts = () => {
     <div className='w-11/12 mx-auto'>
 
       {open &&
-        <ModalLayout clas={`w-11/12 mx-auto lg:w-[50%]`} setModal={setOpen}>
+        <ModalLayout clas={`w-11/12 mx-auto max-w-xl`} setModal={setOpen}>
           <div className="w-full p-5 bg-white rounded-lg">
             <div className="w-full flex flex-col items-center gap-2">
               <div className="text-2xl font-bold">Message</div>

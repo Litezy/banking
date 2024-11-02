@@ -189,7 +189,7 @@ export default function AdminLayout({ children,show=true }) {
                     </div>
                 }
                 {logout &&
-                    <ModalLayout setModal={setLogout} clas={`lg:w-[35%] w-11/12 mx-auto`}>
+                    <ModalLayout setModal={setLogout} clas={`max-w-xl w-11/12 mx-auto`}>
                         <div className="bg-white py-5 px-3 h-fit flex-col text-black rounded-md flex items-center justify-center">
                             <div className="text-xl font-semibold self-center">Confirm Logout</div>
                             <div className="flex items-center justify-between w-full">
@@ -200,7 +200,7 @@ export default function AdminLayout({ children,show=true }) {
                     </ModalLayout>
                 }
                 <div className={`${show === true && 'slate-50 mt-[8rem] overflow-y-auto'} h-screen w-full mt-0 lg:mt-0  overflow-x-hidden`}>
-                    <div className={`${show === true && 'overflow-y-auto pb-20'} bg-slate-50 h-[100dvh]  overflow-x-hidden `}>
+                    <div className={`${show === true && 'overflow-y-auto'} pb-[13rem] bg-slate-50 h-[100dvh]  overflow-x-hidden `}>
                         {children}
                     </div>
                 </div>

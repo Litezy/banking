@@ -1,15 +1,15 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { Apis, GetApi } from 'services/Api'
-import { errorMessage, successMessage } from 'utils/functions'
-import Loader from 'utils/Loader'
+import { errorMessage } from 'utils/functions'
 import Summary from './Summary'
 import moment from 'moment'
+import TablePagination from './TablePagination'
 
 const VerifiedTransfers = () => {
 
-    const [loading, setLoading] = useState(false)
     const [data, setData] = useState({})
     const [load, setLoad] = useState(false)
+    const [page, setPage] = useState(1)
 
     const TableHeaders = [
         "User",
@@ -24,20 +24,25 @@ const VerifiedTransfers = () => {
     const fetchVerifications = useCallback(async () => {
         setLoad(true)
         try {
-            const res = await GetApi(Apis.admin.completed_transfers)
+            const res = await GetApi(`${Apis.admin.completed_transfers}?p=${page}`)
             if (res.status !== 200) return errorMessage(res.msg)
-            setData(res.data)
+            setData(res)
         } catch (error) {
             // console.log(error)
             errorMessage(`sorry, error in fetching transfers`, error)
         } finally {
             setLoad(false)
         }
-    })
+    }, [page])
 
     useEffect(() => {
         fetchVerifications()
-    }, [])
+    }, [fetchVerifications])
+
+
+    if(load) return (
+        <div>Loading Data...</div>
+    )
 
     return (
 
@@ -45,7 +50,7 @@ const VerifiedTransfers = () => {
 
             <div className="w-full flex items-center justify-between">
                 <div className="lg:w-2/4 w-3/4 mx-auto">
-                    <Summary color='bg-primary text-white' title={'Total Verified Transfers'} data={data.length} />
+                    <Summary color='bg-primary text-white' title={'Total Verified Transfers'} data={`Showing ${data.data?.length} out of ${data.total}`} />
                 </div>
             </div>
 
@@ -63,7 +68,7 @@ const VerifiedTransfers = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {data.length > 0 ? data.map((item, i) => (
+                            {data.total > 0 ? data.data?.map((item, i) => (
                                 <tr className="bg-white border-b " key={i}>
                                     <td className="px-3 py-3">
                                         {item.usertransfers.firstname} {item.usertransfers.lastname}
@@ -99,6 +104,12 @@ const VerifiedTransfers = () => {
                         </tbody>
                     </table>
 
+                    <TablePagination
+              onChange={num => setPage(num)}
+              page={page}
+              perPage={data.page_size}
+              total={data.total}
+            />
 
                 </div>
 

@@ -1,6 +1,5 @@
 import moment from 'moment'
 import React, { useCallback, useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { Apis, GetApi, PostApi } from 'services/Api'
 import ChatForm from 'utils/ChatForm'
@@ -9,7 +8,6 @@ import Loader from 'utils/Loader'
 import ModalLayout from 'utils/ModalLayout'
 
 const AdminActiveChats = () => {
-    const profile = useSelector((state) => state.profile.profile)
     const navigate = useNavigate()
     const [actives, setActives] = useState({})
     const [joinedmsg, setJoinedMsg] = useState(false)
@@ -29,7 +27,7 @@ const AdminActiveChats = () => {
 
     useEffect(() => {
         fetchActiveChats()
-    }, [])
+    }, [fetchActiveChats])
 
 
     const TableHeaders = [
@@ -65,7 +63,7 @@ const AdminActiveChats = () => {
         <div className='w-11/12 flex items-center justify-center mx-auto h-fit py-5'>
 
             {joinedmsg &&
-                <ModalLayout setModal={setJoinedMsg} clas={`lg:w-[60%] mx-auto w-11/12`}>
+                <ModalLayout setModal={setJoinedMsg} clas={`max-w-xl mx-auto w-11/12`}>
                     <div className="w-full bg-white rounded-lg p-10 ">
 
                         {loading &&
@@ -79,7 +77,7 @@ const AdminActiveChats = () => {
                 </ModalLayout>
             }
             {confirm &&
-                <ModalLayout setModal={setConfirm} clas={`lg:w-[60%] mx-auto w-11/12`}>
+                <ModalLayout setModal={setConfirm} clas={`max-w-xl mx-auto w-11/12`}>
                     <div className="w-full bg-white rounded-lg p-5 ">
 
                         {loading &&

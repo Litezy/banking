@@ -1,6 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { IoReturnUpBackOutline } from "react-icons/io5";
-import { useSelector } from 'react-redux';
 import { Apis, GetApi, PostApi } from 'services/Api';
 import FormComponent from 'utils/FormComponent';
 import { errorMessage, successMessage } from 'utils/functions';
@@ -9,27 +7,28 @@ import moment from 'moment';
 import ModalLayout from 'utils/ModalLayout';
 import ButtonComponent from 'utils/ButtonComponent';
 import Loader from 'utils/Loader';
+import TablePagination from './TablePagination';
 
 const VirtualCards = () => {
-    const profile = useSelector((state) => state.profile.profile)
     const [cardsArr, setCardsArr] = useState([])
     const [loading, setLoading] = useState(false)
+    const [page, setPage] = useState(1)
 
     const fetchVirtualRequests = useCallback(async () => {
         try {
-            const res = await GetApi(Apis.admin.req_cards)
+            const res = await GetApi(`${Apis.admin.req_cards}?p=${page}`)
             if (res.status === 200) {
-                setCardsArr(res.data)
+                setCardsArr(res)
             }
         } catch (error) {
             console.log(error)
             errorMessage(error.message)
         }
-    }, [])
+    }, [page])
 
     useEffect(() => {
         fetchVirtualRequests()
-    }, [])
+    }, [fetchVirtualRequests])
 
     const TableHeaders = [
         "User",
@@ -48,12 +47,6 @@ const VirtualCards = () => {
     const [selected, setSelected] = useState({})
     const [view, setView] = useState(false)
 
-    const handleChange = (e) => {
-        setCards({
-            ...cards,
-            [e.target.name]: e.target.value
-        })
-    }
     const handleCardNumberChange = (event) => {
         let value = event.target.value.replace(/\D/g, ''); // Remove all non-digit characters
         value = value.substring(0, 16); // Limit to 16 digits
@@ -129,11 +122,11 @@ const VirtualCards = () => {
         <div className='w-11/12 mx-auto'>
 
             <div className="lg:w-2/4 w-3/4 mx-auto">
-                <Summary color='bg-blue-500 text-white' title={'Total Virtual Card Requests'} data={cardsArr.length} />
+                <Summary color='bg-blue-500 text-white' title={'Total Virtual Card Requests'} data={`Showing ${cardsArr.data?.length} out of ${cardsArr.total}`} />
             </div>
 
             {view &&
-                <ModalLayout setModal={setView} clas={`w-11/12 lg:w-[60%] mx-auto`}>
+                <ModalLayout setModal={setView} clas={`w-11/12 max-w-xl mx-auto`}>
                     <form onSubmit={createCard} className="w-full bg-white p-5 rounded-md">
 
                         {loading &&
@@ -197,7 +190,7 @@ const VirtualCards = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {cardsArr.length > 0 ? cardsArr.map((item, i) => (
+                        {cardsArr.total > 0 ? cardsArr.data?.map((item, i) => (
                             <tr className="bg-white border-b " key={i}>
                                 <td className="px-3 py-3">
                                     {item.card_owner?.firstname} {item.card_owner?.lastname}
@@ -230,6 +223,12 @@ const VirtualCards = () => {
                     </tbody>
                 </table>
 
+                <TablePagination
+              onChange={num => setPage(num)}
+              page={page}
+              perPage={cardsArr.page_size}
+              total={cardsArr.total}
+            />
             </div>
         </div>
     )

@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import Summary from './Summary'
-import { Apis, GetApi, PostApi, profileImg } from 'services/Api'
+import { Apis, GetApi, PostApi } from 'services/Api'
 import { errorMessage, successMessage } from 'utils/functions'
 import moment from 'moment'
 import Loader from 'utils/Loader'
 import { useNavigate } from 'react-router-dom'
 import ModalLayout from 'utils/ModalLayout'
+import TablePagination from './TablePagination'
 
 
 const TableHeaders = [
@@ -24,22 +25,23 @@ const PendingTransfers = () => {
     const navigate = useNavigate()
     const [id, setId] = useState(``)
     const [loading, setLoading] = useState(false)
+    const [page, setPage] = useState(1)
 
 
     const fetchTransfers = useCallback(async () => {
         try {
-            const res = await GetApi(Apis.admin.pending_transfers)
+            const res = await GetApi(`${Apis.admin.pending_transfers}?p=${page}`)
             if (res.status !== 200) return errorMessage(res.msg)
-            setData(res.data)
+            setData(res)
         } catch (error) {
             console.log(error)
             errorMessage(`sorry, error in fetching transfers`, error)
         }
-    })
+    }, [page])
 
     useEffect(() => {
         fetchTransfers()
-    }, [])
+    }, [fetchTransfers])
 
 
     const Modal = (id) => {
@@ -70,12 +72,12 @@ const PendingTransfers = () => {
         <div className='w-11/12  mx-auto'>
             <div className="w-full flex items-center justify-between">
                 <div className="lg:w-2/4 w-3/4 mx-auto">
-                    <Summary color='bg-blue-500 text-white' title={'Total Transfers'} data={data?.length} />
+                    <Summary color='bg-blue-500 text-white' title={'Total Transfers'} data={`Showing ${data.data?.length} out of ${data.total}`} />
                 </div>
             </div>
 
             {confirm &&
-                <ModalLayout setModal={setConfirm} clas={`w-10/12 mx-auto lg:w-[40%]`}>
+                <ModalLayout setModal={setConfirm} clas={`w-10/12 mx-auto max-w-lg`}>
                     <div className="w-full rounded-lg lg:px-10 p-5 bg-white ">
                         <div className="w-full text-center">Are you you want to confirm this transfer?</div>
                         <div className="mt-5 flex items-center justify-between">
@@ -104,7 +106,7 @@ const PendingTransfers = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {data.length > 0 ? data.map((item, i) => (
+                        {data.total > 0 ? data.data?.map((item, i) => (
                             <tr className="bg-white border-b " key={i}>
                                 <td className="px-3 py-3">
                                     {item.usertransfers.firstname} {item.usertransfers.lastname}
@@ -137,6 +139,12 @@ const PendingTransfers = () => {
                     </tbody>
                 </table>
 
+                <TablePagination
+              onChange={num => setPage(num)}
+              page={page}
+              perPage={data.page_size}
+              total={data.total}
+            />
             </div>
 
         </div>
