@@ -96,6 +96,7 @@ export const auth_urls = {
 }
 
 export const admin_urls = {
+    admin_board_overview: admin + '/admin-board-overview',
     all_users: admin + '/all-users',
     single_user: admin + '/user',
     all_depo: admin + '/all-depo',
