@@ -29,8 +29,8 @@ if(window.location.origin.includes('localhost')) {
 }
 
  if(window.location.origin.includes('greenfordbank.com')) {
-    URL = 'https://api.greenfordbank.com'
-    profileImg = 'https://api.greenfordbank.com'
+    URL = 'https://prod.greenfordbank.com'
+    profileImg = 'https://prod.greenfordbank.com'
  }
 
 

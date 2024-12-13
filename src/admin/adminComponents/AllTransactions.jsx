@@ -9,6 +9,7 @@ import Loader from 'utils/Loader'
 import 'react-datepicker/dist/react-datepicker.css';
 import DatePicker from 'react-datepicker'
 import TablePagination from './TablePagination'
+import { useSearchParams } from 'react-router-dom'
 
 const AllTransactions = () => {
 
@@ -17,15 +18,20 @@ const AllTransactions = () => {
   const [loading, setLoading] = useState(false)
   const [modal, setModal] = useState(false)
   const [dates, setDates] = useState(false)
-  const [page, setPage] = useState(1)
   const [forms, setForms] = useState({
     date: ''
   })
+  const [text, setText] = useState('')
+  const [loads, setLoads] = useState(true)
   const [message, setMessage] = useState('')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const search = searchParams.get('page')
 
-  const getAllTrans = useCallback(async () => {
+
+  const getAllTrans = useCallback(async (tag) => {
     try {
-      const res = await GetApi(`${Apis.admin.all_trans}?page=${page}`)
+      setLoads(true)
+      const res = await GetApi(`${Apis.admin.all_trans}?p=${search ?? 1}${tag ? `&search=${tag}` : ''}`)
       if (res.status === 200) {
         setTransHistory(res)
       } else {
@@ -33,11 +39,13 @@ const AllTransactions = () => {
       }
     } catch (error) {
       errorMessage(error.message)
+    } finally {
+      setLoads(false)
     }
-  }, [page])
+  }, [search])
 
   useEffect(() => {
-    getAllTrans()
+    getAllTrans("")
   }, [getAllTrans])
 
   const [selectedDate, setSelectedDate] = useState(null);
@@ -47,10 +55,14 @@ const AllTransactions = () => {
     setForms({ ...forms, date: formattedDate });
     setSelectedDate(date);
   };
-  
+
   const selectOne = (item) => {
     setSelectedItem(item)
     setMessage(item.message)
+  }
+
+  function HandlePagin(num) {
+    setSearchParams({ page: num })
   }
 
 
@@ -67,7 +79,7 @@ const AllTransactions = () => {
       const res = await PostApi(Apis.admin.trans_date, formdata)
       if (res.status === 200) {
         successMessage(res.msg)
-        getAllTrans()
+        getAllTrans("")
         setForms({ ...forms, date: "" })
         setModal(false)
       } else {
@@ -81,7 +93,61 @@ const AllTransactions = () => {
     }
   }
   const maxDate = moment('31-12-2024', 'DD-MM-YYYY').toDate();
-  return (
+
+  function HandleSearching() {
+    if (!text) return getAllTrans("")
+    return getAllTrans(text)
+  }
+
+  function ClearSearch() {
+    setText('')
+    return getAllTrans("")
+  }
+
+  if (loads) return (
+    <div className='w-11/12 mx-auto'>
+      <div className="lg:w-2/4 w-3/4 mx-auto">
+        <Summary color='bg-primary text-white' title={'Total Transactions'} data={`Showing 0 out of 0`} />
+      </div>
+      <div className="relative overflow-x-auto rounded-md mt-10">
+        <table className="w-full text-sm text-left rtl:text-right">
+          <thead className=" bg-gradient-to-tr from-primary to-purple-700 lg:text-xl text-base text-white">
+            <tr>
+              <th scope="col" className="px-3 py-3">
+                ID
+              </th>
+              <th scope="col" className="px-3 py-3">
+                User
+              </th>
+              <th scope="col" className="px-3 py-3">
+                Email
+              </th>
+              <th scope="col" className="px-3 py-3">
+                Amount
+              </th>
+              <th scope="col" className="px-3 py-3">
+                Status
+              </th>
+              <th scope="col" className="px-3 py-3">
+                Type
+              </th>
+              <th scope="col" className="px-3 py-3">
+                Date
+              </th>
+              <th scope="col" className="px-3 py-3">
+                Alter
+              </th>
+            </tr>
+          </thead>
+        </table>
+        {new Array(10).fill(0).map((item, i) => (
+          <div key={i} className='bg-slate-200 mb-2 p-3 h-12 animate-pulse'></div>
+        ))}
+      </div>
+    </div>
+  )
+
+  if (!loads) return (
     <div className='w-11/12 mx-auto'>
       <div className="lg:w-2/4 w-3/4 mx-auto">
         <Summary color='bg-primary text-white' title={'Total Transactions'} data={`Showing ${transhistory.data?.length} out of ${transhistory.total}`} />
@@ -114,19 +180,19 @@ const AllTransactions = () => {
                   dropdownMode="select"
                   yearDropdownItemNumber={5}
                   maxDate={maxDate}
-                  scrollableYearDropdown 
+                  scrollableYearDropdown
                 />
               </div>
             </div>
             <div className="mt-5">
               <div className="">Transfer message</div>
-                <textarea
-                  value={message}
-                  className='w-full  max-h-20 resize-none p-2 rounded-md border hover:border-black'
-                  onChange={e => setMessage(e.target.value)}
-                  placeholder='Transfer message'
-                >
-                </textarea>
+              <textarea
+                value={message}
+                className='w-full  max-h-20 resize-none p-2 rounded-md border hover:border-black'
+                onChange={e => setMessage(e.target.value)}
+                placeholder='Transfer message'
+              >
+              </textarea>
             </div>
             <div className="mt-5 w-full mx-auto">
               <ButtonComponent title={`Change transaction`} bg={`h-10 text-white bg-primary`} />
@@ -134,6 +200,17 @@ const AllTransactions = () => {
           </form>
         </ModalLayout>
       }
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className=""></div>
+        <div className="flex items-center justify-end gap-5">
+          <div className="flex items-center border rounded-xl bg-white shadow-xl">
+            <input value={text} onChange={e => setText(e.target.value)} type="text" placeholder="Search aything here..." className="outline-none w-full border-none bg-transparent p-2" />
+            <button onClick={HandleSearching} className="py-3 px-7 capitalize text-white bg-primary rounded-tr-xl rounded-br-xl">search</button>
+          </div>
+         {text && <button onClick={ClearSearch} className="py-3 px-4 bg-slate-400 text-white rounded-md">Clear</button>}
+        </div>
+      </div>
 
       <div className="relative overflow-x-auto rounded-md mt-10">
         <table className="w-full text-sm text-left rtl:text-right">
@@ -178,7 +255,7 @@ const AllTransactions = () => {
                   {item.usertransactions?.email}
                 </td>
                 <td className="px-3 py-3">
-                {item.usertransactions?.currency}{item.amount}
+                  {item.usertransactions?.currency}{item.amount}
                 </td>
                 <td className="px-3 py-3">
                   {item.status}
@@ -201,15 +278,14 @@ const AllTransactions = () => {
 
           </tbody>
         </table>
-
-        <TablePagination
-              onChange={num => setPage(num)}
-              page={page}
-              perPage={transhistory.page_size}
-              total={transhistory.total}
-            />
-
       </div>
+
+      <TablePagination
+        onChange={HandlePagin}
+        page={search}
+        perPage={transhistory.page_size}
+        total={transhistory.total}
+      />
     </div>
   )
 }

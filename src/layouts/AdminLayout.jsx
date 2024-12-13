@@ -60,7 +60,8 @@ export default function AdminLayout({ children,show=true }) {
 
     const SideLinks = [
         { path: 'overview', url: '/admin/overview' },
-        { path: 'users', url: '/admin/users' },
+        { path: 'users management', url: '/admin/users' },
+        { path: 'all users', url: '/admin/users/details' },
         { path: 'transfers', url: '/admin/transfers' },
         { path: 'transactions', url: '/admin/transactions' },
         { path: 'pending transfers', url: '/admin/pending_transfers' },
@@ -205,6 +206,7 @@ export default function AdminLayout({ children,show=true }) {
                     </div>
                 </div>
             </div>
+            <div id="google_translate_element" className="fixed bottom-2 left-2 bg-white py-1.5 px-3 rounded-lg z-50"></div>
         </div>
     )
 }

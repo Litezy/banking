@@ -47,7 +47,7 @@ const TablePagination = ({ total, perPage, page, onChange }) => {
           <button
             key={index}
             onClick={() => (typeof num === 'number' ? onChange(num) : null)}
-            className={`p-1 px-3 ${page === num ? "bg-blue-500 text-white" : ""}`}
+            className={`p-1 px-3 ${parseInt(page) === num ? "bg-blue-500 text-white" : ""}`}
           >
             {num}
           </button>

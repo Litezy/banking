@@ -11,7 +11,8 @@ import { BsChevronDoubleDown } from 'react-icons/bs'
 
 const AdminLinks = [
     { path: 'overview', url: '/admin/overview' },
-    { path: 'users', url: '/admin/users' },
+    { path: 'users management', url: '/admin/users' },
+    { path: 'all users', url: '/admin/users/details' },
     { path: 'transfers', url: '/admin/transfers' },
     { path: 'transactions', url: '/admin/transactions' },
     { path: 'pending transfers', url: '/admin/pending_transfers' },

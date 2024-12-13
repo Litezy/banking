@@ -4,12 +4,13 @@ import { errorMessage } from 'utils/functions'
 import Summary from './Summary'
 import moment from 'moment'
 import TablePagination from './TablePagination'
+import { useSearchParams } from 'react-router-dom'
 
 const VerifiedTransfers = () => {
-
     const [data, setData] = useState({})
-    const [load, setLoad] = useState(false)
-    const [page, setPage] = useState(1)
+    const [loads, setLoads] = useState(true)
+    const [searchParams, setSearchParams] = useSearchParams()
+    const search = searchParams.get('page')
 
     const TableHeaders = [
         "User",
@@ -22,29 +23,58 @@ const VerifiedTransfers = () => {
     ]
 
     const fetchVerifications = useCallback(async () => {
-        setLoad(true)
+        setLoads(true)
         try {
-            const res = await GetApi(`${Apis.admin.completed_transfers}?p=${page}`)
+            const res = await GetApi(`${Apis.admin.completed_transfers}?p=${search ?? 1}`)
             if (res.status !== 200) return errorMessage(res.msg)
             setData(res)
         } catch (error) {
             // console.log(error)
             errorMessage(`sorry, error in fetching transfers`, error)
         } finally {
-            setLoad(false)
+            setLoads(false)
         }
-    }, [page])
+    }, [search])
 
     useEffect(() => {
         fetchVerifications()
     }, [fetchVerifications])
 
+    function HandlePaging(num) {
+        setSearchParams({ page: num })
+    }
 
-    if(load) return (
-        <div>Loading Data...</div>
+
+    if(loads) return (
+        <div className="w-11/12 mx-auto mt-10">
+            <div className="w-full flex items-center justify-between">
+                <div className="lg:w-2/4 w-3/4 mx-auto">
+                    <Summary color='bg-primary text-white' title={'Total Verified Transfers'} data={`Showing 0 out of 0`} />
+                </div>
+            </div>
+
+            <div>
+                <div className="relative overflow-x-auto rounded-md mt-10">
+
+                    <table className="w-full text-sm text-left rtl:text-right">
+                        <thead className=" bg-primary text-xl text-white">
+                            <tr>
+                                {TableHeaders.map((item, index) => (
+                                    <th scope="col" key={index} className="px-3 py-3 text-sm truncate">
+                                        {item}
+                                    </th>
+                                ))}
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+        {new Array(10).fill(0).map((item, i) => (
+          <div key={i} className='bg-slate-200 mb-2 p-3 h-12 animate-pulse'></div>
+        ))}
+            </div>
+        </div>
     )
-
-    return (
+    if(!loads) return (
 
         <div className="w-11/12 mx-auto mt-10">
 
@@ -103,15 +133,13 @@ const VerifiedTransfers = () => {
 
                         </tbody>
                     </table>
-
-                    <TablePagination
-              onChange={num => setPage(num)}
-              page={page}
-              perPage={data.page_size}
-              total={data.total}
-            />
-
                 </div>
+                    <TablePagination
+                        onChange={HandlePaging}
+                        page={search}
+                        perPage={data.page_size}
+                        total={data.total}
+                    />
 
             </div>
         </div>
